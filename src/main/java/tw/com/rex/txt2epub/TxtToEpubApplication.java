@@ -1,6 +1,7 @@
 package tw.com.rex.txt2epub;
 
 import javax.swing.*;
+import javax.swing.border.EmptyBorder;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import java.awt.*;
 import java.io.File;
@@ -9,8 +10,8 @@ public class TxtToEpubApplication {
 
     private static JLabel selectedLabel;
     private final static JLabel outputFilePath = new JLabel("請選擇");
-    private final static JTextField lineField = new JTextField(10);
-    private final static JTextField regexField = new JTextField(10);
+    private final static JTextField lineField = new JTextField(30);
+    private final static JTextField regexField = new JTextField(30);
 
     public static void main(String[] args) {
         JFrame frame = new JFrame("txt to EPUB");
@@ -34,7 +35,8 @@ public class TxtToEpubApplication {
 
         selectFileArea(pane, bag);
         outputFileArea(pane, bag);
-        optionArea(pane, bag);
+        utf8CheckBox(pane, bag);
+        simplifiedToTraditionalCheckBox(pane, bag);
         splitArea(pane, bag);
 
         // JPanel panel = new JPanel();
@@ -85,12 +87,20 @@ public class TxtToEpubApplication {
         pane.add(outputFilePath, bag);
     }
 
-    private static void optionArea(Container pane, GridBagConstraints bag) {
+    private static void utf8CheckBox(Container pane, GridBagConstraints bag) {
         bag.weightx = 0.0;
         bag.gridx = 0;
         bag.gridy = 2;
         bag.gridwidth = 2;
         pane.add(new JCheckBox("轉換文字編碼 UTF-8"), bag);
+    }
+
+    private static void simplifiedToTraditionalCheckBox(Container pane, GridBagConstraints bag) {
+        bag.weightx = 0.0;
+        bag.gridx = 0;
+        bag.gridy = 3;
+        bag.gridwidth = 2;
+        pane.add(new JCheckBox("簡轉繁"), bag);
     }
 
     private static void splitArea(Container pane, GridBagConstraints bag) {
@@ -102,13 +112,24 @@ public class TxtToEpubApplication {
 
         bag.weightx = 0.5;
         bag.gridx = 0;
-        bag.gridy = 3;
+        bag.gridy = 4;
+        bag.gridwidth = 1;
         pane.add(lineSplitButton, bag);
 
         bag.weightx = 0.5;
         bag.gridx = 1;
-        bag.gridy = 3;
+        bag.gridy = 4;
         pane.add(lineField, bag);
+
+        bag.weightx = 0.5;
+        bag.gridx = 0;
+        bag.gridy = 5;
+        pane.add(regexSplitButton, bag);
+
+        bag.weightx = 0.5;
+        bag.gridx = 1;
+        bag.gridy = 5;
+        pane.add(regexField, bag);
     }
 
     private static JButton selectFileButton() {
