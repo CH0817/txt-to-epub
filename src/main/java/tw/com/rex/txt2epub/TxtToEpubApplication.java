@@ -4,12 +4,16 @@ import javax.swing.*;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import java.awt.*;
 import java.io.File;
+import java.nio.charset.Charset;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.Enumeration;
+import java.util.List;
 import java.util.Objects;
 
 public class TxtToEpubApplication {
 
-    private static JLabel selectedLabel;
+    private final static JLabel selectedLabel;
     private final static GridBagConstraints bag;
     private final static JLabel outputFilePath;
     private final static JTextField lineField;
@@ -17,25 +21,21 @@ public class TxtToEpubApplication {
     private final static JCheckBox utf8CbBtn;
     private final static JCheckBox transferChineseCbBtn;
     private final static ButtonGroup splitTypeGroup;
-    // private final static JRadioButton lineSplitButton;
-    // private final static JRadioButton regexSplitButton;
 
     static {
+        // selectedLabel = new JLabel("請選擇");
+        selectedLabel = new JLabel("D:/Rex/Downloads/曹賊.txt");
+        selectedLabel.setPreferredSize(new Dimension(300, 25));
         bag = new GridBagConstraints();
         bag.fill = GridBagConstraints.HORIZONTAL;
         bag.insets = new Insets(3, 3, 3, 3);
-        outputFilePath = new JLabel("請選擇");
+        // outputFilePath = new JLabel("請選擇");
+        outputFilePath = new JLabel("D:/Temp/曹賊.txt");
         lineField = new JTextField(30);
         regexField = new JTextField(30);
         utf8CbBtn = new JCheckBox("轉換文字編碼 UTF-8");
         transferChineseCbBtn = new JCheckBox("簡轉繁");
-        // lineSplitButton = new JRadioButton("以行數分割");
-        // lineSplitButton.setActionCommand("1");
-        // regexSplitButton = new JRadioButton("以正則分割");
-        // regexSplitButton.setActionCommand("2");
         splitTypeGroup = new ButtonGroup();
-        // splitTypeGroup.add(lineSplitButton);
-        // splitTypeGroup.add(regexSplitButton);
     }
 
     public static void main(String[] args) {
@@ -65,9 +65,6 @@ public class TxtToEpubApplication {
         bag.gridx = 0;
         bag.gridy = 0;
         pane.add(selectFileButton(), bag);
-
-        selectedLabel = new JLabel("請選擇");
-        selectedLabel.setPreferredSize(new Dimension(300, 25));
 
         bag.weightx = 0.8;
         bag.gridx = 1;
@@ -201,7 +198,7 @@ public class TxtToEpubApplication {
                 switch (splitType) {
                     case "1":
                         // todo 行分割
-                        int lines = 0;
+                        int lines;
                         try {
                             lines = Integer.parseInt(lineField.getText());
                             if (lines == 0) {
@@ -224,7 +221,20 @@ public class TxtToEpubApplication {
                 JOptionPane.showMessageDialog(pane, error);
             } else {
                 // todo 開始轉換
+                try {
+                    List<String> lines = Files.readAllLines(Paths.get(selectedFile), Charset.forName("GBK"));
+                    Files.write(Paths.get(outputPath), lines);
+                } catch (Exception ex) {
+                    ex.printStackTrace();
+                }
+                switch (splitType) {
+                    case "1":
+                        break;
+                    case "2":
+                        break;
+                }
             }
+            System.out.println("success");
         });
 
         pane.add(doExecuteBtn, bag);
