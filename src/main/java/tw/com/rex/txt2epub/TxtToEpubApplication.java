@@ -1,5 +1,7 @@
 package tw.com.rex.txt2epub;
 
+import com.github.houbb.opencc4j.util.ZhTwConverterUtil;
+
 import javax.swing.*;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import java.awt.*;
@@ -10,6 +12,7 @@ import java.nio.file.Paths;
 import java.util.Enumeration;
 import java.util.List;
 import java.util.Objects;
+import java.util.stream.Collectors;
 
 public class TxtToEpubApplication {
 
@@ -223,7 +226,10 @@ public class TxtToEpubApplication {
                 // todo 開始轉換
                 try {
                     List<String> lines = Files.readAllLines(Paths.get(selectedFile), Charset.forName("GBK"));
-                    Files.write(Paths.get(outputPath), lines);
+                    List<String> contents = lines.stream()
+                                                 .map(ZhTwConverterUtil::toTraditional)
+                                                 .collect(Collectors.toList());
+                    Files.write(Paths.get(outputPath), contents);
                 } catch (Exception ex) {
                     ex.printStackTrace();
                 }
