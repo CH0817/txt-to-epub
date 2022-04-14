@@ -46,7 +46,6 @@ public class MainFrameTest {
         String outputPath = Paths.get("D:/Temp").toAbsolutePath().toString();
         chooser.selectFile(new File(outputPath)).approve();
         window.label("outputFilePath").requireText(outputPath);
-        // todo 按執行按鈕是否有執行
     }
 
 }
