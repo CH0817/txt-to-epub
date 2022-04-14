@@ -34,7 +34,7 @@ public class MainFrameTest {
     }
 
     @Test
-    public void shouldCopyTextInLabelWhenClickingButton() {
+    public void executeTxtToEpub() {
         // 驗證選擇 txt 後是否將路徑放入 label
         window.button("selectFileBtn").click();
         JFileChooserFixture chooser = window.fileChooser("chooser");
