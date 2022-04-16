@@ -4,6 +4,7 @@ import lombok.Data;
 
 import javax.xml.bind.annotation.*;
 import java.io.Serializable;
+import java.util.Collections;
 import java.util.List;
 
 @Data
@@ -16,6 +17,6 @@ public class Container implements Serializable {
     @XmlAttribute
     private String xmlns = "urn:oasis:names:tc:opendocument:xmlns:container";
     @XmlElement(name = "rootfiles")
-    private List<RootFile> rootFiles;
+    private List<RootFile> rootFiles = Collections.singletonList(new RootFile());
 
 }

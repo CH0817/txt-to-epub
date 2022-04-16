@@ -9,10 +9,6 @@ public class TxtToEpubApplication {
     public static void main(String[] args) {
         MainFrame frame = new MainFrame();
         SwingUtilities.invokeLater(() -> frame.setVisible(true));
-        // Container container = new Container();
-        // RootFile rootFile = new RootFile();
-        // container.setRootFiles(Collections.singletonList(rootFile));
-        // XMLUtil.convertToXml(container);
     }
 
 }
