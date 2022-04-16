@@ -127,22 +127,11 @@ public class MainFrame extends JFrame {
     }
 
     private void convertToEpub() {
-        // todo 開始轉換
-        // String selectedFile = selectedLabel.getText();
-        // try {
-        //     java.util.List<String> lines = Files.readAllLines(Paths.get(selectedLabel.getText()),
-        //                                                       Charset.forName("GBK"));
-        //     List<String> contents = lines.stream()
-        //                                  .map(ZhTwConverterUtil::toTraditional)
-        //                                  .collect(Collectors.toList());
-        //     Files.write(Paths.get(outputFilePath.getText()), contents);
-        // } catch (Exception ex) {
-        //     ex.printStackTrace();
-        // }
         if (verify()) {
             TxtHandlerService service = new TxtHandlerService(selectedLabel.getText());
             List<TxtContent> txtContentList = service.getTxtContentList();
-            System.out.println(txtContentList);
+            // todo 分割並轉換
+            JOptionPane.showMessageDialog(pane, "轉換成功");
         }
     }
 
