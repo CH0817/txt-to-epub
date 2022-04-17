@@ -26,11 +26,15 @@ public class EpubServiceTest {
         Path filePath = directoryPath.resolve("曹賊.epub");
         Path coverImage = directoryPath.resolve("item").resolve("image");
         Path stylePath = directoryPath.resolve("item").resolve("style");
+        Path coverXhtml = directoryPath.resolve("item").resolve("xhtml").resolve("p-cover.xhtml");
+        Path navigationXhtml = directoryPath.resolve("item").resolve("navigation-documents.xhtml");
         service.process();
         assertTrue(Files.exists(metaInfPath));
         assertTrue(Files.exists(mineTypePath));
         assertTrue(Files.exists(filePath));
         assertTrue(Files.exists(coverImage));
+        assertTrue(Files.exists(coverXhtml));
+        assertTrue(Files.exists(navigationXhtml));
         try (Stream<Path> walk = Files.walk(stylePath)) {
             walk.filter(Files::isRegularFile)
                 .forEach(p -> assertTrue(Files.exists(p)));
