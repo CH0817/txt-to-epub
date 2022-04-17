@@ -1,5 +1,9 @@
 package tw.com.rex.txt2epub.service;
 
+import lombok.AllArgsConstructor;
+import lombok.NoArgsConstructor;
+import lombok.SneakyThrows;
+import org.apache.commons.lang3.StringUtils;
 import tw.com.rex.txt2epub.model.Container;
 import tw.com.rex.txt2epub.utils.XmlUtil;
 
@@ -9,12 +13,16 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
+@NoArgsConstructor
+@AllArgsConstructor
 public class EpubService {
 
+    private String selectedCover;
     private final Path directoryPath = Paths.get(System.getProperty("java.io.tmpdir"), "曹賊");
 
     public void process() {
-        Path filePath = Paths.get(directoryPath.toAbsolutePath().toString(), "曹賊.epub");
+        createCover();
+        Path filePath = directoryPath.resolve("曹賊.epub");
         createBasicFiles();
         if (!Files.exists(filePath)) {
             try {
@@ -25,13 +33,25 @@ public class EpubService {
         }
     }
 
+    @SneakyThrows
+    private void createCover() {
+        if (StringUtils.isNotBlank(selectedCover)) {
+            Path imageDirectoryPath = directoryPath.resolve("item").resolve("image");
+            if (!Files.exists(imageDirectoryPath)) {
+                Files.createDirectories(imageDirectoryPath);
+            }
+            Path path = Paths.get(selectedCover);
+            Files.copy(path, imageDirectoryPath.resolve(path.getFileName()));
+        }
+    }
+
     private void createBasicFiles() {
         createContainerXml();
         createMineType();
     }
 
     private void createContainerXml() {
-        Path containerXmlPath = Paths.get(directoryPath.toAbsolutePath().toString(), "META-INF", "container.xml");
+        Path containerXmlPath = directoryPath.resolve("META-INF").resolve("container.xml");
         if (!Files.exists(containerXmlPath.getParent())) {
             try {
                 Files.createDirectories(containerXmlPath.getParent());
@@ -50,7 +70,7 @@ public class EpubService {
     }
 
     private void createMineType() {
-        Path path = Paths.get(directoryPath.toAbsolutePath().toString(), "mimetype");
+        Path path = directoryPath.resolve("mimetype");
         if (!Files.exists(path)) {
             try {
                 Files.createFile(path);

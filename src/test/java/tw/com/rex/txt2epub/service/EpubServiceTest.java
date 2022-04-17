@@ -15,18 +15,21 @@ import static org.junit.Assert.assertTrue;
 
 public class EpubServiceTest {
 
-    private final EpubService service = new EpubService();
     private final static Path directoryPath = Paths.get(System.getProperty("java.io.tmpdir"), "曹賊");
 
     @Test
     public void process() {
-        Path metaInfPath = Paths.get(directoryPath.toAbsolutePath().toString(), "META-INF", "container.xml");
-        Path mineTypePath = Paths.get(directoryPath.toAbsolutePath().toString(), "mimetype");
-        Path filePath = Paths.get(directoryPath.toAbsolutePath().toString(), "曹賊.epub");
+        Path coverPath = Paths.get("src/test/resources/cover.jpeg");
+        EpubService service = new EpubService(coverPath.toAbsolutePath().toString());
+        Path metaInfPath = directoryPath.resolve("META-INF").resolve("container.xml");
+        Path mineTypePath = directoryPath.resolve("mimetype");
+        Path filePath = directoryPath.resolve("曹賊.epub");
+        Path coverImage = directoryPath.resolve("item").resolve("image");
         service.process();
         assertTrue(Files.exists(metaInfPath));
         assertTrue(Files.exists(mineTypePath));
         assertTrue(Files.exists(filePath));
+        assertTrue(Files.exists(coverImage));
     }
 
     @AfterClass
