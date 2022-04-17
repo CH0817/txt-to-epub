@@ -18,18 +18,23 @@ public class EpubServiceTest {
     private final static Path directoryPath = Paths.get(System.getProperty("java.io.tmpdir"), "曹賊");
 
     @Test
-    public void process() {
+    public void process() throws IOException {
         Path coverPath = Paths.get("src/test/resources/cover.jpeg");
         EpubService service = new EpubService(coverPath.toAbsolutePath().toString());
         Path metaInfPath = directoryPath.resolve("META-INF").resolve("container.xml");
         Path mineTypePath = directoryPath.resolve("mimetype");
         Path filePath = directoryPath.resolve("曹賊.epub");
         Path coverImage = directoryPath.resolve("item").resolve("image");
+        Path stylePath = directoryPath.resolve("item").resolve("style");
         service.process();
         assertTrue(Files.exists(metaInfPath));
         assertTrue(Files.exists(mineTypePath));
         assertTrue(Files.exists(filePath));
         assertTrue(Files.exists(coverImage));
+        try (Stream<Path> walk = Files.walk(stylePath)) {
+            walk.filter(Files::isRegularFile)
+                .forEach(p -> assertTrue(Files.exists(p)));
+        }
     }
 
     @AfterClass

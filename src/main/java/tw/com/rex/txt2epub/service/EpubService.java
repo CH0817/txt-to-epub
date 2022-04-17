@@ -12,6 +12,9 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 @NoArgsConstructor
 @AllArgsConstructor
@@ -22,6 +25,7 @@ public class EpubService {
 
     public void process() {
         createCover();
+        copyCss();
         Path filePath = directoryPath.resolve("曹賊.epub");
         createBasicFiles();
         if (!Files.exists(filePath)) {
@@ -30,6 +34,25 @@ public class EpubService {
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }
+        }
+    }
+
+    @SneakyThrows
+    private void copyCss() {
+        Path style = directoryPath.resolve("item").resolve("style");
+        if (!Files.exists(style)) {
+            Files.createDirectories(style);
+        }
+        try (Stream<Path> walk = Files.walk(Paths.get("src/main/resources"))) {
+            walk.filter(Files::isRegularFile)
+                .forEach(p -> {
+                    Path targetPath = style.resolve(p.getFileName());
+                    try {
+                        Files.copy(p, targetPath);
+                    } catch (IOException e) {
+                        throw new RuntimeException(e);
+                    }
+                });
         }
     }
 
