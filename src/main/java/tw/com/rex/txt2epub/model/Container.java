@@ -16,7 +16,8 @@ public class Container implements Serializable {
     private String version = "1.0";
     @XmlAttribute
     private String xmlns = "urn:oasis:names:tc:opendocument:xmlns:container";
-    @XmlElement(name = "rootfiles")
+    @XmlElementWrapper(name = "rootfiles")
+    @XmlElement(name = "rootfile")
     private List<RootFile> rootFiles = Collections.singletonList(new RootFile());
 
 }
