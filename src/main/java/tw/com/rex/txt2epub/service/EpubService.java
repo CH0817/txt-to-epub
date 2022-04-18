@@ -5,6 +5,7 @@ import lombok.NoArgsConstructor;
 import lombok.SneakyThrows;
 import org.apache.commons.lang3.StringUtils;
 import tw.com.rex.txt2epub.model.Container;
+import tw.com.rex.txt2epub.utils.DateUtil;
 import tw.com.rex.txt2epub.utils.XmlUtil;
 
 import java.io.IOException;
@@ -51,88 +52,91 @@ public class EpubService {
     }
 
     private String createOpfContent() {
-        return "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n" +
-                "<package\n" +
-                " xmlns=\"http://www.idpf.org/2007/opf\"\n" +
-                " version=\"3.0\"\n" +
-                " xml:lang=\"zh-TW\"\n" +
-                " unique-identifier=\"unique-id\"\n" +
-                " prefix=\"ibooks: http://vocabulary.itunes.apple.com/rdf/ibooks/vocabulary-extensions-1.0/ rendition: http://www.idpf.org/vocab/rendition/#\"\n" +
-                ">\n" +
-                "\n" +
-                "<metadata xmlns:dc=\"http://purl.org/dc/elements/1.1/\">\n" +
-                "\n" +
-                "<!-- 作品名 -->\n" +
-                "<dc:title id=\"title\">曹賊</dc:title>\n" +
-                "\n" +
-                "<!-- 作者名 -->\n" +
-                "<dc:creator id=\"creator01\">庚新</dc:creator>\n" +
-                "<meta refines=\"#creator01\" property=\"role\" scheme=\"marc:relators\">aut</meta>\n" +
-                "<meta refines=\"#creator01\" property=\"display-seq\">1</meta>\n" +
-                "\n" +
-                "<!-- 出版社名 -->\n" +
-                "<dc:publisher id=\"publisher\">台灣數位出版聯盟</dc:publisher>\n" +
-                "\n" +
-                "<!-- 語言 -->\n" +
-                "<dc:language>zh-TW</dc:language>\n" +
-                "\n" +
-                "<!-- 檔案id -->\n" +
-                "<dc:identifier id=\"unique-id\">urn:uuid:" + UUID.randomUUID() + "</dc:identifier>\n" +
-                "\n" +
-                "<!-- 更新時間 -->\n" +
-                "<meta property=\"dcterms:modified\">2019-11-01T00:00:00Z</meta>\n" +
-                "\n" +
-                "<!-- iBook指定字體 -->\n" +
-                "<meta property=\"ibooks:specified-fonts\">true</meta>\n" +
-                "\n" +
-                "</metadata>\n" +
-                "\n" +
-                "<manifest>\n" +
-                "\n" +
-                "<!-- navigation -->\n" +
-                "<item media-type=\"application/xhtml+xml\" id=\"toc\" href=\"navigation-documents.xhtml\" properties=\"nav\"/>\n" +
-                "\n" +
-                "<!-- style -->\n" +
-                "<item media-type=\"text/css\" id=\"book-style\"     href=\"style/book-style.css\"/>\n" +
-                "<item media-type=\"text/css\" id=\"style-reset\"    href=\"style/style-reset.css\"/>\n" +
-                "<item media-type=\"text/css\" id=\"style-standard\" href=\"style/style-standard.css\"/>\n" +
-                "<item media-type=\"text/css\" id=\"style-advance\"  href=\"style/style-advance.css\"/>\n" +
-                "<item media-type=\"text/css\" id=\"style-check\"    href=\"style/style-check.css\"/>\n" +
-                "\n" +
-                "<!-- image -->\n" +
-                "<item media-type=\"image/jpeg\" id=\"cover\"      href=\"image/cover.jpeg\" properties=\"cover-image\"/>\n" +
-                // "<item media-type=\"image/png\" id=\"tdpf\"      href=\"image/tdpf.png\" />\n" +
-                // "<item media-type=\"image/png\" id=\"moc\"      href=\"image/moc.png\" />\n" +
-                "\n" +
-                "\n" +
-                "<!-- xhtml -->\n" +
-                "<item media-type=\"application/xhtml+xml\" id=\"p-cover\"       href=\"xhtml/p-cover.xhtml\" properties=\"svg\"/>\n" +
-                // "<item media-type=\"application/xhtml+xml\" id=\"p-fmatter-001\" href=\"xhtml/p-fmatter-001.xhtml\"/>\n" +
-                // "<item media-type=\"application/xhtml+xml\" id=\"p-titlepage\"   href=\"xhtml/p-titlepage.xhtml\"/>\n" +
-                // "<item media-type=\"application/xhtml+xml\" id=\"p-toc\"         href=\"xhtml/p-toc.xhtml\"/>\n" +
-                // "<item media-type=\"application/xhtml+xml\" id=\"p-001\"         href=\"xhtml/p-001.xhtml\"/>\n" +
-                // "<item media-type=\"application/xhtml+xml\" id=\"p-002\"         href=\"xhtml/p-002.xhtml\"/>\n" +
-                // "<item media-type=\"application/xhtml+xml\" id=\"p-003\"         href=\"xhtml/p-003.xhtml\"/>\n" +
-                "\n" +
-                "<!-- font -->\n" +
-                "\n" +
-                "</manifest>\n" +
-                "\n" +
-                "<spine page-progression-direction=\"rtl\">\n" +
-                "<itemref linear=\"yes\" idref=\"p-cover\"       properties=\"rendition:layout-pre-paginated \n" +
-                "\t\t\t\t\t\t\t\t\t\t\t\t\t    rendition:spread-none \n" +
-                "\t\t\t\t\t\t\t\t\t\t\t\t\t    rendition:page-spread-center\"/>\n" +
-                // "<itemref linear=\"yes\" idref=\"p-fmatter-001\" properties=\"page-spread-left\"/>\n" +
-                // "<itemref linear=\"yes\" idref=\"p-titlepage\"   properties=\"page-spread-left\"/>\n" +
-                // "<itemref linear=\"yes\" idref=\"p-toc\"         properties=\"page-spread-left\"/>\n" +
-                // "<itemref linear=\"yes\" idref=\"p-001\"         properties=\"page-spread-left\"/>\n" +
-                // "<itemref linear=\"yes\" idref=\"p-002\"         properties=\"page-spread-left\"/>\n" +
-                // "<itemref linear=\"yes\" idref=\"p-003\"         properties=\"page-spread-left\"/>\n" +
-                // "<itemref linear=\"yes\" idref=\"p-colophon\"    properties=\"page-spread-left\"/>\n" +
-                "\n" +
-                "</spine>\n" +
-                "\n" +
-                "</package>";
+        StringBuilder sb = new StringBuilder();
+        sb.append("<?xml version=\"1.0\" encoding=\"UTF-8\"?>");
+        sb.append(System.lineSeparator());
+        sb.append("<package");
+        sb.append(System.lineSeparator());
+        sb.append("xmlns=\"http://www.idpf.org/2007/opf\"");
+        sb.append(System.lineSeparator());
+        sb.append("version=\"3.0\"");
+        sb.append(System.lineSeparator());
+        sb.append("xml:lang=\"zh-TW\"");
+        sb.append(System.lineSeparator());
+        sb.append("unique-identifier=\"unique-id\"");
+        sb.append(System.lineSeparator());
+        sb.append("prefix=\"ibooks: http://vocabulary.itunes.apple.com/rdf/ibooks/vocabulary-extensions-1.0/ rendition: http://www.idpf.org/vocab/rendition/#\"");
+        sb.append(System.lineSeparator());
+        sb.append(">");
+        sb.append(System.lineSeparator());
+        sb.append("<metadata xmlns:dc=\"http://purl.org/dc/elements/1.1/\">");
+        sb.append(System.lineSeparator());
+        // todo 書名
+        sb.append("<dc:title id=\"title\">曹賊</dc:title>");
+        sb.append(System.lineSeparator());
+        // todo 作者名
+        sb.append("<dc:creator id=\"creator01\">庚新</dc:creator>");
+        sb.append(System.lineSeparator());
+        sb.append("<meta refines=\"#creator01\" property=\"role\" scheme=\"marc:relators\">aut</meta>");
+        sb.append(System.lineSeparator());
+        sb.append("<meta refines=\"#creator01\" property=\"display-seq\">1</meta>");
+        sb.append(System.lineSeparator());
+        // todo 出版社
+        sb.append("<dc:publisher id=\"publisher\">Rex Yu</dc:publisher>");
+        sb.append(System.lineSeparator());
+        // 語言
+        sb.append("<dc:language>zh-TW</dc:language>");
+        sb.append(System.lineSeparator());
+        // 檔案 id
+        sb.append("<dc:identifier id=\"unique-id\">urn:uuid:");
+        sb.append(UUID.randomUUID());
+        sb.append("</dc:identifier>");
+        sb.append(System.lineSeparator());
+        // 更新時間
+        sb.append("<meta property=\"dcterms:modified\">");
+        sb.append(DateUtil.nowString());
+        sb.append("</meta>");
+        sb.append(System.lineSeparator());
+        // iBook指定字體
+        sb.append("<meta property=\"ibooks:specified-fonts\">true</meta>");
+        sb.append(System.lineSeparator());
+        sb.append("</metadata>");
+        sb.append(System.lineSeparator());
+        sb.append("<manifest>");
+        sb.append(System.lineSeparator());
+        // navigation
+        sb.append("<item media-type=\"application/xhtml+xml\" id=\"toc\" href=\"navigation-documents.xhtml\" properties=\"nav\"/>");
+        sb.append(System.lineSeparator());
+        // style
+        sb.append("<item media-type=\"text/css\" id=\"book-style\" href=\"style/book-style.css\"/>");
+        sb.append(System.lineSeparator());
+        sb.append("<item media-type=\"text/css\" id=\"style-reset\" href=\"style/style-reset.css\"/>");
+        sb.append(System.lineSeparator());
+        sb.append("<item media-type=\"text/css\" id=\"style-standard\" href=\"style/style-standard.css\"/>");
+        sb.append(System.lineSeparator());
+        sb.append("<item media-type=\"text/css\" id=\"style-advance\" href=\"style/style-advance.css\"/>");
+        sb.append(System.lineSeparator());
+        sb.append("<item media-type=\"text/css\" id=\"style-check\" href=\"style/style-check.css\"/>");
+        sb.append(System.lineSeparator());
+        // todo cover
+        sb.append("<item media-type=\"image/jpeg\" id=\"cover\" href=\"image/cover.jpeg\" properties=\"cover-image\"/>");
+        sb.append(System.lineSeparator());
+        // todo xhtml
+        sb.append("<item media-type=\"application/xhtml+xml\" id=\"p-cover\" href=\"xhtml/p-cover.xhtml\" properties=\"svg\"/>");
+        sb.append(System.lineSeparator());
+        sb.append("</manifest>");
+        // font
+        sb.append(System.lineSeparator());
+        sb.append("<spine page-progression-direction=\"rtl\">");
+        sb.append(System.lineSeparator());
+        sb.append("<itemref linear=\"yes\" idref=\"p-cover\" properties=\"rendition:layout-pre-paginated rendition:spread-none rendition:page-spread-center\"/>");
+        sb.append(System.lineSeparator());
+        // sb.append("<itemref linear=\\\"yes\\\" idref=\\\"p-toc\\\"         properties=\\\"page-spread-left\\\"/>");
+        sb.append(System.lineSeparator());
+        sb.append("</spine>");
+        sb.append(System.lineSeparator());
+        sb.append("</package>");
+        return sb.toString();
     }
 
     @SneakyThrows
