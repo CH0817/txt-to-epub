@@ -12,6 +12,7 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.UUID;
 import java.util.stream.Stream;
 
 @NoArgsConstructor
@@ -26,6 +27,7 @@ public class EpubService {
         copyCss();
         createToc();
         createNavigationDocumentsXhtml();
+        createOpf();
         Path filePath = directoryPath.resolve("曹賊.epub");
         createBasicFiles();
         if (!Files.exists(filePath)) {
@@ -35,6 +37,102 @@ public class EpubService {
                 throw new RuntimeException(e);
             }
         }
+    }
+
+    @SneakyThrows
+    private void createOpf() {
+        Path item = directoryPath.resolve("item");
+        if (!Files.exists(item)) {
+            Files.createDirectories(item);
+        }
+        Path opf = item.resolve("standard.opf");
+        String content = createOpfContent();
+        Files.write(opf, content.getBytes(StandardCharsets.UTF_8));
+    }
+
+    private String createOpfContent() {
+        return "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n" +
+                "<package\n" +
+                " xmlns=\"http://www.idpf.org/2007/opf\"\n" +
+                " version=\"3.0\"\n" +
+                " xml:lang=\"zh-TW\"\n" +
+                " unique-identifier=\"unique-id\"\n" +
+                " prefix=\"ibooks: http://vocabulary.itunes.apple.com/rdf/ibooks/vocabulary-extensions-1.0/ rendition: http://www.idpf.org/vocab/rendition/#\"\n" +
+                ">\n" +
+                "\n" +
+                "<metadata xmlns:dc=\"http://purl.org/dc/elements/1.1/\">\n" +
+                "\n" +
+                "<!-- 作品名 -->\n" +
+                "<dc:title id=\"title\">曹賊</dc:title>\n" +
+                "\n" +
+                "<!-- 作者名 -->\n" +
+                "<dc:creator id=\"creator01\">庚新</dc:creator>\n" +
+                "<meta refines=\"#creator01\" property=\"role\" scheme=\"marc:relators\">aut</meta>\n" +
+                "<meta refines=\"#creator01\" property=\"display-seq\">1</meta>\n" +
+                "\n" +
+                "<!-- 出版社名 -->\n" +
+                "<dc:publisher id=\"publisher\">台灣數位出版聯盟</dc:publisher>\n" +
+                "\n" +
+                "<!-- 語言 -->\n" +
+                "<dc:language>zh-TW</dc:language>\n" +
+                "\n" +
+                "<!-- 檔案id -->\n" +
+                "<dc:identifier id=\"unique-id\">urn:uuid:" + UUID.randomUUID() + "</dc:identifier>\n" +
+                "\n" +
+                "<!-- 更新時間 -->\n" +
+                "<meta property=\"dcterms:modified\">2019-11-01T00:00:00Z</meta>\n" +
+                "\n" +
+                "<!-- iBook指定字體 -->\n" +
+                "<meta property=\"ibooks:specified-fonts\">true</meta>\n" +
+                "\n" +
+                "</metadata>\n" +
+                "\n" +
+                "<manifest>\n" +
+                "\n" +
+                "<!-- navigation -->\n" +
+                "<item media-type=\"application/xhtml+xml\" id=\"toc\" href=\"navigation-documents.xhtml\" properties=\"nav\"/>\n" +
+                "\n" +
+                "<!-- style -->\n" +
+                "<item media-type=\"text/css\" id=\"book-style\"     href=\"style/book-style.css\"/>\n" +
+                "<item media-type=\"text/css\" id=\"style-reset\"    href=\"style/style-reset.css\"/>\n" +
+                "<item media-type=\"text/css\" id=\"style-standard\" href=\"style/style-standard.css\"/>\n" +
+                "<item media-type=\"text/css\" id=\"style-advance\"  href=\"style/style-advance.css\"/>\n" +
+                "<item media-type=\"text/css\" id=\"style-check\"    href=\"style/style-check.css\"/>\n" +
+                "\n" +
+                "<!-- image -->\n" +
+                "<item media-type=\"image/jpeg\" id=\"cover\"      href=\"image/cover.jpg\" properties=\"cover-image\"/>\n" +
+                // "<item media-type=\"image/png\" id=\"tdpf\"      href=\"image/tdpf.png\" />\n" +
+                // "<item media-type=\"image/png\" id=\"moc\"      href=\"image/moc.png\" />\n" +
+                "\n" +
+                "\n" +
+                "<!-- xhtml -->\n" +
+                "<item media-type=\"application/xhtml+xml\" id=\"p-cover\"       href=\"xhtml/p-cover.xhtml\" properties=\"svg\"/>\n" +
+                // "<item media-type=\"application/xhtml+xml\" id=\"p-fmatter-001\" href=\"xhtml/p-fmatter-001.xhtml\"/>\n" +
+                // "<item media-type=\"application/xhtml+xml\" id=\"p-titlepage\"   href=\"xhtml/p-titlepage.xhtml\"/>\n" +
+                // "<item media-type=\"application/xhtml+xml\" id=\"p-toc\"         href=\"xhtml/p-toc.xhtml\"/>\n" +
+                // "<item media-type=\"application/xhtml+xml\" id=\"p-001\"         href=\"xhtml/p-001.xhtml\"/>\n" +
+                // "<item media-type=\"application/xhtml+xml\" id=\"p-002\"         href=\"xhtml/p-002.xhtml\"/>\n" +
+                // "<item media-type=\"application/xhtml+xml\" id=\"p-003\"         href=\"xhtml/p-003.xhtml\"/>\n" +
+                "\n" +
+                "<!-- font -->\n" +
+                "\n" +
+                "</manifest>\n" +
+                "\n" +
+                "<spine page-progression-direction=\"rtl\">\n" +
+                "<itemref linear=\"yes\" idref=\"p-cover\"       properties=\"rendition:layout-pre-paginated \n" +
+                "\t\t\t\t\t\t\t\t\t\t\t\t\t    rendition:spread-none \n" +
+                "\t\t\t\t\t\t\t\t\t\t\t\t\t    rendition:page-spread-center\"/>\n" +
+                "<itemref linear=\"yes\" idref=\"p-fmatter-001\" properties=\"page-spread-left\"/>\n" +
+                "<itemref linear=\"yes\" idref=\"p-titlepage\"   properties=\"page-spread-left\"/>\n" +
+                "<itemref linear=\"yes\" idref=\"p-toc\"         properties=\"page-spread-left\"/>\n" +
+                "<itemref linear=\"yes\" idref=\"p-001\"         properties=\"page-spread-left\"/>\n" +
+                "<itemref linear=\"yes\" idref=\"p-002\"         properties=\"page-spread-left\"/>\n" +
+                "<itemref linear=\"yes\" idref=\"p-003\"         properties=\"page-spread-left\"/>\n" +
+                "<itemref linear=\"yes\" idref=\"p-colophon\"    properties=\"page-spread-left\"/>\n" +
+                "\n" +
+                "</spine>\n" +
+                "\n" +
+                "</package>";
     }
 
     @SneakyThrows

@@ -28,6 +28,7 @@ public class EpubServiceTest {
         Path stylePath = directoryPath.resolve("item").resolve("style");
         Path coverXhtml = directoryPath.resolve("item").resolve("xhtml").resolve("p-cover.xhtml");
         Path navigationXhtml = directoryPath.resolve("item").resolve("navigation-documents.xhtml");
+        Path opf = directoryPath.resolve("item").resolve("standard.opf");
         service.process();
         assertTrue(Files.exists(metaInfPath));
         assertTrue(Files.exists(mineTypePath));
@@ -35,6 +36,7 @@ public class EpubServiceTest {
         assertTrue(Files.exists(coverImage));
         assertTrue(Files.exists(coverXhtml));
         assertTrue(Files.exists(navigationXhtml));
+        assertTrue(Files.exists(opf));
         try (Stream<Path> walk = Files.walk(stylePath)) {
             walk.filter(Files::isRegularFile)
                 .forEach(p -> assertTrue(Files.exists(p)));
