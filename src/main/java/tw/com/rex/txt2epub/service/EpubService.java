@@ -100,7 +100,7 @@ public class EpubService {
                 "<item media-type=\"text/css\" id=\"style-check\"    href=\"style/style-check.css\"/>\n" +
                 "\n" +
                 "<!-- image -->\n" +
-                "<item media-type=\"image/jpeg\" id=\"cover\"      href=\"image/cover.jpg\" properties=\"cover-image\"/>\n" +
+                "<item media-type=\"image/jpeg\" id=\"cover\"      href=\"image/cover.jpeg\" properties=\"cover-image\"/>\n" +
                 // "<item media-type=\"image/png\" id=\"tdpf\"      href=\"image/tdpf.png\" />\n" +
                 // "<item media-type=\"image/png\" id=\"moc\"      href=\"image/moc.png\" />\n" +
                 "\n" +
@@ -122,13 +122,13 @@ public class EpubService {
                 "<itemref linear=\"yes\" idref=\"p-cover\"       properties=\"rendition:layout-pre-paginated \n" +
                 "\t\t\t\t\t\t\t\t\t\t\t\t\t    rendition:spread-none \n" +
                 "\t\t\t\t\t\t\t\t\t\t\t\t\t    rendition:page-spread-center\"/>\n" +
-                "<itemref linear=\"yes\" idref=\"p-fmatter-001\" properties=\"page-spread-left\"/>\n" +
-                "<itemref linear=\"yes\" idref=\"p-titlepage\"   properties=\"page-spread-left\"/>\n" +
-                "<itemref linear=\"yes\" idref=\"p-toc\"         properties=\"page-spread-left\"/>\n" +
-                "<itemref linear=\"yes\" idref=\"p-001\"         properties=\"page-spread-left\"/>\n" +
-                "<itemref linear=\"yes\" idref=\"p-002\"         properties=\"page-spread-left\"/>\n" +
-                "<itemref linear=\"yes\" idref=\"p-003\"         properties=\"page-spread-left\"/>\n" +
-                "<itemref linear=\"yes\" idref=\"p-colophon\"    properties=\"page-spread-left\"/>\n" +
+                // "<itemref linear=\"yes\" idref=\"p-fmatter-001\" properties=\"page-spread-left\"/>\n" +
+                // "<itemref linear=\"yes\" idref=\"p-titlepage\"   properties=\"page-spread-left\"/>\n" +
+                // "<itemref linear=\"yes\" idref=\"p-toc\"         properties=\"page-spread-left\"/>\n" +
+                // "<itemref linear=\"yes\" idref=\"p-001\"         properties=\"page-spread-left\"/>\n" +
+                // "<itemref linear=\"yes\" idref=\"p-002\"         properties=\"page-spread-left\"/>\n" +
+                // "<itemref linear=\"yes\" idref=\"p-003\"         properties=\"page-spread-left\"/>\n" +
+                // "<itemref linear=\"yes\" idref=\"p-colophon\"    properties=\"page-spread-left\"/>\n" +
                 "\n" +
                 "</spine>\n" +
                 "\n" +
@@ -230,13 +230,13 @@ public class EpubService {
                 "<style type=\"text/css\">\n" +
                 "  html, body { margin: 0; padding: 0; width: 100%; height: 100%;}\n" +
                 "</style>\n" +
-                "<title>羅生門</title>\n" +
+                "<title>曹賊</title>\n" +
                 "</head>\n" +
                 "<body epub:type=\"cover\" class=\"p-cover\">\n" +
                 "        <svg xmlns=\"http://www.w3.org/2000/svg\" version=\"1.1\"\n" +
                 "            xmlns:xlink=\"http://www.w3.org/1999/xlink\"\n" +
                 "            width=\"100%\" height=\"100%\" viewBox=\"0 0 1444 2048\">\n" +
-                "            <image width=\"1444\" height=\"2048\" xlink:href=\"../image/cover.jpg\"/>\n" +
+                "            <image width=\"1444\" height=\"2048\" xlink:href=\"../image/cover.jpeg\"/>\n" +
                 "        </svg>\n" +
                 "</body>\n" +
                 "</html>";
