@@ -10,7 +10,9 @@ import java.util.List;
 @Data
 public class TxtContent implements Serializable {
 
+    // 章節名稱
     private String title;
+    // 章節內容
     private List<String> contentList;
 
 }

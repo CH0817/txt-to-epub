@@ -1,57 +1,33 @@
 package tw.com.rex.txt2epub.service;
 
-import org.junit.AfterClass;
+import org.junit.Before;
 import org.junit.Test;
+import tw.com.rex.txt2epub.model.Book;
 
-import java.io.File;
-import java.io.IOException;
-import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.Comparator;
-import java.util.stream.Stream;
+import java.util.Collections;
 
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.assertEquals;
 
 public class EpubServiceTest {
 
-    private final static Path directoryPath = Paths.get(System.getProperty("java.io.tmpdir"), "曹賊");
+    private Book book;
+    private final Path outputPath = Paths.get("D:/Temp/曹賊");
 
-    @Test
-    public void process() throws IOException {
-        Path coverPath = Paths.get("src/test/resources/cover.jpeg");
-        EpubService service = new EpubService(coverPath.toAbsolutePath().toString());
-        Path metaInfPath = directoryPath.resolve("META-INF").resolve("container.xml");
-        Path mineTypePath = directoryPath.resolve("mimetype");
-        Path filePath = directoryPath.resolve("曹賊.epub");
-        Path coverImage = directoryPath.resolve("item").resolve("image");
-        Path stylePath = directoryPath.resolve("item").resolve("style");
-        Path coverXhtml = directoryPath.resolve("item").resolve("xhtml").resolve("p-cover.xhtml");
-        Path navigationXhtml = directoryPath.resolve("item").resolve("navigation-documents.xhtml");
-        Path opf = directoryPath.resolve("item").resolve("standard.opf");
-        service.process();
-        assertTrue(Files.exists(metaInfPath));
-        assertTrue(Files.exists(mineTypePath));
-        assertTrue(Files.exists(filePath));
-        assertTrue(Files.exists(coverImage));
-        assertTrue(Files.exists(coverXhtml));
-        assertTrue(Files.exists(navigationXhtml));
-        assertTrue(Files.exists(opf));
-        try (Stream<Path> walk = Files.walk(stylePath)) {
-            walk.filter(Files::isRegularFile)
-                .forEach(p -> assertTrue(Files.exists(p)));
-        }
+    @Before
+    public void setUp() {
+        book = new Book();
+        book.setName("曹賊");
+        book.setAuthor("庚新");
+        book.setTxtContentList(Collections.emptyList());
+        book.setCover(Paths.get("src/test/resources/cover.jpeg"));
     }
 
-    @AfterClass
-    public static void deleteTempFile() throws IOException {
-        if (Files.exists(directoryPath)) {
-            try (Stream<Path> walk = Files.walk(directoryPath)) {
-                walk.sorted(Comparator.reverseOrder())
-                    .map(Path::toFile)
-                    .forEach(File::delete);
-            }
-        }
+    @Test
+    public void process() throws Exception {
+        EpubService service = new EpubService(book, outputPath);
+        assertEquals(outputPath.resolve("曹賊.epub").toAbsolutePath().toString(), service.process());
     }
 
 }
