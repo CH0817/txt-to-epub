@@ -5,8 +5,8 @@ import java.time.format.DateTimeFormatter;
 
 public class DateUtil {
 
-    public static String nowString() {
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSSZ");
+    public static String bookModifyDate() {
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss'Z'");
         return LocalDateTime.now().format(formatter);
     }
 

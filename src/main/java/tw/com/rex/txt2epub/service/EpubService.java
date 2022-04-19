@@ -94,7 +94,7 @@ public class EpubService {
         sb.append(System.lineSeparator());
         // 更新時間
         sb.append("<meta property=\"dcterms:modified\">");
-        sb.append(DateUtil.nowString());
+        sb.append(DateUtil.bookModifyDate());
         sb.append("</meta>");
         sb.append(System.lineSeparator());
         // iBook指定字體
