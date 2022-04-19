@@ -1,7 +1,9 @@
 package tw.com.rex.txt2epub.frame;
 
 import org.apache.commons.lang3.StringUtils;
+import tw.com.rex.txt2epub.model.Book;
 import tw.com.rex.txt2epub.model.TxtContent;
+import tw.com.rex.txt2epub.service.EpubService;
 import tw.com.rex.txt2epub.service.TxtHandlerService;
 
 import javax.imageio.ImageIO;
@@ -10,6 +12,7 @@ import javax.swing.filechooser.FileFilter;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import java.awt.*;
 import java.io.File;
+import java.nio.file.Paths;
 import java.util.List;
 
 public class MainFrame extends JFrame {
@@ -145,10 +148,10 @@ public class MainFrame extends JFrame {
         FileFilter imageFilesFilter = new FileNameExtensionFilter("image files", ImageIO.getReaderFileSuffixes());
         chooser.setFileFilter(imageFilesFilter);
         chooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
-        int dialog = chooser.showOpenDialog(null);
+        int dialog = chooser.showOpenDialog(pane);
         if (dialog == JFileChooser.APPROVE_OPTION) {
             File selectedFile = chooser.getSelectedFile();
-            outputFilePath.setText(selectedFile.getPath());
+            coverPath.setText(selectedFile.getPath());
         }
     }
 
@@ -166,10 +169,13 @@ public class MainFrame extends JFrame {
 
     private void convertToEpub() {
         if (verify()) {
-            TxtHandlerService service = new TxtHandlerService(selectedLabel.getText());
-            List<TxtContent> txtContentList = service.getTxtContentList();
-            // todo 分割並轉換
-            JOptionPane.showMessageDialog(pane, "轉換成功");
+            try {
+                String epub = new EpubService(createBook(), Paths.get(outputFilePath.getText())).process();
+                // todo 開啟輸出路徑
+                JOptionPane.showMessageDialog(pane, "轉換成功");
+            } catch (Exception e) {
+                JOptionPane.showMessageDialog(pane, e.getMessage());
+            }
         }
     }
 
@@ -186,6 +192,26 @@ public class MainFrame extends JFrame {
             return false;
         }
         return true;
+    }
+
+    private Book createBook() {
+        Book book = new Book();
+        book.setName(getBookName());
+        book.setCover(Paths.get(coverPath.getText()));
+        // todo 增加輸入作者框
+        book.setAuthor("Rex Yu");
+        book.setTxtContentList(getTxtContentList());
+        System.out.println(book);
+        return book;
+    }
+
+    private String getBookName() {
+        String fileName = Paths.get(selectedLabel.getText()).toAbsolutePath().getFileName().toString();
+        return fileName.substring(0, fileName.lastIndexOf("."));
+    }
+
+    private List<TxtContent> getTxtContentList() {
+        return new TxtHandlerService(selectedLabel.getText()).getTxtContentList();
     }
 
 }

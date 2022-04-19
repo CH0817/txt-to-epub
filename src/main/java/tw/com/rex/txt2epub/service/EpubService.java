@@ -1,9 +1,9 @@
 package tw.com.rex.txt2epub.service;
 
 import com.adobe.epubcheck.tool.EpubChecker;
-import lombok.SneakyThrows;
 import tw.com.rex.txt2epub.model.Book;
 import tw.com.rex.txt2epub.model.TempDirectory;
+import tw.com.rex.txt2epub.model.TxtContent;
 import tw.com.rex.txt2epub.model.epub.Container;
 import tw.com.rex.txt2epub.utils.DateUtil;
 import tw.com.rex.txt2epub.utils.FileUtil;
@@ -11,7 +11,9 @@ import tw.com.rex.txt2epub.utils.XmlUtil;
 
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.List;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 public class EpubService {
 
@@ -28,7 +30,7 @@ public class EpubService {
     public String process() throws Exception {
         createCover();
         copyCss();
-        // createToc();
+        createToc();
         createNavigationDocuments();
         createOpf();
         createContainerXml();
@@ -102,7 +104,14 @@ public class EpubService {
         FileUtil.copyAll(Paths.get("src/main/resources/style"), tempDirectory.getStylePath());
     }
 
-    @SneakyThrows
+    /**
+     * 產生目錄
+     */
+    private void createToc() {
+        List<String> titles = book.getTxtContentList().stream().map(TxtContent::getTitle).collect(Collectors.toList());
+        // todo 產生目錄
+    }
+
     private void createNavigationDocuments() {
         String content = createNavigationDocumentsXhtmlContent();
         FileUtil.write(tempDirectory.getItemPath().resolve("navigation-documents.xhtml"), content);
