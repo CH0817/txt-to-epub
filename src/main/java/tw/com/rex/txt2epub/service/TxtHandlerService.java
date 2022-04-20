@@ -65,6 +65,7 @@ public class TxtHandlerService {
         return IntStream.range(startIndex, endIndex)
                         .mapToObj(allLines::get)
                         .filter(StringUtils::isNotBlank)
+                        .map(s -> s.replaceAll("　", ""))
                         .collect(toList());
     }
 

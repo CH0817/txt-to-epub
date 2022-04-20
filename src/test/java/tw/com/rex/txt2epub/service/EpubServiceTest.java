@@ -6,7 +6,6 @@ import tw.com.rex.txt2epub.model.Book;
 
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.Collections;
 
 import static org.junit.Assert.assertEquals;
 
@@ -20,7 +19,10 @@ public class EpubServiceTest {
         book = new Book();
         book.setName("曹賊");
         book.setAuthor("庚新");
-        book.setTxtContentList(Collections.emptyList());
+        TxtHandlerService txtHandlerService = new TxtHandlerService(Paths.get("src/test/resources/曹賊.txt")
+                                                                         .toAbsolutePath()
+                                                                         .toString());
+        book.setTxtContentList(txtHandlerService.getTxtContentList());
         book.setCover(Paths.get("src/test/resources/cover.jpeg"));
     }
 

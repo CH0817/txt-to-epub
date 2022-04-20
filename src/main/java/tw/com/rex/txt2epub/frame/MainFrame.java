@@ -201,7 +201,6 @@ public class MainFrame extends JFrame {
         // todo 增加輸入作者框
         book.setAuthor("Rex Yu");
         book.setTxtContentList(getTxtContentList());
-        System.out.println(book);
         return book;
     }
 
