@@ -11,7 +11,7 @@ import tw.com.rex.txt2epub.utils.XmlUtil;
 
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
@@ -22,7 +22,7 @@ public class EpubService {
     private final Book book;
     private final Path outputPath;
     private final TempDirectory tempDirectory;
-    private Map<String, String> contentXhtmlMap = new HashMap<>();
+    private Map<String, String> contentXhtmlMap = new LinkedHashMap<>();
 
     public EpubService(Book book, Path outputPath) {
         this.book = book;
@@ -113,37 +113,61 @@ public class EpubService {
      */
     private void createToc() {
         List<String> titles = book.getTxtContentList().stream().map(TxtContent::getTitle).collect(Collectors.toList());
-        // todo 產生目錄
         StringBuilder sb = new StringBuilder();
         sb.append("<?xml version=\"1.0\" encoding=\"UTF-8\"?>")
+          .append(System.lineSeparator())
           .append("<!DOCTYPE html>")
+          .append(System.lineSeparator())
           .append("<html")
+          .append(System.lineSeparator())
           .append("xmlns=\"http://www.w3.org/1999/xhtml\"")
+          .append(System.lineSeparator())
           .append("xmlns:epub=\"http://www.idpf.org/2007/ops\"")
+          .append(System.lineSeparator())
           .append("xml:lang=\"zh-TW\" lang=\"zh-TW\"")
+          .append(System.lineSeparator())
           .append("class=\"vrtl\"")
+          .append(System.lineSeparator())
           .append(">")
+          .append(System.lineSeparator())
           .append("<head>")
+          .append(System.lineSeparator())
           .append("<meta charset=\"UTF-8\"/>")
+          .append(System.lineSeparator())
           .append("<title>")
           .append(book.getName())
           .append("</title>")
+          .append(System.lineSeparator())
           .append("<link rel=\"stylesheet\" type=\"text/css\" href=\"../style/book-style.css\"/>")
+          .append(System.lineSeparator())
           .append("</head>")
+          .append(System.lineSeparator())
           .append("<body class=\"p-toc\">")
+          .append(System.lineSeparator())
           .append("<div class=\"main\"><h1>目錄</h1>")
+          .append(System.lineSeparator())
           .append("<p><br/></p>")
+          .append(System.lineSeparator())
           .append("<p><br/></p>")
+          .append(System.lineSeparator())
           .append("<p class=\"m-top-2em\"><a href=\"p-cover.xhtml\">封面</a></p>")
-          // .append("<p class=\"m-top-2em\"><a href=\"p-fmatter-001.xhtml\">製作緣起</a></p>")
-          // .append("<p class=\"m-top-2em\"><a href=\"p-titlepage.xhtml\">書名頁</a></p>")
-          // .append("<p class=\"m-top-2em\"><a href=\"p-toc.xhtml\">目錄</a></p>")
-          // .append("<p class=\"m-top-2em\"><a href=\"p-001.xhtml\">內文</a></p>")
-          // .append("<p class=\"m-top-2em\"><a href=\"p-002.xhtml\">製作解說</a></p> ")
-          // .append("<p class=\"m-top-2em\"><a href=\"p-colophon.xhtml\">版權頁</a></p>")
-          .append("</div>")
+          .append(System.lineSeparator())
+          .append("<p class=\"m-top-2em\"><a href=\"p-toc.xhtml\">目錄</a></p>")
+          .append(System.lineSeparator());
+        for (String key : contentXhtmlMap.keySet()) {
+            sb.append("<p class=\"m-top-2em\"><a href=\"")
+              .append(contentXhtmlMap.get(key))
+              .append("\">")
+              .append(key)
+              .append("</a></p>")
+              .append(System.lineSeparator());
+        }
+        sb.append("</div>")
+          .append(System.lineSeparator())
           .append("</body>")
+          .append(System.lineSeparator())
           .append("</html>");
+        FileUtil.write(tempDirectory.getXhtmlPath().resolve("p-toc.xhtml"), sb.toString());
     }
 
     private void createNavigationDocuments() {
@@ -171,7 +195,9 @@ public class EpubService {
           .append(System.lineSeparator())
           .append("<meta charset=\"UTF-8\"/>")
           .append(System.lineSeparator())
-          .append("<title>目錄</title>")
+          .append("<title>")
+          .append(book.getName())
+          .append("</title>")
           .append(System.lineSeparator())
           .append("</head>")
           .append(System.lineSeparator())
@@ -183,9 +209,19 @@ public class EpubService {
           .append(System.lineSeparator())
           .append("<ol>")
           .append(System.lineSeparator())
+          // 超連結目錄
           .append("<li><a href=\"xhtml/p-cover.xhtml\">封面</a></li>")
-          .append(System.lineSeparator())
-          .append("</ol>")
+          .append("<li><a href=\"xhtml/p-toc.xhtml\">目錄</a></li>")
+          .append(System.lineSeparator());
+        for (String key : contentXhtmlMap.keySet()) {
+            sb.append("<li><a href=\"xhtml/")
+              .append(contentXhtmlMap.get(key))
+              .append("\">")
+              .append(key)
+              .append("</a></li>")
+              .append(System.lineSeparator());
+        }
+        sb.append("</ol>")
           .append(System.lineSeparator())
           .append("</nav>")
           .append(System.lineSeparator())
@@ -271,12 +307,14 @@ public class EpubService {
           .append(System.lineSeparator())
           .append("<item media-type=\"text/css\" id=\"style-check\" href=\"style/style-check.css\"/>")
           .append(System.lineSeparator())
-          // 封面
+          // 封面頁
           .append("<item media-type=\"image/jpeg\" id=\"cover\" href=\"image/")
           .append(book.getCover().getFileName())
           .append("\" properties=\"cover-image\"/>")
           .append(System.lineSeparator())
-          .append("<item media-type=\"application/xhtml+xml\" id=\"p-cover\" href=\"xhtml/p-cover.xhtml\" properties=\"svg\"/>");
+          .append("<item media-type=\"application/xhtml+xml\" id=\"p-cover\" href=\"xhtml/p-cover.xhtml\" properties=\"svg\"/>")
+          .append("<item media-type=\"application/xhtml+xml\" id=\"p-toc\" href=\"xhtml/p-toc.xhtml\"/>")
+          .append(System.lineSeparator());
         // xhtml define
         book.getTxtContentList().forEach(c -> {
             String xhtml = contentXhtmlMap.get(c.getTitle());
@@ -284,7 +322,8 @@ public class EpubService {
               .append(xhtml.substring(0, xhtml.lastIndexOf(".")))
               .append("\" href=\"xhtml/")
               .append(xhtml)
-              .append("\"/>");
+              .append("\"/>")
+              .append(System.lineSeparator());
         });
         sb.append(System.lineSeparator())
           .append("</manifest>")
@@ -293,13 +332,16 @@ public class EpubService {
           .append("<spine page-progression-direction=\"rtl\">")
           .append(System.lineSeparator())
           // cover xhtml ref
-          .append("<itemref linear=\"yes\" idref=\"p-cover\" properties=\"rendition:layout-pre-paginated rendition:spread-none rendition:page-spread-center\"/>");
+          .append("<itemref linear=\"yes\" idref=\"p-cover\" properties=\"rendition:layout-pre-paginated rendition:spread-none rendition:page-spread-center\"/>")
+          .append("<itemref linear=\"yes\" idref=\"p-toc\" properties=\"page-spread-left\"/>")
+          .append(System.lineSeparator());
         // xhtml ref
         book.getTxtContentList().forEach(c -> {
             String xhtml = contentXhtmlMap.get(c.getTitle());
             sb.append("<itemref linear=\"yes\" idref=\"")
               .append(xhtml.substring(0, xhtml.lastIndexOf(".")))
-              .append("\" properties=\"page-spread-left\"/>");
+              .append("\" properties=\"page-spread-left\"/>")
+              .append(System.lineSeparator());
         });
         sb.append(System.lineSeparator())
           .append("</spine>")
