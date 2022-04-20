@@ -15,14 +15,13 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
-import java.util.stream.Collectors;
 
 public class EpubService {
 
     private final Book book;
     private final Path outputPath;
     private final TempDirectory tempDirectory;
-    private Map<String, String> contentXhtmlMap = new LinkedHashMap<>();
+    private final Map<String, String> contentXhtmlMap = new LinkedHashMap<>();
 
     public EpubService(Book book, Path outputPath) {
         this.book = book;
@@ -112,7 +111,6 @@ public class EpubService {
      * 產生目錄
      */
     private void createToc() {
-        List<String> titles = book.getTxtContentList().stream().map(TxtContent::getTitle).collect(Collectors.toList());
         StringBuilder sb = new StringBuilder();
         sb.append("<?xml version=\"1.0\" encoding=\"UTF-8\"?>")
           .append(System.lineSeparator())
@@ -319,7 +317,7 @@ public class EpubService {
         book.getTxtContentList().forEach(c -> {
             String xhtml = contentXhtmlMap.get(c.getTitle());
             sb.append("<item media-type=\"application/xhtml+xml\" id=\"")
-              .append(xhtml.substring(0, xhtml.lastIndexOf(".")))
+              .append(xhtml,0, xhtml.lastIndexOf("."))
               .append("\" href=\"xhtml/")
               .append(xhtml)
               .append("\"/>")
@@ -339,7 +337,7 @@ public class EpubService {
         book.getTxtContentList().forEach(c -> {
             String xhtml = contentXhtmlMap.get(c.getTitle());
             sb.append("<itemref linear=\"yes\" idref=\"")
-              .append(xhtml.substring(0, xhtml.lastIndexOf(".")))
+              .append(xhtml,0, xhtml.lastIndexOf("."))
               .append("\" properties=\"page-spread-left\"/>")
               .append(System.lineSeparator());
         });
@@ -422,11 +420,11 @@ public class EpubService {
     }
 
     private String getChapter(int chapterIndex) {
-        String chapter = String.valueOf(chapterIndex);
+        StringBuilder chapter = new StringBuilder(String.valueOf(chapterIndex));
         while (chapter.length() < 4) {
-            chapter = "0" + chapter;
+            chapter.insert(0, "0");
         }
-        return chapter;
+        return chapter.toString();
     }
 
     private String covertToEpub() throws Exception {
