@@ -1,6 +1,7 @@
 package tw.com.rex.txt2epub.service;
 
 import com.adobe.epubcheck.tool.EpubChecker;
+import tw.com.rex.txt2epub.TxtToEpubApplication;
 import tw.com.rex.txt2epub.model.Book;
 import tw.com.rex.txt2epub.model.TempDirectory;
 import tw.com.rex.txt2epub.model.TxtContent;
@@ -9,8 +10,9 @@ import tw.com.rex.txt2epub.utils.DateUtil;
 import tw.com.rex.txt2epub.utils.FileUtil;
 import tw.com.rex.txt2epub.utils.XmlUtil;
 
+import java.io.IOException;
+import java.io.InputStream;
 import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -104,7 +106,13 @@ public class EpubService {
     }
 
     private void copyCss() {
-        FileUtil.copyAll(Paths.get("src/main/resources/style"), tempDirectory.getStylePath());
+        // todo 打包成 jar 後會錯誤
+        // FileUtil.copyAll(Paths.get("src/main/resources/style"), tempDirectory.getStylePath());
+        try (InputStream is = TxtToEpubApplication.class.getClassLoader().getResourceAsStream("book-style.css")) {
+            System.out.println(is);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     /**
