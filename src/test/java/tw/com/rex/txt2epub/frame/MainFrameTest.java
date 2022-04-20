@@ -41,11 +41,16 @@ public class MainFrameTest {
         String filePath = Paths.get("src/test/resources/曹賊.txt").toAbsolutePath().toString();
         chooser.selectFile(new File(filePath)).approve();
         window.label("selectedFilePath").requireText(filePath);
-        // 驗證選擇輸出路徑後後是否將路徑放入 label
+        // 驗證選擇輸出路徑後是否將路徑放入 label
         window.button("selectOutputPathBtn").click();
-        String outputPath = Paths.get("D:/Temp").toAbsolutePath().toString();
+        String outputPath = Paths.get(System.getProperty("java.io.tmpdir")).toAbsolutePath().toString();
         chooser.selectFile(new File(outputPath)).approve();
         window.label("outputFilePath").requireText(outputPath);
+        // 驗證選擇封面圖片後是否將路徑放入 label
+        window.button("selectCoverImage").click();
+        String coverPath = Paths.get("src/test/resources/cover.jpg").toAbsolutePath().toString();
+        chooser.selectFile(new File(coverPath)).approve();
+        window.label("coverPath").requireText(coverPath);
     }
 
 }

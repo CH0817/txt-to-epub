@@ -268,8 +268,10 @@ public class EpubService {
           .append(System.lineSeparator())
           .append("<meta refines=\"#creator01\" property=\"display-seq\">1</meta>")
           .append(System.lineSeparator())
-          // todo 出版社
-          .append("<dc:publisher id=\"publisher\">Rex Yu</dc:publisher>")
+          // 出版社
+          .append("<dc:publisher id=\"publisher\">")
+          .append(book.getPublishingHouse())
+          .append("</dc:publisher>")
           .append(System.lineSeparator())
           // 語言
           .append("<dc:language>zh-TW</dc:language>")
@@ -429,10 +431,16 @@ public class EpubService {
 
     private String covertToEpub() throws Exception {
         String[] args = {tempDirectory.getBasePath().toAbsolutePath().toString(), "--mode", "exp", "--save"};
-        if (0 != new EpubChecker().run(args)) {
+        int checkResult = new EpubChecker().run(args);
+        removeTemp();
+        if (0 != checkResult) {
             throw new Exception("EPUB 轉換失敗");
         }
         return moveEpub();
+    }
+
+    private void removeTemp() {
+        FileUtil.deleteAll(tempDirectory.getBasePath());
     }
 
     private String moveEpub() {

@@ -9,6 +9,7 @@ import java.nio.file.Path;
 import java.nio.file.StandardCopyOption;
 import java.nio.file.StandardOpenOption;
 import java.util.Arrays;
+import java.util.Comparator;
 import java.util.Objects;
 import java.util.stream.Stream;
 
@@ -75,6 +76,27 @@ public class FileUtil {
         } catch (IOException e) {
             printStackTrace(e);
             throwRuntimeException("move file in " + source.toAbsolutePath() + " to " + target.toAbsolutePath() + " failure!");
+        }
+    }
+
+    public static void deleteAll(Path path) {
+        assert Objects.nonNull(path);
+
+        try (Stream<Path> pathStream = Files.walk(path)) {
+            pathStream.sorted(Comparator.reverseOrder()).forEach(FileUtil::delete);
+        } catch (IOException e) {
+            printStackTrace(e);
+            throwRuntimeException("remove files in " + path.toAbsolutePath() + " failure!");
+        }
+    }
+
+    public static void delete(Path path) {
+        assert Objects.nonNull(path);
+        try {
+            Files.deleteIfExists(path);
+        } catch (IOException e) {
+            printStackTrace(e);
+            throwRuntimeException("remove file " + path.toAbsolutePath() + " failure!");
         }
     }
 

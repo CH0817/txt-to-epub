@@ -1,8 +1,8 @@
 package tw.com.rex.txt2epub.model;
 
 import lombok.Data;
+import org.apache.commons.lang3.StringUtils;
 
-import java.io.File;
 import java.io.Serializable;
 import java.nio.file.Path;
 import java.util.List;
@@ -10,13 +10,20 @@ import java.util.List;
 @Data
 public class Book implements Serializable {
 
-    // 書名
+    private final String UNKNOWN = "未知";
+
     private String name;
-    // 作者
     private String author;
-    // 內文
+    private String publishingHouse;
     private List<TxtContent> txtContentList;
-    // 封面
     private Path cover;
+
+    public String getAuthor() {
+        return StringUtils.isNotBlank(author) ? author : UNKNOWN;
+    }
+
+    public String getPublishingHouse() {
+        return StringUtils.isNotBlank(publishingHouse) ? publishingHouse : UNKNOWN;
+    }
 
 }

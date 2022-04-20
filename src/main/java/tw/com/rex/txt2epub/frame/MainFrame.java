@@ -18,27 +18,27 @@ import java.util.List;
 public class MainFrame extends JFrame {
 
     private final Container pane;
-    private final JLabel selectedLabel;
     private final GridBagConstraints bag;
+    private final JLabel selectedTxtLabel;
     private final JLabel outputFilePath;
     private final JLabel coverPath;
     private final JFileChooser chooser;
+    private final JTextField authorField;
+    private final JTextField publishingHouseField;
 
     public MainFrame() throws HeadlessException {
         pane = this.getContentPane();
-
-        selectedLabel = new JLabel();
-        selectedLabel.setName("selectedFilePath");
-        // selectedLabel = new JLabel("D:/Rex/Downloads/曹賊.txt");
-        selectedLabel.setPreferredSize(new Dimension(300, 25));
 
         bag = new GridBagConstraints();
         bag.fill = GridBagConstraints.HORIZONTAL;
         bag.insets = new Insets(3, 3, 3, 3);
 
+        selectedTxtLabel = new JLabel();
+        selectedTxtLabel.setName("selectedFilePath");
+        selectedTxtLabel.setPreferredSize(new Dimension(300, 25));
+
         outputFilePath = new JLabel();
         outputFilePath.setName("outputFilePath");
-        // outputFilePath = new JLabel("D:/Temp/曹賊.txt");
 
         coverPath = new JLabel();
         coverPath.setName("coverPath");
@@ -46,6 +46,9 @@ public class MainFrame extends JFrame {
         chooser = new JFileChooser();
         chooser.setName("chooser");
         chooser.setMultiSelectionEnabled(false);
+
+        authorField = new JTextField();
+        publishingHouseField = new JTextField();
 
         setTitle("txt轉EPUB");
         Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
@@ -63,6 +66,7 @@ public class MainFrame extends JFrame {
         selectFileArea();
         outputFileArea();
         coverArea();
+        inputArea();
         executeArea();
     }
 
@@ -75,7 +79,7 @@ public class MainFrame extends JFrame {
         bag.weightx = 0.8;
         bag.gridx = 1;
         bag.gridy = 0;
-        pane.add(selectedLabel, bag);
+        pane.add(selectedTxtLabel, bag);
     }
 
     private void outputFileArea() {
@@ -104,7 +108,7 @@ public class MainFrame extends JFrame {
         int dialog = chooser.showOpenDialog(pane);
         if (dialog == JFileChooser.APPROVE_OPTION) {
             File selectedFile = chooser.getSelectedFile();
-            selectedLabel.setText(selectedFile.getPath());
+            selectedTxtLabel.setText(selectedFile.getPath());
         }
     }
 
@@ -155,10 +159,32 @@ public class MainFrame extends JFrame {
         }
     }
 
+    private void inputArea() {
+        bag.weightx = 0.2;
+        bag.gridx = 0;
+        bag.gridy = 3;
+        pane.add(new JLabel("作者"), bag);
+
+        bag.weightx = 0.8;
+        bag.gridx = 1;
+        bag.gridy = 3;
+        pane.add(authorField, bag);
+
+        bag.weightx = 0.2;
+        bag.gridx = 0;
+        bag.gridy = 4;
+        pane.add(new JLabel("出版社"), bag);
+
+        bag.weightx = 0.8;
+        bag.gridx = 1;
+        bag.gridy = 4;
+        pane.add(publishingHouseField, bag);
+    }
+
     private void executeArea() {
         bag.weightx = 0.0;
         bag.gridx = 0;
-        bag.gridy = 3;
+        bag.gridy = 5;
         bag.gridwidth = 2;
 
         JButton doExecuteBtn = new JButton("開始轉換");
@@ -171,8 +197,11 @@ public class MainFrame extends JFrame {
         if (verify()) {
             try {
                 String epub = new EpubService(createBook(), Paths.get(outputFilePath.getText())).process();
-                // todo 開啟輸出路徑
-                JOptionPane.showMessageDialog(pane, "轉換成功");
+                int input = JOptionPane.showOptionDialog(pane, "轉換成功", "訊息", JOptionPane.DEFAULT_OPTION,
+                                                         JOptionPane.INFORMATION_MESSAGE, null, null, null);
+                if (input == JOptionPane.OK_OPTION) {
+                    Desktop.getDesktop().open(Paths.get(epub).getParent().toFile());
+                }
             } catch (Exception e) {
                 JOptionPane.showMessageDialog(pane, e.getMessage());
             }
@@ -181,7 +210,7 @@ public class MainFrame extends JFrame {
 
     private boolean verify() {
         StringBuilder error = new StringBuilder();
-        if (StringUtils.isBlank(selectedLabel.getText())) {
+        if (StringUtils.isBlank(selectedTxtLabel.getText())) {
             error.append("請選擇檔案\n");
         }
         if (StringUtils.isBlank(outputFilePath.getText())) {
@@ -198,19 +227,19 @@ public class MainFrame extends JFrame {
         Book book = new Book();
         book.setName(getBookName());
         book.setCover(Paths.get(coverPath.getText()));
-        // todo 增加輸入作者框
-        book.setAuthor("Rex Yu");
+        book.setAuthor(authorField.getText());
+        book.setPublishingHouse(publishingHouseField.getText());
         book.setTxtContentList(getTxtContentList());
         return book;
     }
 
     private String getBookName() {
-        String fileName = Paths.get(selectedLabel.getText()).toAbsolutePath().getFileName().toString();
+        String fileName = Paths.get(selectedTxtLabel.getText()).toAbsolutePath().getFileName().toString();
         return fileName.substring(0, fileName.lastIndexOf("."));
     }
 
     private List<TxtContent> getTxtContentList() {
-        return new TxtHandlerService(selectedLabel.getText()).getTxtContentList();
+        return new TxtHandlerService(selectedTxtLabel.getText()).getTxtContentList();
     }
 
 }

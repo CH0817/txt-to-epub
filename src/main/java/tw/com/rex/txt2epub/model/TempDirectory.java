@@ -2,7 +2,6 @@ package tw.com.rex.txt2epub.model;
 
 import lombok.AccessLevel;
 import lombok.Getter;
-import lombok.NonNull;
 import tw.com.rex.txt2epub.utils.FileUtil;
 
 import java.io.Serializable;
@@ -13,7 +12,6 @@ import java.nio.file.Paths;
 public class TempDirectory implements Serializable {
 
     @Getter(AccessLevel.NONE)
-    @NonNull
     private final String bookName;
     private Path basePath;
     private Path metaInfPath;
@@ -22,7 +20,7 @@ public class TempDirectory implements Serializable {
     private Path stylePath;
     private Path xhtmlPath;
 
-    public TempDirectory(@NonNull String bookName) {
+    public TempDirectory(String bookName) {
         this.bookName = bookName;
         initPaths();
         createDirectories();
