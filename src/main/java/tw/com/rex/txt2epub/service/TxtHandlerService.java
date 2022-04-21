@@ -66,7 +66,17 @@ public class TxtHandlerService {
                         .mapToObj(allLines::get)
                         .filter(StringUtils::isNotBlank)
                         .map(s -> s.replaceAll("　", ""))
+                        .map(this::replaceAllSpecialChar)
                         .collect(toList());
+    }
+
+    private String replaceAllSpecialChar(String content) {
+        content = content.replaceAll("&", "&amp;");
+        content = content.replaceAll("<", "&lt;");
+        content = content.replaceAll(">", "&gt;");
+        content = content.replaceAll("\"", "&quot;");
+        content = content.replaceAll("'", "&apos;");
+        return content;
     }
 
 }
