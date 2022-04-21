@@ -1,9 +1,11 @@
-package tw.com.rex.txt2epub.service;
+package tw.com.rex.txt2epub.service.impl;
 
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import tw.com.rex.txt2epub.model.Book;
+import tw.com.rex.txt2epub.service.EpubService;
+import tw.com.rex.txt2epub.service.TxtHandlerService;
 import tw.com.rex.txt2epub.utils.FileUtil;
 
 import java.nio.file.Path;
@@ -11,7 +13,7 @@ import java.nio.file.Paths;
 
 import static org.junit.Assert.assertEquals;
 
-public class EpubServiceTest {
+public class HorizontalEpubServiceImplTest {
 
     private Book book;
     private final Path outputPath = Paths.get("D:/Temp/曹賊");
@@ -31,7 +33,7 @@ public class EpubServiceTest {
 
     @Test
     public void process() throws Exception {
-        EpubService service = new VerticalEpubServiceImpl(book, outputPath);
+        EpubService service = new HorizontalEpubServiceImpl(book, outputPath);
         assertEquals(outputPath.resolve("曹賊.epub").toAbsolutePath().toString(), service.process());
     }
 

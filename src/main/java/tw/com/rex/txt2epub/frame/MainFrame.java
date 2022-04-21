@@ -1,10 +1,12 @@
 package tw.com.rex.txt2epub.frame;
 
 import org.apache.commons.lang3.StringUtils;
+import tw.com.rex.txt2epub.define.TypesettingEnum;
+import tw.com.rex.txt2epub.factory.EpubServiceFactory;
 import tw.com.rex.txt2epub.model.Book;
 import tw.com.rex.txt2epub.model.TxtContent;
+import tw.com.rex.txt2epub.service.EpubService;
 import tw.com.rex.txt2epub.service.TxtHandlerService;
-import tw.com.rex.txt2epub.service.VerticalEpubServiceImpl;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
@@ -12,7 +14,9 @@ import javax.swing.filechooser.FileFilter;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import java.awt.*;
 import java.io.File;
+import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.Enumeration;
 import java.util.List;
 
 public class MainFrame extends JFrame {
@@ -25,7 +29,7 @@ public class MainFrame extends JFrame {
     private final JFileChooser chooser;
     private final JTextField authorField;
     private final JTextField publishingHouseField;
-    private ButtonGroup typesettingGroup;
+    private final ButtonGroup typesettingGroup;
 
     public MainFrame() throws HeadlessException {
         pane = this.getContentPane();
@@ -51,6 +55,8 @@ public class MainFrame extends JFrame {
         authorField = new JTextField();
         publishingHouseField = new JTextField();
 
+        typesettingGroup = new ButtonGroup();
+
         setTitle("txt轉EPUB");
         Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
         int height = screenSize.height;
@@ -68,6 +74,7 @@ public class MainFrame extends JFrame {
         outputFileArea();
         coverArea();
         inputArea();
+        typesettingArea();
         executeArea();
     }
 
@@ -182,10 +189,32 @@ public class MainFrame extends JFrame {
         pane.add(publishingHouseField, bag);
     }
 
+    private void typesettingArea() {
+        JRadioButton horizontal = new JRadioButton("橫排");
+        horizontal.setActionCommand(TypesettingEnum.HORIZONTAL.name());
+        horizontal.setSelected(true);
+
+        JRadioButton vertical = new JRadioButton("直排");
+        vertical.setActionCommand(TypesettingEnum.VERTICAL.name());
+
+        typesettingGroup.add(horizontal);
+        typesettingGroup.add(vertical);
+
+        bag.weightx = 0.5;
+        bag.gridx = 0;
+        bag.gridy = 5;
+        pane.add(horizontal, bag);
+
+        bag.weightx = 0.5;
+        bag.gridx = 1;
+        bag.gridy = 5;
+        pane.add(vertical, bag);
+    }
+
     private void executeArea() {
         bag.weightx = 0.0;
         bag.gridx = 0;
-        bag.gridy = 5;
+        bag.gridy = 6;
         bag.gridwidth = 2;
 
         JButton doExecuteBtn = new JButton("開始轉換");
@@ -197,7 +226,11 @@ public class MainFrame extends JFrame {
     private void convertToEpub() {
         if (verify()) {
             try {
-                String epub = new VerticalEpubServiceImpl(createBook(), Paths.get(outputFilePath.getText())).process();
+                Book book = createBook();
+                Path outputPath = Paths.get(outputFilePath.getText());
+                String typesetting = getTypesetting();
+                EpubService service = EpubServiceFactory.getEpubService(book, outputPath, typesetting);
+                String epub = service.process();
                 int input = JOptionPane.showOptionDialog(pane, "轉換成功", "訊息", JOptionPane.DEFAULT_OPTION,
                                                          JOptionPane.INFORMATION_MESSAGE, null, null, null);
                 if (input == JOptionPane.OK_OPTION) {
@@ -241,6 +274,16 @@ public class MainFrame extends JFrame {
 
     private List<TxtContent> getTxtContentList() {
         return new TxtHandlerService(selectedTxtLabel.getText()).getTxtContentList();
+    }
+
+    private String getTypesetting() {
+        for (Enumeration<AbstractButton> buttons = typesettingGroup.getElements(); buttons.hasMoreElements(); ) {
+            AbstractButton button = buttons.nextElement();
+            if (button.isSelected()) {
+                return button.getActionCommand();
+            }
+        }
+        return null;
     }
 
 }

@@ -1,10 +1,11 @@
-package tw.com.rex.txt2epub.service;
+package tw.com.rex.txt2epub.service.impl.base;
 
 import com.adobe.epubcheck.tool.EpubChecker;
 import tw.com.rex.txt2epub.model.Book;
 import tw.com.rex.txt2epub.model.TempDirectory;
 import tw.com.rex.txt2epub.model.TxtContent;
 import tw.com.rex.txt2epub.model.epub.Container;
+import tw.com.rex.txt2epub.service.EpubService;
 import tw.com.rex.txt2epub.utils.DateUtil;
 import tw.com.rex.txt2epub.utils.FileUtil;
 import tw.com.rex.txt2epub.utils.XmlUtil;
@@ -17,14 +18,14 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
-public class VerticalEpubServiceImpl implements EpubService {
+public abstract class AbstractEpubServiceImpl implements EpubService {
 
     private final Book book;
     private final Path outputPath;
-    private final TempDirectory tempDirectory;
+    protected final TempDirectory tempDirectory;
     private final Map<String, String> contentXhtmlMap = new LinkedHashMap<>();
 
-    public VerticalEpubServiceImpl(Book book, Path outputPath) {
+    public AbstractEpubServiceImpl(Book book, Path outputPath) {
         this.book = book;
         this.outputPath = outputPath;
         this.tempDirectory = new TempDirectory(book.getName());
@@ -50,63 +51,61 @@ public class VerticalEpubServiceImpl implements EpubService {
     }
 
     private String createCoverXhtmlContent() {
-        StringBuilder sb = new StringBuilder();
-        sb.append("<?xml version=\"1.0\" encoding=\"UTF-8\"?>")
-          .append(System.lineSeparator())
-          .append("<!DOCTYPE html>")
-          .append(System.lineSeparator())
-          .append("<html")
-          .append(System.lineSeparator())
-          .append("xmlns=\"http://www.w3.org/1999/xhtml\"")
-          .append(System.lineSeparator())
-          .append("xmlns:epub=\"http://www.idpf.org/2007/ops\"")
-          .append(System.lineSeparator())
-          .append("xml:lang=\"zh-TW\" lang=\"zh-TW\"")
-          .append(System.lineSeparator())
-          .append("class=\"hltr\"")
-          .append(System.lineSeparator())
-          .append(">")
-          .append(System.lineSeparator())
-          .append("<head>")
-          .append(System.lineSeparator())
-          .append("<meta charset=\"UTF-8\"/>")
-          .append(System.lineSeparator())
-          .append("<meta name=\"viewport\" content=\"width=1444,height=2048\" />")
-          .append(System.lineSeparator())
-          .append("<style type=\"text/css\">")
-          .append(System.lineSeparator())
-          .append("html, body { margin: 0; padding: 0; width: 100%; height: 100%;}")
-          .append(System.lineSeparator())
-          .append("</style>")
-          .append(System.lineSeparator())
-          .append("<title>")
-          .append(book.getName())
-          .append("</title>")
-          .append(System.lineSeparator())
-          .append("</head>")
-          .append(System.lineSeparator())
-          .append("<body epub:type=\"cover\" class=\"p-cover\">")
-          .append(System.lineSeparator())
-          .append("<svg xmlns=\"http://www.w3.org/2000/svg\" version=\"1.1\"")
-          .append(System.lineSeparator())
-          .append("xmlns:xlink=\"http://www.w3.org/1999/xlink\"")
-          .append(System.lineSeparator())
-          .append("width=\"100%\" height=\"100%\" viewBox=\"0 0 1444 2048\">")
-          .append(System.lineSeparator())
-          .append("<image width=\"1444\" height=\"2048\" xlink:href=\"../image/")
-          .append(book.getCover().getFileName())
-          .append("\"/>")
-          .append(System.lineSeparator())
-          .append("</svg>")
-          .append(System.lineSeparator())
-          .append("</body>")
-          .append(System.lineSeparator())
-          .append("</html>");
-        return sb.toString();
+        return "<?xml version=\"1.0\" encoding=\"UTF-8\"?>" +
+                System.lineSeparator() +
+                "<!DOCTYPE html>" +
+                System.lineSeparator() +
+                "<html" +
+                System.lineSeparator() +
+                "xmlns=\"http://www.w3.org/1999/xhtml\"" +
+                System.lineSeparator() +
+                "xmlns:epub=\"http://www.idpf.org/2007/ops\"" +
+                System.lineSeparator() +
+                "xml:lang=\"zh-TW\" lang=\"zh-TW\"" +
+                System.lineSeparator() +
+                "class=\"hltr\"" +
+                System.lineSeparator() +
+                ">" +
+                System.lineSeparator() +
+                "<head>" +
+                System.lineSeparator() +
+                "<meta charset=\"UTF-8\"/>" +
+                System.lineSeparator() +
+                "<meta name=\"viewport\" content=\"width=1444,height=2048\" />" +
+                System.lineSeparator() +
+                "<style type=\"text/css\">" +
+                System.lineSeparator() +
+                "html, body { margin: 0; padding: 0; width: 100%; height: 100%;}" +
+                System.lineSeparator() +
+                "</style>" +
+                System.lineSeparator() +
+                "<title>" +
+                book.getName() +
+                "</title>" +
+                System.lineSeparator() +
+                "</head>" +
+                System.lineSeparator() +
+                "<body epub:type=\"cover\" class=\"p-cover\">" +
+                System.lineSeparator() +
+                "<svg xmlns=\"http://www.w3.org/2000/svg\" version=\"1.1\"" +
+                System.lineSeparator() +
+                "xmlns:xlink=\"http://www.w3.org/1999/xlink\"" +
+                System.lineSeparator() +
+                "width=\"100%\" height=\"100%\" viewBox=\"0 0 1444 2048\">" +
+                System.lineSeparator() +
+                "<image width=\"1444\" height=\"2048\" xlink:href=\"../image/" +
+                book.getCover().getFileName() +
+                "\"/>" +
+                System.lineSeparator() +
+                "</svg>" +
+                System.lineSeparator() +
+                "</body>" +
+                System.lineSeparator() +
+                "</html>";
     }
 
     private void copyCss() {
-        String[] cssNames = {"book-style.css", "style-advance.css", "style-check.css", "style-reset.css", "style-standard.css"};
+        String[] cssNames = {"style-advance.css", "style-check.css", "style-reset.css", "style-standard.css"};
         for (String cssName : cssNames) {
             Path cssPath = tempDirectory.getStylePath().resolve(cssName).toAbsolutePath();
             ClassLoader classloader = Thread.currentThread().getContextClassLoader();
@@ -116,6 +115,19 @@ public class VerticalEpubServiceImpl implements EpubService {
                 e.printStackTrace();
                 throw new RuntimeException("copy " + cssName + " to " + cssPath + " failure!");
             }
+        }
+        copyTypesettingCss();
+    }
+
+    private void copyTypesettingCss() {
+        String cssName = "book-style.css";
+        Path cssPath = tempDirectory.getStylePath().resolve(cssName).toAbsolutePath();
+        ClassLoader classloader = Thread.currentThread().getContextClassLoader();
+        try (InputStream input = classloader.getResourceAsStream("style/" + getTypesettingCssFolder() + "/" + cssName)) {
+            FileUtil.copy(input, cssPath);
+        } catch (IOException e) {
+            e.printStackTrace();
+            throw new RuntimeException("copy vertical book-style.css to " + cssPath + " failure!");
         }
     }
 
@@ -136,7 +148,9 @@ public class VerticalEpubServiceImpl implements EpubService {
           .append(System.lineSeparator())
           .append("xml:lang=\"zh-TW\" lang=\"zh-TW\"")
           .append(System.lineSeparator())
-          .append("class=\"vrtl\"")
+          .append("class=\"")
+          .append(getTypesettingClass())
+          .append("\"")
           .append(System.lineSeparator())
           .append(">")
           .append(System.lineSeparator())
@@ -160,12 +174,18 @@ public class VerticalEpubServiceImpl implements EpubService {
           .append(System.lineSeparator())
           .append("<p><br/></p>")
           .append(System.lineSeparator())
-          .append("<p class=\"m-top-2em\"><a href=\"p-cover.xhtml\">封面</a></p>")
+          .append("<p class=\"")
+          .append(getTocParagraphClass())
+          .append("\"><a href=\"p-cover.xhtml\">封面</a></p>")
           .append(System.lineSeparator())
-          .append("<p class=\"m-top-2em\"><a href=\"p-toc.xhtml\">目錄</a></p>")
+          .append("<p class=\"")
+          .append(getTocParagraphClass())
+          .append("\"><a href=\"p-toc.xhtml\">目錄</a></p>")
           .append(System.lineSeparator());
         for (String key : contentXhtmlMap.keySet()) {
-            sb.append("<p class=\"m-top-2em\"><a href=\"")
+            sb.append("<p class=\"")
+              .append(getTocParagraphClass())
+              .append("\"><a href=\"")
               .append(contentXhtmlMap.get(key))
               .append("\">")
               .append(key)
@@ -387,7 +407,9 @@ public class VerticalEpubServiceImpl implements EpubService {
               .append(System.lineSeparator())
               .append("xml:lang=\"zh-TW\" lang=\"zh-TW\"")
               .append(System.lineSeparator())
-              .append("class=\"vrtl\"")
+              .append("class=\"")
+              .append(getTypesettingClass())
+              .append("\"")
               .append(System.lineSeparator())
               .append(">")
               .append(System.lineSeparator())
@@ -407,16 +429,22 @@ public class VerticalEpubServiceImpl implements EpubService {
               .append(System.lineSeparator())
               .append("<div class=\"main\">")
               .append(System.lineSeparator())
-              .append("<h2 class=\"gfont p-top-2em color-dimgray\">")
+              .append("<h2 class=\"")
+              .append(getContentH2Class())
+              .append("\">")
               .append(txtContentList.get(i).getTitle())
               .append("</h2>")
               .append(System.lineSeparator());
             List<String> contentList = txtContentList.get(i).getContentList();
             for (int j = 0; j < contentList.size(); j++) {
                 if (j == 0) {
-                    sb.append("<p class=\"m-right-5em\">");
+                    sb.append("<p class=\"")
+                      .append(getContentFirstParagraphClass())
+                      .append("\">");
                 } else {
-                    sb.append("<p>");
+                    sb.append("<p")
+                      .append(getContentParagraphClass())
+                      .append(">");
                 }
                 sb.append(contentList.get(j))
                   .append("</p>")
@@ -461,5 +489,17 @@ public class VerticalEpubServiceImpl implements EpubService {
         FileUtil.move(path, output);
         return output.toAbsolutePath().toString();
     }
+
+    protected abstract String getTypesettingClass();
+
+    protected abstract String getTocParagraphClass();
+
+    protected abstract String getContentH2Class();
+
+    protected abstract String getContentFirstParagraphClass();
+
+    protected abstract String getContentParagraphClass();
+
+    protected abstract String getTypesettingCssFolder();
 
 }
