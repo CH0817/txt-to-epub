@@ -31,7 +31,7 @@ public class EpubServiceTest {
 
     @Test
     public void process() throws Exception {
-        EpubService service = new EpubService(book, outputPath);
+        EpubService service = new VerticalEpubServiceImpl(book, outputPath);
         assertEquals(outputPath.resolve("曹賊.epub").toAbsolutePath().toString(), service.process());
     }
 

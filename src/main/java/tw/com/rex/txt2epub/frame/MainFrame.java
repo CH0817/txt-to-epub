@@ -3,8 +3,8 @@ package tw.com.rex.txt2epub.frame;
 import org.apache.commons.lang3.StringUtils;
 import tw.com.rex.txt2epub.model.Book;
 import tw.com.rex.txt2epub.model.TxtContent;
-import tw.com.rex.txt2epub.service.EpubService;
 import tw.com.rex.txt2epub.service.TxtHandlerService;
+import tw.com.rex.txt2epub.service.VerticalEpubServiceImpl;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
@@ -25,6 +25,7 @@ public class MainFrame extends JFrame {
     private final JFileChooser chooser;
     private final JTextField authorField;
     private final JTextField publishingHouseField;
+    private ButtonGroup typesettingGroup;
 
     public MainFrame() throws HeadlessException {
         pane = this.getContentPane();
@@ -196,7 +197,7 @@ public class MainFrame extends JFrame {
     private void convertToEpub() {
         if (verify()) {
             try {
-                String epub = new EpubService(createBook(), Paths.get(outputFilePath.getText())).process();
+                String epub = new VerticalEpubServiceImpl(createBook(), Paths.get(outputFilePath.getText())).process();
                 int input = JOptionPane.showOptionDialog(pane, "轉換成功", "訊息", JOptionPane.DEFAULT_OPTION,
                                                          JOptionPane.INFORMATION_MESSAGE, null, null, null);
                 if (input == JOptionPane.OK_OPTION) {
