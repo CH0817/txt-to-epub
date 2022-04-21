@@ -2,7 +2,10 @@ package tw.com.rex.txt2epub.utils;
 
 import org.apache.commons.lang3.StringUtils;
 
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -13,6 +16,7 @@ import java.util.Comparator;
 import java.util.Objects;
 import java.util.stream.Stream;
 
+@SuppressWarnings("unused")
 public class FileUtil {
 
     public static void createDirectories(Path... paths) {
@@ -26,8 +30,7 @@ public class FileUtil {
             try {
                 Files.createDirectories(path);
             } catch (IOException e) {
-                printStackTrace(e);
-                throwRuntimeException(path.toAbsolutePath() + " create directory failure!");
+                handlerIOException(e, path.toAbsolutePath() + " create directory failure!");
             }
         }
     }
@@ -39,8 +42,7 @@ public class FileUtil {
             Files.write(path, content.getBytes(StandardCharsets.UTF_8), StandardOpenOption.CREATE,
                         StandardOpenOption.TRUNCATE_EXISTING);
         } catch (IOException e) {
-            printStackTrace(e);
-            throwRuntimeException("write to " + path.toAbsolutePath() + " failure!");
+            handlerIOException(e, "write to " + path.toAbsolutePath() + " failure!");
         }
     }
 
@@ -50,8 +52,18 @@ public class FileUtil {
         try {
             Files.copy(source, target, StandardCopyOption.REPLACE_EXISTING);
         } catch (IOException e) {
-            printStackTrace(e);
-            throwRuntimeException("copy " + source.toAbsolutePath() + " to " + target.toAbsolutePath() + " failure!");
+            handlerIOException(e, "copy " + source.toAbsolutePath() + " to " + target.toAbsolutePath() + " failure!");
+        }
+    }
+
+    public static void copy(InputStream input, Path target) {
+        assert Objects.nonNull(input);
+        assert Objects.nonNull(target);
+        try (OutputStream output = new FileOutputStream(target.toString())) {
+            input.transferTo(output);
+            output.flush();
+        } catch (IOException e) {
+            handlerIOException(e, "copy InputStream to " + target.toAbsolutePath() + " failure!");
         }
     }
 
@@ -62,8 +74,8 @@ public class FileUtil {
             walk.filter(Files::isRegularFile)
                 .forEach(p -> copy(p, target.resolve(p.getFileName())));
         } catch (IOException e) {
-            printStackTrace(e);
-            throwRuntimeException("copy files in " + source.toAbsolutePath() + " to " + target.toAbsolutePath() + " failure!");
+            handlerIOException(e,
+                               "copy files in " + source.toAbsolutePath() + " to " + target.toAbsolutePath() + " failure!");
         }
     }
 
@@ -74,19 +86,19 @@ public class FileUtil {
             createDirectory(target.getParent());
             Files.move(source, target, StandardCopyOption.REPLACE_EXISTING);
         } catch (IOException e) {
-            printStackTrace(e);
-            throwRuntimeException("move file in " + source.toAbsolutePath() + " to " + target.toAbsolutePath() + " failure!");
+            handlerIOException(e,
+                               "move file in " + source.toAbsolutePath() + " to " + target.toAbsolutePath() + " failure!");
         }
     }
 
     public static void deleteAll(Path path) {
         assert Objects.nonNull(path);
-
-        try (Stream<Path> pathStream = Files.walk(path)) {
-            pathStream.sorted(Comparator.reverseOrder()).forEach(FileUtil::delete);
-        } catch (IOException e) {
-            printStackTrace(e);
-            throwRuntimeException("remove files in " + path.toAbsolutePath() + " failure!");
+        if (Files.exists(path)) {
+            try (Stream<Path> pathStream = Files.walk(path)) {
+                pathStream.sorted(Comparator.reverseOrder()).forEach(FileUtil::delete);
+            } catch (IOException e) {
+                handlerIOException(e, "remove files in " + path.toAbsolutePath() + " failure!");
+            }
         }
     }
 
@@ -95,16 +107,12 @@ public class FileUtil {
         try {
             Files.deleteIfExists(path);
         } catch (IOException e) {
-            printStackTrace(e);
-            throwRuntimeException("remove file " + path.toAbsolutePath() + " failure!");
+            handlerIOException(e, "remove file " + path.toAbsolutePath() + " failure!");
         }
     }
 
-    private static void printStackTrace(Exception e) {
+    private static void handlerIOException(Exception e, String message) {
         e.printStackTrace();
-    }
-
-    private static void throwRuntimeException(String message) {
         throw new RuntimeException(message);
     }
 

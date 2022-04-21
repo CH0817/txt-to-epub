@@ -1,7 +1,6 @@
 package tw.com.rex.txt2epub.service;
 
 import com.adobe.epubcheck.tool.EpubChecker;
-import tw.com.rex.txt2epub.TxtToEpubApplication;
 import tw.com.rex.txt2epub.model.Book;
 import tw.com.rex.txt2epub.model.TempDirectory;
 import tw.com.rex.txt2epub.model.TxtContent;
@@ -106,12 +105,16 @@ public class EpubService {
     }
 
     private void copyCss() {
-        // todo 打包成 jar 後會錯誤
-        // FileUtil.copyAll(Paths.get("src/main/resources/style"), tempDirectory.getStylePath());
-        try (InputStream is = TxtToEpubApplication.class.getClassLoader().getResourceAsStream("book-style.css")) {
-            System.out.println(is);
-        } catch (IOException e) {
-            throw new RuntimeException(e);
+        String[] cssNames = {"book-style.css", "style-advance.css", "style-check.css", "style-reset.css", "style-standard.css"};
+        for (String cssName : cssNames) {
+            Path cssPath = tempDirectory.getStylePath().resolve(cssName).toAbsolutePath();
+            ClassLoader classloader = Thread.currentThread().getContextClassLoader();
+            try (InputStream input = classloader.getResourceAsStream("style/" + cssName)) {
+                FileUtil.copy(input, cssPath);
+            } catch (IOException e) {
+                e.printStackTrace();
+                throw new RuntimeException("copy " + cssName + " to " + cssPath + " failure!");
+            }
         }
     }
 
