@@ -31,7 +31,9 @@ public abstract class AbstractEpubServiceImpl implements EpubService {
     public String process() throws Exception {
         CssClass css = createCssClass();
         createContentXhtml(css);
-        createCover();
+        if (book.hasCover()) {
+            createCover();
+        }
         copyCssFiles();
         createToc(css);
         createNavigationDocuments();

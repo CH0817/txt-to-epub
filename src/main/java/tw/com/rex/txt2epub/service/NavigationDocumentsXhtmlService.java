@@ -54,10 +54,13 @@ public class NavigationDocumentsXhtmlService {
                .append("<h1>目錄</h1>")
                .append(System.lineSeparator())
                .append("<ol>")
-               .append(System.lineSeparator())
-               // 超連結目錄
-               .append("<li><a href=\"xhtml/p-cover.xhtml\">封面</a></li>")
-               .append("<li><a href=\"xhtml/p-toc.xhtml\">目錄</a></li>")
+               .append(System.lineSeparator());
+        // 封面
+        if (book.hasCover()) {
+            builder.append("<li><a href=\"xhtml/p-cover.xhtml\">封面</a></li>");
+        }
+        // 目錄
+        builder.append("<li><a href=\"xhtml/p-toc.xhtml\">目錄</a></li>")
                .append(System.lineSeparator());
     }
 

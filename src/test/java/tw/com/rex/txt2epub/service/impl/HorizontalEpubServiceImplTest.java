@@ -37,6 +37,13 @@ public class HorizontalEpubServiceImplTest {
         assertEquals(outputPath.resolve("曹賊.epub").toAbsolutePath().toString(), service.process());
     }
 
+    @Test
+    public void processNoCover() throws Exception {
+        book.setCover(Path.of(""));
+        EpubService service = new HorizontalEpubServiceImpl(book, outputPath);
+        assertEquals(outputPath.resolve("曹賊.epub").toAbsolutePath().toString(), service.process());
+    }
+
     @After
     public void cleanUp() {
         FileUtil.deleteAll(outputPath);

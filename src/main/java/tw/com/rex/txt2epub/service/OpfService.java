@@ -43,10 +43,12 @@ public class OpfService {
         appendNavigationItem(sb);
         // style
         appendStyleItems(sb);
-        // todo 封面要判斷 cover image item
-        appendCoverImageItem(sb);
-        // todo 封面要判斷 cover item
-        appendCoverItem(sb);
+        if (book.hasCover()) {
+            // cover image item
+            appendCoverImageItem(sb);
+            // cover item
+            appendCoverItem(sb);
+        }
         // table of contents item
         appendTableOfContentsItem(sb);
         // main content items xhtml
@@ -59,8 +61,10 @@ public class OpfService {
           .append("<spine page-progression-direction=\"rtl\">")
           .append(System.lineSeparator());
 
-        // todo 封面要判斷 cover xhtml ref
-        appendCoverItemRefs(sb);
+        // cover xhtml ref
+        if (book.hasCover()) {
+            appendCoverItemRefs(sb);
+        }
         // table of contents xhtml ref
         appendTableOfContentsItemRefs(sb);
         // xhtml ref

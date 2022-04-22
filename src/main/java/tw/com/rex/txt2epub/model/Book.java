@@ -4,8 +4,10 @@ import lombok.Data;
 import org.apache.commons.lang3.StringUtils;
 
 import java.io.Serializable;
+import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.List;
+import java.util.Objects;
 
 @Data
 public class Book implements Serializable {
@@ -24,6 +26,10 @@ public class Book implements Serializable {
 
     public String getPublisher() {
         return StringUtils.isNotBlank(publisher) ? publisher : UNKNOWN;
+    }
+
+    public boolean hasCover() {
+        return Objects.nonNull(cover) && Files.exists(cover) && Files.isRegularFile(cover);
     }
 
 }

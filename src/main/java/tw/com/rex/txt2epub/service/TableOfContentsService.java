@@ -55,15 +55,16 @@ public class TableOfContentsService {
           .append("<p><br/></p>")
           .append(System.lineSeparator())
           .append("<p><br/></p>")
-          .append(System.lineSeparator())
+          .append(System.lineSeparator());
 
-          // todo 封面要判斷
-          .append("<p class=\"")
-          .append(css.getTocParagraphClass())
-          .append("\"><a href=\"p-cover.xhtml\">封面</a></p>")
-          .append(System.lineSeparator())
+        if (book.hasCover()) {
+            sb.append("<p class=\"")
+              .append(css.getTocParagraphClass())
+              .append("\"><a href=\"p-cover.xhtml\">封面</a></p>")
+              .append(System.lineSeparator());
+        }
 
-          .append("<p class=\"")
+        sb.append("<p class=\"")
           .append(css.getTocParagraphClass())
           .append("\"><a href=\"p-toc.xhtml\">目錄</a></p>")
           .append(System.lineSeparator());
