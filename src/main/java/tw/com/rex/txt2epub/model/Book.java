@@ -14,7 +14,7 @@ public class Book implements Serializable {
 
     private String name;
     private String author;
-    private String publishingHouse;
+    private String publisher;
     private List<TxtContent> txtContentList;
     private Path cover;
 
@@ -22,8 +22,8 @@ public class Book implements Serializable {
         return StringUtils.isNotBlank(author) ? author : UNKNOWN;
     }
 
-    public String getPublishingHouse() {
-        return StringUtils.isNotBlank(publishingHouse) ? publishingHouse : UNKNOWN;
+    public String getPublisher() {
+        return StringUtils.isNotBlank(publisher) ? publisher : UNKNOWN;
     }
 
 }

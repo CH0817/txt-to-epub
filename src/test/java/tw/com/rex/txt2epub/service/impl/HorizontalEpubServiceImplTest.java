@@ -23,7 +23,7 @@ public class HorizontalEpubServiceImplTest {
         book = new Book();
         book.setName("曹賊");
         book.setAuthor("庚新");
-        book.setPublishingHouse("典藏閣");
+        book.setPublisher("典藏閣");
         TxtHandlerService txtHandlerService = new TxtHandlerService(Paths.get("src/test/resources/曹賊.txt")
                                                                          .toAbsolutePath()
                                                                          .toString());

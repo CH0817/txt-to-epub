@@ -262,7 +262,7 @@ public class MainFrame extends JFrame {
         book.setName(getBookName());
         book.setCover(Paths.get(coverPath.getText()));
         book.setAuthor(authorField.getText());
-        book.setPublishingHouse(publishingHouseField.getText());
+        book.setPublisher(publishingHouseField.getText());
         book.setTxtContentList(getTxtContentList());
         return book;
     }
