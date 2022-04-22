@@ -71,12 +71,11 @@ public class TxtHandlerService {
     }
 
     private String replaceAllSpecialChar(String content) {
-        content = content.replaceAll("&", "&amp;");
-        content = content.replaceAll("<", "&lt;");
-        content = content.replaceAll(">", "&gt;");
-        content = content.replaceAll("\"", "&quot;");
-        content = content.replaceAll("'", "&apos;");
-        return content;
+        return content.replaceAll("&", "&amp;")
+                      .replaceAll("<", "&lt;")
+                      .replaceAll(">", "&gt;")
+                      .replaceAll("\"", "&quot;")
+                      .replaceAll("'", "&apos;");
     }
 
 }
