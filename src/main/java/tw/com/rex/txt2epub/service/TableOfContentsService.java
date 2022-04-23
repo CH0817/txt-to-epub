@@ -53,13 +53,6 @@ public class TableOfContentsService {
           .append("<div class=\"main\"><h1>目錄</h1>")
           .append(System.lineSeparator());
 
-        if (book.hasCover()) {
-            sb.append("<p class=\"")
-              .append(css.getTocParagraphClass())
-              .append("\"><a href=\"p-cover.xhtml\">封面</a></p>")
-              .append(System.lineSeparator());
-        }
-
         appendMainTableOfContents(sb);
 
         sb.append("</div>")
