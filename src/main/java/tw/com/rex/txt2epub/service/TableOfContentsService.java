@@ -51,10 +51,6 @@ public class TableOfContentsService {
           .append("<body class=\"p-toc\">")
           .append(System.lineSeparator())
           .append("<div class=\"main\"><h1>目錄</h1>")
-          .append(System.lineSeparator())
-          .append("<p><br/></p>")
-          .append(System.lineSeparator())
-          .append("<p><br/></p>")
           .append(System.lineSeparator());
 
         if (book.hasCover()) {
@@ -63,11 +59,6 @@ public class TableOfContentsService {
               .append("\"><a href=\"p-cover.xhtml\">封面</a></p>")
               .append(System.lineSeparator());
         }
-
-        sb.append("<p class=\"")
-          .append(css.getTocParagraphClass())
-          .append("\"><a href=\"p-toc.xhtml\">目錄</a></p>")
-          .append(System.lineSeparator());
 
         appendMainTableOfContents(sb);
 

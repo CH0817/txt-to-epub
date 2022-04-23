@@ -19,7 +19,7 @@ public class HorizontalEpubServiceImpl extends AbstractEpubServiceImpl {
                        .typesettingClass("hltr")
                        .tocParagraphClass(StringUtils.EMPTY)
                        .contentH2Class("gfont align-center m-top-3em")
-                       .contentFirstParagraphClass("m-top-5em indent-2em")
+                       .contentFirstParagraphClass("m-top-2em indent-2em")
                        .contentParagraphClass(StringUtils.SPACE + "class=\"indent-2em\"")
                        .build();
     }
