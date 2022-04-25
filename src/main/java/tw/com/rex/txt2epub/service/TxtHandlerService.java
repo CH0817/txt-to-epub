@@ -1,6 +1,6 @@
 package tw.com.rex.txt2epub.service;
 
-import com.github.houbb.opencc4j.util.ZhTwConverterUtil;
+import com.github.houbb.opencc4j.util.ZhConverterUtil;
 import lombok.AllArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
 import tw.com.rex.txt2epub.model.TxtContent;
@@ -32,7 +32,7 @@ public class TxtHandlerService {
             try {
                 return Files.readAllLines(Paths.get(filePath), Charset.forName(charset))
                             .stream()
-                            .map(ZhTwConverterUtil::toTraditional)
+                            .map(ZhConverterUtil::toTraditional)
                             .collect(toList());
             } catch (IOException e) {
                 System.out.println(charset + " 編碼取 txt 內容失敗");
