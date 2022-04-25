@@ -2,7 +2,7 @@ package tw.com.rex.txt2epub.service;
 
 import tw.com.rex.txt2epub.model.Book;
 import tw.com.rex.txt2epub.model.ConvertInfo;
-import tw.com.rex.txt2epub.model.CssClass;
+import tw.com.rex.txt2epub.model.Style;
 import tw.com.rex.txt2epub.utils.FileUtil;
 
 import java.nio.file.Path;
@@ -10,11 +10,11 @@ import java.nio.file.Path;
 public class TableOfContentsService {
 
     private final Book book;
-    private final CssClass css;
+    private final Style style;
     private final Path output;
 
-    public TableOfContentsService(ConvertInfo convertInfo, CssClass cssClass) {
-        this.css = cssClass;
+    public TableOfContentsService(ConvertInfo convertInfo) {
+        this.style = convertInfo.getStyle();
         this.book = convertInfo.getBook();
         this.output = convertInfo.getTempDirectory().getXhtmlPath();
     }
@@ -34,7 +34,7 @@ public class TableOfContentsService {
           .append("xml:lang=\"zh-TW\" lang=\"zh-TW\"")
           .append(System.lineSeparator())
           .append("class=\"")
-          .append(css.getTypesettingClass())
+          .append(style.getTypesettingClass())
           .append("\"")
           .append(System.lineSeparator())
           .append(">")
@@ -68,7 +68,7 @@ public class TableOfContentsService {
 
     private void appendMainTableOfContents(StringBuilder builder) {
         book.getTxtContentList().forEach(txtContent -> builder.append("<p class=\"")
-                                                              .append(css.getTocParagraphClass())
+                                                              .append(style.getTocParagraphClass())
                                                               .append("\"><a href=\"")
                                                               .append(txtContent.getXhtmlName())
                                                               .append("\">")

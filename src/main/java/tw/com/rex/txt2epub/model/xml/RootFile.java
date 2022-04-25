@@ -1,4 +1,4 @@
-package tw.com.rex.txt2epub.model.epub;
+package tw.com.rex.txt2epub.model.xml;
 
 import lombok.Data;
 

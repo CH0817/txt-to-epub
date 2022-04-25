@@ -10,10 +10,12 @@ public class ConvertInfo {
     private final Book book;
     private final Path output;
     private final TempDirectory tempDirectory;
+    private final Style style;
 
-    public ConvertInfo(Book book, Path output) {
+    public ConvertInfo(Book book, Path output, Style style) {
         this.book = book;
         this.output = output;
+        this.style = style;
         tempDirectory = new TempDirectory(book.getName());
     }
 

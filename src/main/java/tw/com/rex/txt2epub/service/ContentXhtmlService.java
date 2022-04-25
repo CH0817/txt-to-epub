@@ -2,7 +2,7 @@ package tw.com.rex.txt2epub.service;
 
 import tw.com.rex.txt2epub.model.Book;
 import tw.com.rex.txt2epub.model.ConvertInfo;
-import tw.com.rex.txt2epub.model.CssClass;
+import tw.com.rex.txt2epub.model.Style;
 import tw.com.rex.txt2epub.model.TxtContent;
 import tw.com.rex.txt2epub.utils.FileUtil;
 
@@ -12,11 +12,11 @@ import java.util.List;
 public class ContentXhtmlService {
 
     private final Book book;
-    private final CssClass css;
+    private final Style style;
     private final Path output;
 
-    public ContentXhtmlService(ConvertInfo convertInfo, CssClass css) {
-        this.css = css;
+    public ContentXhtmlService(ConvertInfo convertInfo) {
+        this.style = convertInfo.getStyle();
         this.book = convertInfo.getBook();
         this.output = convertInfo.getTempDirectory().getXhtmlPath();
     }
@@ -45,7 +45,7 @@ public class ContentXhtmlService {
                .append("xml:lang=\"zh-TW\" lang=\"zh-TW\"")
                .append(System.lineSeparator())
                .append("class=\"")
-               .append(css.getTypesettingClass())
+               .append(style.getTypesettingClass())
                .append("\"")
                .append(System.lineSeparator())
                .append(">")
@@ -67,7 +67,7 @@ public class ContentXhtmlService {
                .append("<div class=\"main\">")
                .append(System.lineSeparator())
                .append("<h2 class=\"")
-               .append(css.getContentH2Class())
+               .append(style.getContentH2Class())
                .append("\">")
                .append(txtContent.getTitle())
                .append("</h2>")
@@ -78,11 +78,11 @@ public class ContentXhtmlService {
         for (int i = 0; i < contentList.size(); i++) {
             if (i == 0) {
                 builder.append("<p class=\"")
-                       .append(css.getContentFirstParagraphClass())
+                       .append(style.getContentFirstParagraphClass())
                        .append("\">");
             } else {
                 builder.append("<p")
-                       .append(css.getContentParagraphClass())
+                       .append(style.getContentParagraphClass())
                        .append(">");
             }
             builder.append(contentList.get(i))

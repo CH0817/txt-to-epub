@@ -2,12 +2,13 @@ package tw.com.rex.txt2epub.frame;
 
 import org.apache.commons.lang3.StringUtils;
 import tw.com.rex.txt2epub.define.TypesettingEnum;
-import tw.com.rex.txt2epub.factory.EpubServiceFactory;
+import tw.com.rex.txt2epub.factory.StyleFactory;
 import tw.com.rex.txt2epub.model.Book;
 import tw.com.rex.txt2epub.model.ConvertInfo;
+import tw.com.rex.txt2epub.model.Style;
 import tw.com.rex.txt2epub.model.TxtContent;
-import tw.com.rex.txt2epub.service.EpubService;
 import tw.com.rex.txt2epub.service.TxtHandlerService;
+import tw.com.rex.txt2epub.service.EpubService;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
@@ -226,8 +227,7 @@ public class MainFrame extends JFrame {
     private void convertToEpub() {
         if (verify()) {
             try {
-                EpubService service = EpubServiceFactory.getEpubService(createConvertInfo(), getTypesetting());
-                String epub = service.process();
+                String epub = new EpubService(createConvertInfo()).process();
                 int input = JOptionPane.showOptionDialog(pane, "轉換成功", "訊息", JOptionPane.DEFAULT_OPTION,
                                                          JOptionPane.INFORMATION_MESSAGE, null, null, null);
                 if (input == JOptionPane.OK_OPTION) {
@@ -255,7 +255,8 @@ public class MainFrame extends JFrame {
     }
 
     private ConvertInfo createConvertInfo() {
-        return new ConvertInfo(createBook(), Paths.get(outputFilePath.getText()));
+        Style style = StyleFactory.getStyle(getTypesetting());
+        return new ConvertInfo(createBook(), Paths.get(outputFilePath.getText()), style);
     }
 
     private Book createBook() {

@@ -1,6 +1,6 @@
 package tw.com.rex.txt2epub.service;
 
-import lombok.AllArgsConstructor;
+import tw.com.rex.txt2epub.model.ConvertInfo;
 import tw.com.rex.txt2epub.model.TempDirectory;
 import tw.com.rex.txt2epub.utils.FileUtil;
 
@@ -8,11 +8,15 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.Path;
 
-@AllArgsConstructor
-public class CssFileService {
+public class StyleFileService {
 
-    private TempDirectory tempDirectory;
-    private String typesettingCssFolder;
+    private final TempDirectory tempDirectory;
+    private final String mainStyleFolder;
+
+    public StyleFileService(ConvertInfo convertInfo) {
+        tempDirectory = convertInfo.getTempDirectory();
+        mainStyleFolder = convertInfo.getStyle().getMainStyleFolder();
+    }
 
     public void copy() {
         String[] cssNames = {"style-advance.css", "style-check.css", "style-reset.css", "style-standard.css"};
@@ -33,7 +37,7 @@ public class CssFileService {
         String cssName = "book-style.css";
         Path cssPath = tempDirectory.getStylePath().resolve(cssName).toAbsolutePath();
         ClassLoader classloader = Thread.currentThread().getContextClassLoader();
-        try (InputStream input = classloader.getResourceAsStream("style/" + typesettingCssFolder + "/" + cssName)) {
+        try (InputStream input = classloader.getResourceAsStream("style/" + mainStyleFolder + "/" + cssName)) {
             FileUtil.copy(input, cssPath);
         } catch (IOException e) {
             e.printStackTrace();
