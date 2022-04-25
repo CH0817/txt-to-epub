@@ -34,32 +34,26 @@ public abstract class AbstractEpubServiceImpl implements EpubService {
     }
 
     private void createContentXhtml() {
-        // new ContentXhtmlService(book, createCssClass(), tempDirectory.getXhtmlPath()).generate();
         new ContentXhtmlService(convertInfo, createCssClass()).generate();
     }
 
     private void createCover() {
-        // new CoverXhtmlService(book, tempDirectory.getXhtmlPath().resolve("p-cover.xhtml")).generate();
         new CoverXhtmlService(convertInfo).generate();
     }
 
     private void copyCssFiles() {
-        // new CssFileService(tempDirectory, getTypesettingCssFolder()).copy();
         new CssFileService(convertInfo.getTempDirectory(), getTypesettingCssFolder()).copy();
     }
 
     private void createTableOfContents() {
-        // new TableOfContentsService(book, createCssClass(), tempDirectory.getXhtmlPath()).generate();
         new TableOfContentsService(convertInfo, createCssClass()).generate();
     }
 
     private void createNavigationDocuments() {
-        // new NavigationDocumentsXhtmlService(book, tempDirectory.getItemPath()).generate();
         new NavigationDocumentsXhtmlService(convertInfo).generate();
     }
 
     private void createOpf() {
-        // new OpfService(book, tempDirectory.getItemPath()).generate();
         new OpfService(convertInfo).generate();
     }
 
