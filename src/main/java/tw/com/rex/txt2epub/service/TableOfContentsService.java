@@ -1,20 +1,23 @@
 package tw.com.rex.txt2epub.service;
 
-import lombok.AllArgsConstructor;
 import tw.com.rex.txt2epub.model.Book;
+import tw.com.rex.txt2epub.model.ConvertInfo;
 import tw.com.rex.txt2epub.model.CssClass;
 import tw.com.rex.txt2epub.utils.FileUtil;
 
 import java.nio.file.Path;
-import java.util.Map;
 
-@AllArgsConstructor
 public class TableOfContentsService {
 
-    private Book book;
-    private CssClass css;
-    private Map<String, String> contentXhtmlMap;
-    private Path output;
+    private final Book book;
+    private final CssClass css;
+    private final Path output;
+
+    public TableOfContentsService(ConvertInfo convertInfo, CssClass cssClass) {
+        this.css = cssClass;
+        this.book = convertInfo.getBook();
+        this.output = convertInfo.getTempDirectory().getXhtmlPath();
+    }
 
     public void generate() {
         StringBuilder sb = new StringBuilder();
@@ -64,16 +67,14 @@ public class TableOfContentsService {
     }
 
     private void appendMainTableOfContents(StringBuilder builder) {
-        for (String title : contentXhtmlMap.keySet()) {
-            builder.append("<p class=\"")
-                   .append(css.getTocParagraphClass())
-                   .append("\"><a href=\"")
-                   .append(contentXhtmlMap.get(title))
-                   .append("\">")
-                   .append(title)
-                   .append("</a></p>")
-                   .append(System.lineSeparator());
-        }
+        book.getTxtContentList().forEach(txtContent -> builder.append("<p class=\"")
+                                                              .append(css.getTocParagraphClass())
+                                                              .append("\"><a href=\"")
+                                                              .append(txtContent.getXhtmlName())
+                                                              .append("\">")
+                                                              .append(txtContent.getTitle())
+                                                              .append("</a></p>")
+                                                              .append(System.lineSeparator()));
     }
 
 }

@@ -39,4 +39,8 @@ public class TempDirectory implements Serializable {
         FileUtil.createDirectories(basePath, metaInfPath, itemPath, imagePath, xhtmlPath, stylePath);
     }
 
+    public Path getFinalFilePath() {
+        return getBasePath().getParent().resolve(bookName + ".epub");
+    }
+
 }

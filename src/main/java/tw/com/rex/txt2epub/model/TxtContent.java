@@ -14,5 +14,7 @@ public class TxtContent implements Serializable {
     private String title;
     // 章節內容
     private List<String> contentList;
+    // 檔案名稱
+    private String xhtmlName;
 
 }

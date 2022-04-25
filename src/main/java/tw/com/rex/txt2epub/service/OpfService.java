@@ -1,20 +1,22 @@
 package tw.com.rex.txt2epub.service;
 
-import lombok.AllArgsConstructor;
 import tw.com.rex.txt2epub.model.Book;
+import tw.com.rex.txt2epub.model.ConvertInfo;
 import tw.com.rex.txt2epub.utils.DateUtil;
 import tw.com.rex.txt2epub.utils.FileUtil;
 
 import java.nio.file.Path;
-import java.util.Map;
 import java.util.UUID;
 
-@AllArgsConstructor
 public class OpfService {
 
     private final Book book;
     private final Path output;
-    private final Map<String, String> contentXhtmlMap;
+
+    public OpfService(ConvertInfo convertInfo) {
+        this.book = convertInfo.getBook();
+        this.output = convertInfo.getTempDirectory().getItemPath();
+    }
 
     public void generate() {
         StringBuilder sb = new StringBuilder();
@@ -187,8 +189,8 @@ public class OpfService {
     }
 
     private void appendItems(StringBuilder builder) {
-        book.getTxtContentList().forEach(c -> {
-            String xhtml = contentXhtmlMap.get(c.getTitle());
+        book.getTxtContentList().forEach(txtContent -> {
+            String xhtml = txtContent.getXhtmlName();
             builder.append("<item media-type=\"application/xhtml+xml\" id=\"")
                    .append(xhtml, 0, xhtml.lastIndexOf("."))
                    .append("\" href=\"xhtml/")
@@ -210,8 +212,8 @@ public class OpfService {
     }
 
     private void appendItemRefs(StringBuilder sb) {
-        book.getTxtContentList().forEach(c -> {
-            String xhtml = contentXhtmlMap.get(c.getTitle());
+        book.getTxtContentList().forEach(txtContent -> {
+            String xhtml = txtContent.getXhtmlName();
             sb.append("<itemref linear=\"yes\" idref=\"")
               .append(xhtml, 0, xhtml.lastIndexOf("."))
               .append("\" properties=\"page-spread-left\"/>")

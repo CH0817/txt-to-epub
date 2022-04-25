@@ -1,18 +1,20 @@
 package tw.com.rex.txt2epub.service;
 
-import lombok.AllArgsConstructor;
 import tw.com.rex.txt2epub.model.Book;
+import tw.com.rex.txt2epub.model.ConvertInfo;
 import tw.com.rex.txt2epub.utils.FileUtil;
 
 import java.nio.file.Path;
-import java.util.Map;
 
-@AllArgsConstructor
 public class NavigationDocumentsXhtmlService {
 
-    private Book book;
-    private Map<String, String> contentXhtmlMap;
-    private Path output;
+    private final Book book;
+    private final Path output;
+
+    public NavigationDocumentsXhtmlService(ConvertInfo convertInfo) {
+        this.book = convertInfo.getBook();
+        this.output = convertInfo.getTempDirectory().getItemPath();
+    }
 
     public void generate() {
         StringBuilder sb = new StringBuilder();
@@ -66,14 +68,12 @@ public class NavigationDocumentsXhtmlService {
 
 
     private void appendMainContents(StringBuilder builder) {
-        for (String title : contentXhtmlMap.keySet()) {
-            builder.append("<li><a href=\"xhtml/")
-                   .append(contentXhtmlMap.get(title))
-                   .append("\">")
-                   .append(title)
-                   .append("</a></li>")
-                   .append(System.lineSeparator());
-        }
+        book.getTxtContentList().forEach(txtContent -> builder.append("<li><a href=\"xhtml/")
+                                                              .append(txtContent.getXhtmlName())
+                                                              .append("\">")
+                                                              .append(txtContent.getTitle())
+                                                              .append("</a></li>")
+                                                              .append(System.lineSeparator()));
     }
 
     private void appendSuffixContents(StringBuilder builder) {

@@ -1,39 +1,34 @@
 package tw.com.rex.txt2epub.service;
 
-import lombok.AllArgsConstructor;
 import tw.com.rex.txt2epub.model.Book;
+import tw.com.rex.txt2epub.model.ConvertInfo;
 import tw.com.rex.txt2epub.model.CssClass;
 import tw.com.rex.txt2epub.model.TxtContent;
 import tw.com.rex.txt2epub.utils.FileUtil;
 
 import java.nio.file.Path;
-import java.util.LinkedHashMap;
 import java.util.List;
-import java.util.Map;
 
-@AllArgsConstructor
 public class ContentXhtmlService {
 
-    private Book book;
-    private CssClass css;
-    private Path output;
+    private final Book book;
+    private final CssClass css;
+    private final Path output;
 
-    public Map<String, String> generate() {
-        // todo Map<String, String> 要移出
-        Map<String, String> result = new LinkedHashMap<>();
-        List<TxtContent> txtContentList = book.getTxtContentList();
-        for (int i = 0; i < txtContentList.size(); i++) {
+    public ContentXhtmlService(ConvertInfo convertInfo, CssClass css) {
+        this.css = css;
+        this.book = convertInfo.getBook();
+        this.output = convertInfo.getTempDirectory().getXhtmlPath();
+    }
+
+    public void generate() {
+        book.getTxtContentList().forEach(content -> {
             StringBuilder sb = new StringBuilder();
-            TxtContent txtContent = txtContentList.get(i);
-            List<String> contentList = txtContent.getContentList();
-            appendPrefixContents(sb, txtContent);
-            appendMainContents(sb, contentList);
+            appendPrefixContents(sb, content);
+            appendMainContents(sb, content.getContentList());
             appendSuffix(sb);
-            String xhtmlName = "p-" + getChapter(i + 1) + ".xhtml";
-            result.put(txtContent.getTitle(), xhtmlName);
-            FileUtil.write(output.resolve(xhtmlName), sb.toString());
-        }
-        return result;
+            FileUtil.write(output.resolve(content.getXhtmlName()), sb.toString());
+        });
     }
 
     private void appendPrefixContents(StringBuilder builder, TxtContent txtContent) {
@@ -102,14 +97,6 @@ public class ContentXhtmlService {
                .append("</body>")
                .append(System.lineSeparator())
                .append("</html>");
-    }
-
-    private String getChapter(int chapterIndex) {
-        StringBuilder chapter = new StringBuilder(String.valueOf(chapterIndex));
-        while (chapter.length() < 4) {
-            chapter.insert(0, "0");
-        }
-        return chapter.toString();
     }
 
 }

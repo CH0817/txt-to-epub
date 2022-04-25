@@ -1,14 +1,38 @@
 package tw.com.rex.txt2epub.service;
 
-import lombok.AllArgsConstructor;
 import tw.com.rex.txt2epub.model.Book;
+import tw.com.rex.txt2epub.model.ConvertInfo;
+import tw.com.rex.txt2epub.utils.FileUtil;
 
-@AllArgsConstructor
+import java.nio.file.Path;
+import java.nio.file.Paths;
+
 public class CoverXhtmlService {
 
-    private Book book;
+    private final Book book;
+    private final Path output;
 
-    public String generate() {
+    public CoverXhtmlService(ConvertInfo convertInfo) {
+        this.book = convertInfo.getBook();
+        this.output = convertInfo.getTempDirectory().getXhtmlPath().resolve("p-cover.xhtml");
+    }
+
+    public void generate() {
+        if (book.hasCover()) {
+            copyCoverImage();
+            FileUtil.write(output, getContent());
+        }
+    }
+
+    private void copyCoverImage() {
+        Path path = Paths.get(System.getProperty("java.io.tmpdir"), book.getName())
+                         .resolve("item")
+                         .resolve("image")
+                         .resolve(book.getCover().getFileName());
+        FileUtil.copy(book.getCover(), path);
+    }
+
+    private String getContent() {
         return "<?xml version=\"1.0\" encoding=\"UTF-8\"?>" +
                 System.lineSeparator() +
                 "<!DOCTYPE html>" +

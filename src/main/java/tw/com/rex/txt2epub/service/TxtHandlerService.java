@@ -53,12 +53,25 @@ public class TxtHandlerService {
         List<TxtContent> result = new ArrayList<>();
         for (int i = 0; i < titleIndexes.size(); i++) {
             String title = allLines.get(titleIndexes.get(i));
+            String xhtmlName = getXhtmlName(i + 1);
             int startIndex = titleIndexes.get(i) + 1;
             int endIndex = (i == titleIndexes.size() - 1) ? allLines.size() : titleIndexes.get(i + 1);
             List<String> contentList = getContentList(allLines, startIndex, endIndex);
-            result.add(new TxtContent(title, contentList));
+            result.add(new TxtContent(title, contentList, xhtmlName));
         }
         return result;
+    }
+
+    private String getXhtmlName(int index) {
+        return "p-" + getChapter(index) + ".xhtml";
+    }
+
+    private String getChapter(int chapterIndex) {
+        StringBuilder chapter = new StringBuilder(String.valueOf(chapterIndex));
+        while (chapter.length() < 4) {
+            chapter.insert(0, "0");
+        }
+        return chapter.toString();
     }
 
     private List<String> getContentList(List<String> allLines, int startIndex, int endIndex) {
