@@ -1,13 +1,10 @@
 package tw.com.rex.txt2epub.frame;
 
+import lombok.Getter;
+import lombok.Setter;
 import org.apache.commons.lang3.StringUtils;
 import tw.com.rex.txt2epub.define.TypesettingEnum;
-import tw.com.rex.txt2epub.factory.StyleFactory;
-import tw.com.rex.txt2epub.model.Book;
 import tw.com.rex.txt2epub.model.ConvertInfo;
-import tw.com.rex.txt2epub.model.Style;
-import tw.com.rex.txt2epub.model.TxtContent;
-import tw.com.rex.txt2epub.service.TxtHandlerService;
 import tw.com.rex.txt2epub.service.EpubService;
 
 import javax.imageio.ImageIO;
@@ -18,19 +15,30 @@ import java.awt.*;
 import java.io.File;
 import java.nio.file.Paths;
 import java.util.Enumeration;
-import java.util.List;
 
 public class MainFrame extends JFrame {
 
     private final Container pane;
     private final GridBagConstraints bag;
-    private final JLabel selectedTxtLabel;
-    private final JLabel outputFilePath;
-    private final JLabel coverPath;
+    @Getter
+    @Setter
+    private JLabel selectedTxtLabel;
+    @Getter
+    @Setter
+    private JLabel outputFilePath;
+    @Getter
+    @Setter
+    private JLabel coverPath;
     private final JFileChooser chooser;
-    private final JTextField authorField;
-    private final JTextField publishingHouseField;
-    private final ButtonGroup typesettingGroup;
+    @Getter
+    @Setter
+    private JTextField authorField;
+    @Getter
+    @Setter
+    private JTextField publishingHouseField;
+    @Getter
+    @Setter
+    private ButtonGroup typesettingGroup;
 
     public MainFrame() throws HeadlessException {
         pane = this.getContentPane();
@@ -227,7 +235,7 @@ public class MainFrame extends JFrame {
     private void convertToEpub() {
         if (verify()) {
             try {
-                new EpubService(createConvertInfo()).process();
+                new EpubService(new ConvertInfo(this)).process();
                 int input = JOptionPane.showOptionDialog(pane, "轉換成功", "訊息", JOptionPane.DEFAULT_OPTION,
                                                          JOptionPane.INFORMATION_MESSAGE, null, null, null);
                 if (input == JOptionPane.OK_OPTION) {
@@ -247,6 +255,9 @@ public class MainFrame extends JFrame {
         if (StringUtils.isBlank(outputFilePath.getText())) {
             error.append("請選擇輸出路徑\n");
         }
+        if (StringUtils.isBlank(getTypesetting())) {
+            error.append("未選擇直排或橫排\n");
+        }
         if (StringUtils.isNotBlank(error.toString())) {
             JOptionPane.showMessageDialog(pane, error);
             return false;
@@ -254,38 +265,15 @@ public class MainFrame extends JFrame {
         return true;
     }
 
-    private ConvertInfo createConvertInfo() {
-        Style style = StyleFactory.getStyle(getTypesetting());
-        return new ConvertInfo(createBook(), Paths.get(outputFilePath.getText()), style);
-    }
-
-    private Book createBook() {
-        Book book = new Book();
-        book.setName(getBookName());
-        book.setCover(Paths.get(coverPath.getText()));
-        book.setAuthor(authorField.getText());
-        book.setPublisher(publishingHouseField.getText());
-        book.setTxtContentList(getTxtContentList());
-        return book;
-    }
-
-    private String getBookName() {
-        String fileName = Paths.get(selectedTxtLabel.getText()).toAbsolutePath().getFileName().toString();
-        return fileName.substring(0, fileName.lastIndexOf("."));
-    }
-
-    private List<TxtContent> getTxtContentList() {
-        return new TxtHandlerService(selectedTxtLabel.getText()).getTxtContentList();
-    }
-
-    private String getTypesetting() {
-        for (Enumeration<AbstractButton> buttons = typesettingGroup.getElements(); buttons.hasMoreElements(); ) {
-            AbstractButton button = buttons.nextElement();
+    public String getTypesetting() {
+        Enumeration<AbstractButton> elements = typesettingGroup.getElements();
+        while (elements.hasMoreElements()) {
+            AbstractButton button = elements.nextElement();
             if (button.isSelected()) {
                 return button.getActionCommand();
             }
         }
-        throw new RuntimeException("未選擇直排或橫排");
+        return StringUtils.EMPTY;
     }
 
 }

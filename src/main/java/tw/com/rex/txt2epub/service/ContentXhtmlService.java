@@ -2,7 +2,7 @@ package tw.com.rex.txt2epub.service;
 
 import tw.com.rex.txt2epub.model.Book;
 import tw.com.rex.txt2epub.model.ConvertInfo;
-import tw.com.rex.txt2epub.model.Style;
+import tw.com.rex.txt2epub.model.css.Style;
 import tw.com.rex.txt2epub.model.TxtContent;
 import tw.com.rex.txt2epub.utils.FileUtil;
 

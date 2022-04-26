@@ -1,7 +1,6 @@
-package tw.com.rex.txt2epub.css;
+package tw.com.rex.txt2epub.model.css;
 
 import org.apache.commons.lang3.StringUtils;
-import tw.com.rex.txt2epub.model.Style;
 
 public class HorizontalStyle extends Style {
 

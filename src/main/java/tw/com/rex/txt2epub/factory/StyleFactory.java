@@ -1,9 +1,9 @@
 package tw.com.rex.txt2epub.factory;
 
-import tw.com.rex.txt2epub.css.HorizontalStyle;
-import tw.com.rex.txt2epub.css.VerticalStyle;
+import tw.com.rex.txt2epub.model.css.HorizontalStyle;
+import tw.com.rex.txt2epub.model.css.VerticalStyle;
 import tw.com.rex.txt2epub.define.TypesettingEnum;
-import tw.com.rex.txt2epub.model.Style;
+import tw.com.rex.txt2epub.model.css.Style;
 
 public class StyleFactory {
 

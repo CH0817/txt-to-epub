@@ -1,73 +1,56 @@
 package tw.com.rex.txt2epub.service;
 
 import org.junit.After;
-import org.junit.Before;
 import org.junit.Test;
 import tw.com.rex.txt2epub.define.TypesettingEnum;
-import tw.com.rex.txt2epub.factory.StyleFactory;
-import tw.com.rex.txt2epub.model.Book;
+import tw.com.rex.txt2epub.frame.MainFrame;
 import tw.com.rex.txt2epub.model.ConvertInfo;
+import tw.com.rex.txt2epub.util.EpubServiceTestUtil;
 import tw.com.rex.txt2epub.utils.FileUtil;
 
+import javax.swing.*;
 import java.nio.file.Files;
-import java.nio.file.Path;
 import java.nio.file.Paths;
 
 import static org.junit.Assert.assertTrue;
 
 public class EpubServiceTest {
 
-    private ConvertInfo horizontalConvertInfo;
-    private ConvertInfo verticalConvertInfo;
-    private static final Path outputPath = Paths.get("D:/Temp/曹賊");
-    private final String FINAL_FILE_NAME = "曹賊.epub";
+    private static final String OUTPUT_PATH = "D:/Temp/曹賊";
 
-    @Before
-    public void setUp() {
-        Book book = getBook();
-        horizontalConvertInfo = new ConvertInfo(book,
-                                                outputPath,
-                                                StyleFactory.getStyle(TypesettingEnum.HORIZONTAL.toString()));
-        verticalConvertInfo = new ConvertInfo(book,
-                                              outputPath,
-                                              StyleFactory.getStyle(TypesettingEnum.VERTICAL.toString()));
-    }
-
-    private static Book getBook() {
-        Book book = new Book();
-        book.setName("曹賊");
-        book.setAuthor("庚新");
-        book.setPublisher("典藏閣");
-        TxtHandlerService txtHandlerService = new TxtHandlerService(Paths.get("src/test/resources/曹賊.txt")
-                                                                         .toAbsolutePath()
-                                                                         .toString());
-        book.setTxtContentList(txtHandlerService.getTxtContentList());
-        book.setCover(Paths.get("src/test/resources/cover.jpg"));
-        return book;
-    }
 
     @Test
     public void horizontalProcess() throws Exception {
-        new EpubService(horizontalConvertInfo).process();
-        assertTrue(Files.exists(outputPath.resolve(FINAL_FILE_NAME)));
+        MainFrame frame = EpubServiceTestUtil.createFrame(TypesettingEnum.HORIZONTAL, OUTPUT_PATH);
+        ConvertInfo convertInfo = new ConvertInfo(frame);
+        new EpubService(convertInfo).process();
+        verifyResult();
     }
 
     @Test
     public void verticalProcess() throws Exception {
-        new EpubService(verticalConvertInfo).process();
-        assertTrue(Files.exists(outputPath.resolve(FINAL_FILE_NAME)));
+        MainFrame frame = EpubServiceTestUtil.createFrame(TypesettingEnum.VERTICAL, OUTPUT_PATH);
+        ConvertInfo convertInfo = new ConvertInfo(frame);
+        new EpubService(convertInfo).process();
+        verifyResult();
     }
 
     @Test
     public void processNoCover() throws Exception {
-        horizontalConvertInfo.getBook().setCover(Path.of(""));
-        new EpubService(horizontalConvertInfo).process();
-        assertTrue(Files.exists(outputPath.resolve(FINAL_FILE_NAME)));
+        MainFrame frame = EpubServiceTestUtil.createFrame(TypesettingEnum.HORIZONTAL, OUTPUT_PATH);
+        frame.setCoverPath(new JLabel());
+        ConvertInfo convertInfo = new ConvertInfo(frame);
+        new EpubService(convertInfo).process();
+        verifyResult();
+    }
+
+    private void verifyResult() {
+        assertTrue(Files.exists(Paths.get(OUTPUT_PATH).resolve("曹賊.epub")));
     }
 
     @After
     public void cleanUp() {
-        FileUtil.deleteAll(outputPath);
+        FileUtil.deleteAll(Paths.get(OUTPUT_PATH));
     }
 
 }
