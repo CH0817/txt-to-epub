@@ -9,10 +9,11 @@ import tw.com.rex.txt2epub.model.Book;
 import tw.com.rex.txt2epub.model.ConvertInfo;
 import tw.com.rex.txt2epub.utils.FileUtil;
 
+import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 public class EpubServiceTest {
 
@@ -47,21 +48,21 @@ public class EpubServiceTest {
 
     @Test
     public void horizontalProcess() throws Exception {
-        EpubService service = new EpubService(horizontalConvertInfo);
-        assertEquals(outputPath.resolve(FINAL_FILE_NAME).toAbsolutePath().toString(), service.process());
+        new EpubService(horizontalConvertInfo).process();
+        assertTrue(Files.exists(outputPath.resolve(FINAL_FILE_NAME)));
     }
 
     @Test
     public void verticalProcess() throws Exception {
-        EpubService service = new EpubService(verticalConvertInfo);
-        assertEquals(outputPath.resolve(FINAL_FILE_NAME).toAbsolutePath().toString(), service.process());
+        new EpubService(verticalConvertInfo).process();
+        assertTrue(Files.exists(outputPath.resolve(FINAL_FILE_NAME)));
     }
 
     @Test
     public void processNoCover() throws Exception {
         horizontalConvertInfo.getBook().setCover(Path.of(""));
-        EpubService service = new EpubService(horizontalConvertInfo);
-        assertEquals(outputPath.resolve(FINAL_FILE_NAME).toAbsolutePath().toString(), service.process());
+        new EpubService(horizontalConvertInfo).process();
+        assertTrue(Files.exists(outputPath.resolve(FINAL_FILE_NAME)));
     }
 
     @After

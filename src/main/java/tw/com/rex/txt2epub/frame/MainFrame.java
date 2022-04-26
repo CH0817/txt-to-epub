@@ -227,11 +227,11 @@ public class MainFrame extends JFrame {
     private void convertToEpub() {
         if (verify()) {
             try {
-                String epub = new EpubService(createConvertInfo()).process();
+                new EpubService(createConvertInfo()).process();
                 int input = JOptionPane.showOptionDialog(pane, "轉換成功", "訊息", JOptionPane.DEFAULT_OPTION,
                                                          JOptionPane.INFORMATION_MESSAGE, null, null, null);
                 if (input == JOptionPane.OK_OPTION) {
-                    Desktop.getDesktop().open(Paths.get(epub).getParent().toFile());
+                    Desktop.getDesktop().open(Paths.get(outputFilePath.getText()).toFile());
                 }
             } catch (Exception e) {
                 JOptionPane.showMessageDialog(pane, e.getMessage());
@@ -285,7 +285,7 @@ public class MainFrame extends JFrame {
                 return button.getActionCommand();
             }
         }
-        return null;
+        throw new RuntimeException("未選擇直排或橫排");
     }
 
 }

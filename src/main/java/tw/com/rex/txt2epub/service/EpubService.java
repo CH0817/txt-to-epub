@@ -16,7 +16,7 @@ public class EpubService {
         this.convertInfo = convertInfo;
     }
 
-    public String process() throws Exception {
+    public void process() throws Exception {
         createContentXhtml();
         createCover();
         copyCssFiles();
@@ -27,7 +27,7 @@ public class EpubService {
         createMineType();
         convert();
         removeTemp();
-        return moveEpub();
+        moveEpub();
     }
 
     private void createContentXhtml() {
@@ -76,11 +76,10 @@ public class EpubService {
         FileUtil.deleteAll(convertInfo.getTempDirectory().getBasePath());
     }
 
-    private String moveEpub() {
+    private void moveEpub() {
         Path path = convertInfo.getTempDirectory().getFinalFilePath();
         Path output = convertInfo.getOutput().resolve(path.getFileName());
         FileUtil.move(path, output);
-        return output.toAbsolutePath().toString();
     }
 
 }
