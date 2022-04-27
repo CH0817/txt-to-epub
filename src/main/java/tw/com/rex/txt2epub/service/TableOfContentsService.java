@@ -13,10 +13,10 @@ public class TableOfContentsService {
     private final Style style;
     private final Path output;
 
-    public TableOfContentsService(ConvertInfo convertInfo) {
+    public TableOfContentsService(ConvertInfo convertInfo, int index) {
         this.style = convertInfo.getStyle();
-        this.book = convertInfo.getBook();
-        this.output = convertInfo.getTempDirectory().getXhtmlPath();
+        this.book = convertInfo.getBooks()[index];
+        this.output = convertInfo.getTempDirectories()[index].getXhtmlPath();
     }
 
     public void generate() {

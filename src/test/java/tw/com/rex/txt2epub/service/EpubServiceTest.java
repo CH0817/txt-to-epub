@@ -5,12 +5,15 @@ import org.junit.Test;
 import tw.com.rex.txt2epub.define.TypesettingEnum;
 import tw.com.rex.txt2epub.frame.MainFrame;
 import tw.com.rex.txt2epub.model.ConvertInfo;
+import tw.com.rex.txt2epub.model.TxtContent;
 import tw.com.rex.txt2epub.util.EpubServiceTestUtil;
 import tw.com.rex.txt2epub.utils.FileUtil;
+import tw.com.rex.txt2epub.utils.ListUtil;
 
 import javax.swing.*;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.util.List;
 
 import static org.junit.Assert.assertTrue;
 
@@ -20,7 +23,7 @@ public class EpubServiceTest {
 
 
     @Test
-    public void horizontalProcess() throws Exception {
+    public void horizontalProcess() {
         MainFrame frame = EpubServiceTestUtil.createFrame(TypesettingEnum.HORIZONTAL, OUTPUT_PATH);
         ConvertInfo convertInfo = new ConvertInfo(frame);
         new EpubService(convertInfo).process();
@@ -28,7 +31,7 @@ public class EpubServiceTest {
     }
 
     @Test
-    public void verticalProcess() throws Exception {
+    public void verticalProcess() {
         MainFrame frame = EpubServiceTestUtil.createFrame(TypesettingEnum.VERTICAL, OUTPUT_PATH);
         ConvertInfo convertInfo = new ConvertInfo(frame);
         new EpubService(convertInfo).process();
@@ -36,7 +39,7 @@ public class EpubServiceTest {
     }
 
     @Test
-    public void processNoCover() throws Exception {
+    public void processNoCover() {
         MainFrame frame = EpubServiceTestUtil.createFrame(TypesettingEnum.HORIZONTAL, OUTPUT_PATH);
         frame.setCoverPath(new JLabel());
         ConvertInfo convertInfo = new ConvertInfo(frame);
@@ -45,7 +48,19 @@ public class EpubServiceTest {
     }
 
     private void verifyResult() {
-        assertTrue(Files.exists(Paths.get(OUTPUT_PATH).resolve("曹賊.epub")));
+        String txtPath = Paths.get("src/test/resources/曹賊.txt").toAbsolutePath().toString();
+        TxtHandlerService service = new TxtHandlerService(txtPath);
+        List<TxtContent> txtContentList = service.getTxtContentList();
+        int episodes = ListUtil.separateDataList(txtContentList, 100).size();
+        for (int i = 0; i < episodes; i++) {
+            StringBuilder epubName = new StringBuilder(String.valueOf(episodes));
+            while (epubName.length() < 2) {
+                epubName.insert(0, "0");
+            }
+            epubName.insert(0, "曹賊-");
+            epubName.append(".epub");
+            assertTrue(Files.exists(Paths.get(OUTPUT_PATH).resolve(epubName.toString())));
+        }
     }
 
     @After

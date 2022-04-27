@@ -7,22 +7,29 @@ import tw.com.rex.txt2epub.model.css.Style;
 
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.stream.Stream;
 
 @Getter
 public class ConvertInfo {
 
-    private final Book book;
+    private final Book[] books;
     private final Path output;
-    private final TempDirectory tempDirectory;
+    private final TempDirectory[] tempDirectories;
     private final Style style;
     private final MainFrame frame;
 
     public ConvertInfo(MainFrame frame) {
         this.frame = frame;
-        this.book = new Book(frame);
+        this.books = Book.create(frame);
         this.output = Paths.get(frame.getOutputFilePath().getText());
         this.style = StyleFactory.getStyle(frame.getTypesetting());
-        this.tempDirectory = new TempDirectory(book.getName());
+        this.tempDirectories = createTempDirectories();
+    }
+
+    private TempDirectory[] createTempDirectories() {
+        return Stream.of(books)
+                     .map(book -> new TempDirectory(book.getName()))
+                     .toArray(TempDirectory[]::new);
     }
 
 }

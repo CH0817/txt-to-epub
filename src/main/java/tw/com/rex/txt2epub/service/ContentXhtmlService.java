@@ -2,8 +2,8 @@ package tw.com.rex.txt2epub.service;
 
 import tw.com.rex.txt2epub.model.Book;
 import tw.com.rex.txt2epub.model.ConvertInfo;
-import tw.com.rex.txt2epub.model.css.Style;
 import tw.com.rex.txt2epub.model.TxtContent;
+import tw.com.rex.txt2epub.model.css.Style;
 import tw.com.rex.txt2epub.utils.FileUtil;
 
 import java.nio.file.Path;
@@ -15,10 +15,10 @@ public class ContentXhtmlService {
     private final Style style;
     private final Path output;
 
-    public ContentXhtmlService(ConvertInfo convertInfo) {
+    public ContentXhtmlService(ConvertInfo convertInfo, int index) {
         this.style = convertInfo.getStyle();
-        this.book = convertInfo.getBook();
-        this.output = convertInfo.getTempDirectory().getXhtmlPath();
+        this.book = convertInfo.getBooks()[index];
+        this.output = convertInfo.getTempDirectories()[index].getXhtmlPath();
     }
 
     public void generate() {

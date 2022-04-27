@@ -12,9 +12,9 @@ public class CoverXhtmlService {
     private final Book book;
     private final Path output;
 
-    public CoverXhtmlService(ConvertInfo convertInfo) {
-        this.book = convertInfo.getBook();
-        this.output = convertInfo.getTempDirectory().getXhtmlPath().resolve("p-cover.xhtml");
+    public CoverXhtmlService(ConvertInfo convertInfo, int index) {
+        this.book = convertInfo.getBooks()[index];
+        this.output = convertInfo.getTempDirectories()[index].getXhtmlPath().resolve("p-cover.xhtml");
     }
 
     public void generate() {

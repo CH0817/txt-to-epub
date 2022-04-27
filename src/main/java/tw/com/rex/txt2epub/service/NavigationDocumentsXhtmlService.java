@@ -11,9 +11,9 @@ public class NavigationDocumentsXhtmlService {
     private final Book book;
     private final Path output;
 
-    public NavigationDocumentsXhtmlService(ConvertInfo convertInfo) {
-        this.book = convertInfo.getBook();
-        this.output = convertInfo.getTempDirectory().getItemPath();
+    public NavigationDocumentsXhtmlService(ConvertInfo convertInfo, int index) {
+        this.book = convertInfo.getBooks()[index];
+        this.output = convertInfo.getTempDirectories()[index].getItemPath();
     }
 
     public void generate() {

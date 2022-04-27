@@ -13,8 +13,8 @@ public class StyleFileService {
     private final TempDirectory tempDirectory;
     private final String mainStyleFolder;
 
-    public StyleFileService(ConvertInfo convertInfo) {
-        tempDirectory = convertInfo.getTempDirectory();
+    public StyleFileService(ConvertInfo convertInfo, int index) {
+        tempDirectory = convertInfo.getTempDirectories()[index];
         mainStyleFolder = convertInfo.getStyle().getMainStyleFolder();
     }
 
