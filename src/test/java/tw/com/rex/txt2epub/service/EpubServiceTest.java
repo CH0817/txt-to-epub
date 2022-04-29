@@ -6,7 +6,7 @@ import tw.com.rex.txt2epub.define.TypesettingEnum;
 import tw.com.rex.txt2epub.frame.MainFrame;
 import tw.com.rex.txt2epub.model.ConvertInfo;
 import tw.com.rex.txt2epub.model.TxtContent;
-import tw.com.rex.txt2epub.util.EpubServiceTestUtil;
+import tw.com.rex.txt2epub.utils.TestUtil;
 import tw.com.rex.txt2epub.utils.FileUtil;
 import tw.com.rex.txt2epub.utils.ListUtil;
 
@@ -24,7 +24,7 @@ public class EpubServiceTest {
 
     @Test
     public void horizontalProcess() {
-        MainFrame frame = EpubServiceTestUtil.createFrame(TypesettingEnum.HORIZONTAL, OUTPUT_PATH);
+        MainFrame frame = TestUtil.createFrame(TypesettingEnum.HORIZONTAL, OUTPUT_PATH);
         ConvertInfo convertInfo = new ConvertInfo(frame);
         new EpubService(convertInfo).process();
         verifyResult();
@@ -32,7 +32,7 @@ public class EpubServiceTest {
 
     @Test
     public void verticalProcess() {
-        MainFrame frame = EpubServiceTestUtil.createFrame(TypesettingEnum.VERTICAL, OUTPUT_PATH);
+        MainFrame frame = TestUtil.createFrame(TypesettingEnum.VERTICAL, OUTPUT_PATH);
         ConvertInfo convertInfo = new ConvertInfo(frame);
         new EpubService(convertInfo).process();
         verifyResult();
@@ -40,7 +40,7 @@ public class EpubServiceTest {
 
     @Test
     public void processNoCover() {
-        MainFrame frame = EpubServiceTestUtil.createFrame(TypesettingEnum.HORIZONTAL, OUTPUT_PATH);
+        MainFrame frame = TestUtil.createFrame(TypesettingEnum.HORIZONTAL, OUTPUT_PATH);
         frame.setCoverPath(new JLabel());
         ConvertInfo convertInfo = new ConvertInfo(frame);
         new EpubService(convertInfo).process();

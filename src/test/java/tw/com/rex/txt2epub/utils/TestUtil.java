@@ -1,12 +1,16 @@
-package tw.com.rex.txt2epub.util;
+package tw.com.rex.txt2epub.utils;
 
 import tw.com.rex.txt2epub.define.TypesettingEnum;
 import tw.com.rex.txt2epub.frame.MainFrame;
+import tw.com.rex.txt2epub.model.ConvertInfo;
+import tw.com.rex.txt2epub.model.TempDirectory;
+import tw.com.rex.txt2epub.utils.FileUtil;
 
 import javax.swing.*;
 import java.nio.file.Paths;
+import java.util.Arrays;
 
-public class EpubServiceTestUtil {
+public class TestUtil {
 
     public static MainFrame createFrame(TypesettingEnum typesettingEnum, String outputPath) {
         MainFrame frame = new MainFrame();
@@ -36,6 +40,26 @@ public class EpubServiceTestUtil {
         result.add(horizontal);
         result.add(vertical);
         return result;
+    }
+
+    public static ConvertInfo createConvertInfo() {
+        String outputPath = Paths.get(System.getProperty("java.io.tmpdir"), "測試").toAbsolutePath().toString();
+        return new ConvertInfo(createFrame(TypesettingEnum.HORIZONTAL, outputPath));
+    }
+
+    public static void cleanUp(ConvertInfo convertInfo) {
+        deleteTempFiles(convertInfo);
+        deleteOutputFiles(convertInfo);
+    }
+
+    private static void deleteTempFiles(ConvertInfo convertInfo) {
+        Arrays.stream(convertInfo.getTempDirectories())
+              .map(TempDirectory::getBasePath)
+              .forEach(FileUtil::deleteAll);
+    }
+
+    private static void deleteOutputFiles(ConvertInfo convertInfo) {
+        FileUtil.deleteAll(convertInfo.getOutput());
     }
 
 }

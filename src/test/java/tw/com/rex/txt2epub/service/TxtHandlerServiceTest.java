@@ -13,7 +13,7 @@ public class TxtHandlerServiceTest {
     public void getContents() {
         Path filePath = Paths.get("src/test/resources/曹賊.txt");
         TxtHandlerService service = new TxtHandlerService(filePath.toAbsolutePath().toString());
-        assertEquals(751, service.getTxtContentList().size());
+        assertEquals(368, service.getTxtContentList().size());
     }
 
 }
