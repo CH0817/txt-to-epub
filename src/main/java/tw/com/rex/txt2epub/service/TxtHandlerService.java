@@ -1,5 +1,6 @@
 package tw.com.rex.txt2epub.service;
 
+import com.github.houbb.opencc4j.support.segment.impl.Segments;
 import com.github.houbb.opencc4j.util.ZhConverterUtil;
 import lombok.AllArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
@@ -31,9 +32,9 @@ public class TxtHandlerService {
         for (String charset : charsets) {
             try {
                 return Files.readAllLines(Paths.get(filePath), Charset.forName(charset))
-                            .stream()
-                            .map(ZhConverterUtil::toTraditional)
-                            .collect(toList());
+                        .stream()
+                        .map(s -> ZhConverterUtil.toTraditional(s, Segments.defaults()))
+                        .collect(toList());
             } catch (IOException e) {
                 System.out.println(charset + " 編碼取 txt 內容失敗");
             }
@@ -43,10 +44,10 @@ public class TxtHandlerService {
 
     private List<Integer> getTitleIndexes(List<String> allLines) {
         return IntStream.range(0, allLines.size())
-                        .filter(i -> StringUtils.isNotBlank(allLines.get(i)))
-                        .filter(i -> StringUtils.trimToEmpty(allLines.get(i)).matches("^第\\d{1,4}章 .*$"))
-                        .boxed()
-                        .collect(toList());
+                .filter(i -> StringUtils.isNotBlank(allLines.get(i)))
+                .filter(i -> StringUtils.trimToEmpty(allLines.get(i)).matches("^第\\d{1,4}章 .*$"))
+                .boxed()
+                .collect(toList());
     }
 
     private List<TxtContent> createTxtContentList(List<String> allLines, List<Integer> titleIndexes) {
@@ -76,19 +77,32 @@ public class TxtHandlerService {
 
     private List<String> getContentList(List<String> allLines, int startIndex, int endIndex) {
         return IntStream.range(startIndex, endIndex)
-                        .mapToObj(allLines::get)
-                        .filter(StringUtils::isNotBlank)
-                        .map(s -> s.replaceAll("　", ""))
-                        .map(this::replaceAllSpecialChar)
-                        .collect(toList());
+                .mapToObj(allLines::get)
+                .filter(StringUtils::isNotBlank)
+                .map(s -> s.replaceAll("　", ""))
+                .map(this::replaceSpecialSymbol)
+                .map(this::replaceSpecificChar)
+                .map(this::replaceSpecificNoun)
+                .collect(toList());
     }
 
-    private String replaceAllSpecialChar(String content) {
+    private String replaceSpecificChar(String content) {
+        return content.replaceAll("羣", "群")
+                .replaceAll("孃", "娘")
+                .replaceAll("裏", "裡")
+                .replaceAll("纔", "才");
+    }
+
+    private String replaceSpecialSymbol(String content) {
         return content.replaceAll("&", "&amp;")
-                      .replaceAll("<", "&lt;")
-                      .replaceAll(">", "&gt;")
-                      .replaceAll("\"", "&quot;")
-                      .replaceAll("'", "&apos;");
+                .replaceAll("<", "&lt;")
+                .replaceAll(">", "&gt;")
+                .replaceAll("\"", "&quot;")
+                .replaceAll("'", "&apos;");
+    }
+
+    private String replaceSpecificNoun(String content) {
+        return content.replaceAll("樑習", "梁習");
     }
 
 }
