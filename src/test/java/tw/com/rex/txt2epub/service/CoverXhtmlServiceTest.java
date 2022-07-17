@@ -1,11 +1,10 @@
 package tw.com.rex.txt2epub.service;
 
-import org.junit.After;
-import org.junit.Test;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.Test;
 import tw.com.rex.txt2epub.model.ConvertInfo;
 import tw.com.rex.txt2epub.utils.TestUtil;
 
-import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Arrays;
@@ -13,18 +12,19 @@ import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
-import static org.junit.Assert.assertTrue;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.io.FileMatchers.anExistingFileOrDirectory;
 
 public class CoverXhtmlServiceTest {
 
-    private final ConvertInfo convertInfo = TestUtil.createConvertInfo();
+    private static final ConvertInfo convertInfo = TestUtil.createConvertInfo();
 
     @Test
     public void generate() {
         IntStream.range(0, convertInfo.getTempDirectories().length)
                  .forEach(i -> new CoverXhtmlService(convertInfo, i).generate());
 
-        getCoverPaths().forEach(p -> assertTrue(Files.exists(p)));
+        getCoverPaths().stream().map(Path::toFile).forEach(f -> assertThat(f, anExistingFileOrDirectory()));
     }
 
     private List<Path> getCoverPaths() {
@@ -36,8 +36,8 @@ public class CoverXhtmlServiceTest {
                      .collect(Collectors.toList());
     }
 
-    @After
-    public void cleanUp() {
+    @AfterAll
+    public static void cleanUp() {
         TestUtil.cleanUp(convertInfo);
     }
 

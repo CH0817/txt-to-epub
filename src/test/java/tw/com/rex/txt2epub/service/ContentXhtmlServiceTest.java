@@ -1,32 +1,33 @@
 package tw.com.rex.txt2epub.service;
 
-import org.junit.After;
-import org.junit.Test;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.Test;
 import tw.com.rex.txt2epub.model.Book;
 import tw.com.rex.txt2epub.model.ConvertInfo;
 import tw.com.rex.txt2epub.model.TempDirectory;
 import tw.com.rex.txt2epub.utils.TestUtil;
 
-import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
-import static org.junit.Assert.assertTrue;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.io.FileMatchers.anExistingFileOrDirectory;
 
 public class ContentXhtmlServiceTest {
 
-    private final ConvertInfo convertInfo = TestUtil.createConvertInfo();
+    private final static ConvertInfo convertInfo = TestUtil.createConvertInfo();
 
     @Test
     public void generate() {
         IntStream.range(0, convertInfo.getTempDirectories().length)
-                 .forEach(i -> new ContentXhtmlService(convertInfo, i).generate());
+                .forEach(i -> new ContentXhtmlService(convertInfo, i).generate());
 
         IntStream.range(0, convertInfo.getBooks().length)
-                 .mapToObj(this::getAllPathStream)
-                 .flatMap(s -> s)
-                 .forEach(p -> assertTrue(Files.exists(p)));
+                .mapToObj(this::getAllPathStream)
+                .flatMap(s -> s)
+                .map(Path::toFile)
+                .forEach(f -> assertThat(f, anExistingFileOrDirectory()));
     }
 
     private Stream<Path> getAllPathStream(int index) {
@@ -39,8 +40,8 @@ public class ContentXhtmlServiceTest {
         return book.getTxtContentList().stream().map(c -> tempDirectory.getXhtmlPath().resolve(c.getXhtmlName()));
     }
 
-    @After
-    public void cleanUp() {
+    @AfterAll
+    public static void cleanUp() {
         TestUtil.cleanUp(convertInfo);
     }
 
