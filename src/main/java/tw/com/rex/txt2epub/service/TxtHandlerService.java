@@ -44,7 +44,7 @@ public class TxtHandlerService {
     private List<Integer> getTitleIndexes(List<String> allLines) {
         return IntStream.range(0, allLines.size())
                         .filter(i -> StringUtils.isNotBlank(allLines.get(i)))
-                        .filter(i -> StringUtils.trimToEmpty(allLines.get(i)).matches("^第\\d{1,4}章 .*$"))
+                        .filter(i -> StringUtils.trimToEmpty(allLines.get(i)).matches("^第\\d{1,4}[章|節] .*$"))
                         .boxed()
                         .collect(toList());
     }
