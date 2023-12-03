@@ -1,5 +1,6 @@
 package tw.com.rex.txt2epub.service;
 
+import com.github.houbb.opencc4j.support.segment.impl.Segments;
 import com.github.houbb.opencc4j.util.ZhConverterUtil;
 import lombok.AllArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
