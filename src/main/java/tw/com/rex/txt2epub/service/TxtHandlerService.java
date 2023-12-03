@@ -27,7 +27,7 @@ public class TxtHandlerService {
     }
 
     private List<String> getAllLines() {
-        String[] charsets = {"UTF-8", "Big5", "GBK"};
+        String[] charsets = {"UTF-8", "Big5", "GBK", "UTF-16"};
         for (String charset : charsets) {
             try {
                 return Files.readAllLines(Paths.get(filePath), Charset.forName(charset))
