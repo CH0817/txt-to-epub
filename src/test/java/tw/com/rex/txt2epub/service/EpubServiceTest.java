@@ -1,12 +1,12 @@
 package tw.com.rex.txt2epub.service;
 
-import org.junit.After;
-import org.junit.Test;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.Test;
 import tw.com.rex.txt2epub.define.TypesettingEnum;
 import tw.com.rex.txt2epub.frame.MainFrame;
 import tw.com.rex.txt2epub.model.ConvertInfo;
 import tw.com.rex.txt2epub.model.TxtContent;
-import tw.com.rex.txt2epub.util.EpubServiceTestUtil;
+import tw.com.rex.txt2epub.utils.TestUtil;
 import tw.com.rex.txt2epub.utils.FileUtil;
 import tw.com.rex.txt2epub.utils.ListUtil;
 
@@ -15,16 +15,15 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.List;
 
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class EpubServiceTest {
 
     private static final String OUTPUT_PATH = "D:/Temp/曹賊";
 
-
     @Test
     public void horizontalProcess() {
-        MainFrame frame = EpubServiceTestUtil.createFrame(TypesettingEnum.HORIZONTAL, OUTPUT_PATH);
+        MainFrame frame = TestUtil.createFrame(TypesettingEnum.HORIZONTAL, OUTPUT_PATH);
         ConvertInfo convertInfo = new ConvertInfo(frame);
         new EpubService(convertInfo).process();
         verifyResult();
@@ -32,7 +31,7 @@ public class EpubServiceTest {
 
     @Test
     public void verticalProcess() {
-        MainFrame frame = EpubServiceTestUtil.createFrame(TypesettingEnum.VERTICAL, OUTPUT_PATH);
+        MainFrame frame = TestUtil.createFrame(TypesettingEnum.VERTICAL, OUTPUT_PATH);
         ConvertInfo convertInfo = new ConvertInfo(frame);
         new EpubService(convertInfo).process();
         verifyResult();
@@ -40,7 +39,7 @@ public class EpubServiceTest {
 
     @Test
     public void processNoCover() {
-        MainFrame frame = EpubServiceTestUtil.createFrame(TypesettingEnum.HORIZONTAL, OUTPUT_PATH);
+        MainFrame frame = TestUtil.createFrame(TypesettingEnum.HORIZONTAL, OUTPUT_PATH);
         frame.setCoverPath(new JLabel());
         ConvertInfo convertInfo = new ConvertInfo(frame);
         new EpubService(convertInfo).process();
@@ -63,8 +62,8 @@ public class EpubServiceTest {
         }
     }
 
-    @After
-    public void cleanUp() {
+    @AfterAll
+    public static void cleanUp() {
         FileUtil.deleteAll(Paths.get(OUTPUT_PATH));
     }
 

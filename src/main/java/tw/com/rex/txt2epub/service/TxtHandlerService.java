@@ -31,9 +31,9 @@ public class TxtHandlerService {
         for (String charset : charsets) {
             try {
                 return Files.readAllLines(Paths.get(filePath), Charset.forName(charset))
-                            .stream()
-                            .map(ZhConverterUtil::toTraditional)
-                            .collect(toList());
+                        .stream()
+                        .map(s -> ZhConverterUtil.toTraditional(s, Segments.defaults()))
+                        .collect(toList());
             } catch (IOException e) {
                 System.out.println(charset + " 編碼取 txt 內容失敗");
             }
@@ -76,19 +76,32 @@ public class TxtHandlerService {
 
     private List<String> getContentList(List<String> allLines, int startIndex, int endIndex) {
         return IntStream.range(startIndex, endIndex)
-                        .mapToObj(allLines::get)
-                        .filter(StringUtils::isNotBlank)
-                        .map(s -> s.replaceAll("　", ""))
-                        .map(this::replaceAllSpecialChar)
-                        .collect(toList());
+                .mapToObj(allLines::get)
+                .filter(StringUtils::isNotBlank)
+                .map(s -> s.replaceAll("　", ""))
+                .map(this::replaceSpecialSymbol)
+                .map(this::replaceSpecificChar)
+                .map(this::replaceSpecificNoun)
+                .collect(toList());
     }
 
-    private String replaceAllSpecialChar(String content) {
+    private String replaceSpecificChar(String content) {
+        return content.replaceAll("羣", "群")
+                .replaceAll("孃", "娘")
+                .replaceAll("裏", "裡")
+                .replaceAll("纔", "才");
+    }
+
+    private String replaceSpecialSymbol(String content) {
         return content.replaceAll("&", "&amp;")
-                      .replaceAll("<", "&lt;")
-                      .replaceAll(">", "&gt;")
-                      .replaceAll("\"", "&quot;")
-                      .replaceAll("'", "&apos;");
+                .replaceAll("<", "&lt;")
+                .replaceAll(">", "&gt;")
+                .replaceAll("\"", "&quot;")
+                .replaceAll("'", "&apos;");
+    }
+
+    private String replaceSpecificNoun(String content) {
+        return content.replaceAll("樑習", "梁習");
     }
 
 }
