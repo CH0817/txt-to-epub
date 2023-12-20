@@ -17,8 +17,8 @@ import java.util.Enumeration;
 @Getter
 public class MainFrame extends JFrame {
 
-    private final Container pane;
     private final GridBagConstraints bag;
+    private final Container pane;
     private final JLabel selectedTxtLabel;
     private final JLabel outputFilePath;
     private final JLabel coverPath;
@@ -27,107 +27,75 @@ public class MainFrame extends JFrame {
     private final ButtonGroup typesettingGroup;
 
     public MainFrame() throws HeadlessException {
-        pane = this.getContentPane();
-
-        bag = new GridBagConstraints();
-        bag.fill = GridBagConstraints.HORIZONTAL;
-        bag.insets = new Insets(3, 3, 3, 3);
-
         selectedTxtLabel = new JLabel();
         selectedTxtLabel.setName("selectedFilePath");
         selectedTxtLabel.setPreferredSize(new Dimension(300, 25));
 
         outputFilePath = new JLabel();
         outputFilePath.setName("outputFilePath");
+        outputFilePath.setPreferredSize(new Dimension(300, 25));
 
         coverPath = new JLabel();
         coverPath.setName("coverPath");
+        coverPath.setPreferredSize(new Dimension(300, 25));
 
         authorField = new JTextField();
+
         publishingHouseField = new JTextField();
 
         typesettingGroup = new ButtonGroup();
 
-        setTitle("txt轉EPUB");
-        Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
-        int height = screenSize.height;
-        int width = screenSize.width;
-        setSize(width / 2, height / 2);
-        setLocationRelativeTo(null);
-        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        setPane(getContentPane());
-        pack();
-    }
-
-    private void setPane(Container pane) {
+        pane = this.getContentPane();
         pane.setLayout(new GridBagLayout());
-        selectFileArea();
-        outputFileArea();
-        coverArea();
-        inputArea();
-        typesettingArea();
-        executeArea();
-    }
 
-    private void selectFileArea() {
-        bag.weightx = 0.2;
+        // 選 txt
+        bag = new GridBagConstraints();
+        bag.fill = GridBagConstraints.HORIZONTAL;
         bag.gridx = 0;
         bag.gridy = 0;
         pane.add(new TxtChooserButton(selectedTxtLabel), bag);
 
-        bag.weightx = 0.8;
         bag.gridx = 1;
         bag.gridy = 0;
         pane.add(selectedTxtLabel, bag);
-    }
 
-    private void outputFileArea() {
-        bag.weightx = 0.2;
+        // 選輸出
         bag.gridx = 0;
         bag.gridy = 1;
         pane.add(new OutputPathChooserButton(outputFilePath), bag);
 
-        bag.weightx = 0.8;
         bag.gridx = 1;
         bag.gridy = 1;
         pane.add(outputFilePath, bag);
-    }
 
-    private void coverArea() {
-        bag.weightx = 0.2;
+        // 選封面
         bag.gridx = 0;
         bag.gridy = 2;
         pane.add(new CoverChooserButton(coverPath), bag);
 
-        bag.weightx = 0.8;
         bag.gridx = 1;
         bag.gridy = 2;
         pane.add(coverPath, bag);
-    }
 
-    private void inputArea() {
-        bag.weightx = 0.2;
+        // 作者
         bag.gridx = 0;
         bag.gridy = 3;
-        pane.add(new JLabel("作者"), bag);
+        pane.add(new JLabel("作者", SwingConstants.CENTER), bag);
 
-        bag.weightx = 0.8;
         bag.gridx = 1;
         bag.gridy = 3;
         pane.add(authorField, bag);
 
-        bag.weightx = 0.2;
+        // 出版社
         bag.gridx = 0;
         bag.gridy = 4;
-        pane.add(new JLabel("出版社"), bag);
+        pane.add(new JLabel("出版社", SwingConstants.CENTER), bag);
 
-        bag.weightx = 0.8;
         bag.gridx = 1;
         bag.gridy = 4;
         pane.add(publishingHouseField, bag);
-    }
 
-    private void typesettingArea() {
+        // 橫直排
         JRadioButton horizontal = new JRadioButton("橫排");
         horizontal.setActionCommand(TypesettingEnum.HORIZONTAL.name());
         horizontal.setSelected(true);
@@ -138,19 +106,17 @@ public class MainFrame extends JFrame {
         typesettingGroup.add(horizontal);
         typesettingGroup.add(vertical);
 
-        bag.weightx = 0.5;
+        JPanel panel = new JPanel();
+        panel.setLayout(new FlowLayout(FlowLayout.LEFT));
+        panel.add(horizontal);
+        panel.add(vertical);
+
         bag.gridx = 0;
         bag.gridy = 5;
-        pane.add(horizontal, bag);
+        bag.gridwidth = 2;
+        pane.add(panel, bag);
 
-        bag.weightx = 0.5;
-        bag.gridx = 1;
-        bag.gridy = 5;
-        pane.add(vertical, bag);
-    }
-
-    private void executeArea() {
-        bag.weightx = 0.0;
+        // 開始轉換
         bag.gridx = 0;
         bag.gridy = 6;
         bag.gridwidth = 2;
@@ -159,6 +125,15 @@ public class MainFrame extends JFrame {
         doExecuteBtn.addActionListener(e -> convertToEpub());
 
         pane.add(doExecuteBtn, bag);
+
+        setTitle("txt轉EPUB");
+        Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
+        int height = screenSize.height;
+        int width = screenSize.width;
+        setSize(width / 2, height / 2);
+        setLocationRelativeTo(null);
+        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        pack();
     }
 
     private void convertToEpub() {
