@@ -4,15 +4,14 @@ import lombok.Getter;
 import lombok.Setter;
 import org.apache.commons.lang3.StringUtils;
 import tw.com.rex.txt2epub.define.TypesettingEnum;
+import tw.com.rex.txt2epub.frame.button.CoverChooserButton;
+import tw.com.rex.txt2epub.frame.button.OutputPathChooserButton;
+import tw.com.rex.txt2epub.frame.button.TxtChooserButton;
 import tw.com.rex.txt2epub.model.ConvertInfo;
 import tw.com.rex.txt2epub.service.EpubService;
 
-import javax.imageio.ImageIO;
 import javax.swing.*;
-import javax.swing.filechooser.FileFilter;
-import javax.swing.filechooser.FileNameExtensionFilter;
 import java.awt.*;
-import java.io.File;
 import java.nio.file.Paths;
 import java.util.Enumeration;
 
@@ -29,7 +28,6 @@ public class MainFrame extends JFrame {
     @Getter
     @Setter
     private JLabel coverPath;
-    private final JFileChooser chooser;
     @Getter
     @Setter
     private JTextField authorField;
@@ -56,10 +54,6 @@ public class MainFrame extends JFrame {
 
         coverPath = new JLabel();
         coverPath.setName("coverPath");
-
-        chooser = new JFileChooser();
-        chooser.setName("chooser");
-        chooser.setMultiSelectionEnabled(false);
 
         authorField = new JTextField();
         publishingHouseField = new JTextField();
@@ -91,7 +85,7 @@ public class MainFrame extends JFrame {
         bag.weightx = 0.2;
         bag.gridx = 0;
         bag.gridy = 0;
-        pane.add(selectFileButton(), bag);
+        pane.add(new TxtChooserButton(selectedTxtLabel), bag);
 
         bag.weightx = 0.8;
         bag.gridx = 1;
@@ -103,7 +97,7 @@ public class MainFrame extends JFrame {
         bag.weightx = 0.2;
         bag.gridx = 0;
         bag.gridy = 1;
-        pane.add(selectOutputPathButton(), bag);
+        pane.add(new OutputPathChooserButton(outputFilePath), bag);
 
         bag.weightx = 0.8;
         bag.gridx = 1;
@@ -111,69 +105,16 @@ public class MainFrame extends JFrame {
         pane.add(outputFilePath, bag);
     }
 
-    private JButton selectFileButton() {
-        JButton result = new JButton("請選擇檔案");
-        result.setName("selectFileBtn");
-        result.addActionListener(e -> selectFile());
-        return result;
-    }
-
-    private void selectFile() {
-        FileFilter txtFileFilter = new FileNameExtensionFilter("txt filter", "txt");
-        chooser.setFileFilter(txtFileFilter);
-        chooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
-        int dialog = chooser.showOpenDialog(pane);
-        if (dialog == JFileChooser.APPROVE_OPTION) {
-            File selectedFile = chooser.getSelectedFile();
-            selectedTxtLabel.setText(selectedFile.getPath());
-        }
-    }
-
-    private JButton selectOutputPathButton() {
-        JButton result = new JButton("請選擇輸出路徑");
-        result.setName("selectOutputPathBtn");
-        result.addActionListener(e -> selectOutputPath());
-        return result;
-    }
-
-    private void selectOutputPath() {
-        chooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
-        chooser.setFileFilter(null);
-        int dialog = chooser.showOpenDialog(null);
-        if (dialog == JFileChooser.APPROVE_OPTION) {
-            File selectedFile = chooser.getSelectedFile();
-            outputFilePath.setText(selectedFile.getPath());
-        }
-    }
-
     private void coverArea() {
         bag.weightx = 0.2;
         bag.gridx = 0;
         bag.gridy = 2;
-        pane.add(selectCoverImageButton(), bag);
+        pane.add(new CoverChooserButton(coverPath), bag);
 
         bag.weightx = 0.8;
         bag.gridx = 1;
         bag.gridy = 2;
         pane.add(coverPath, bag);
-    }
-
-    private JButton selectCoverImageButton() {
-        JButton result = new JButton("請選擇封面");
-        result.setName("selectCoverImage");
-        result.addActionListener(e -> selectCoverImage());
-        return result;
-    }
-
-    private void selectCoverImage() {
-        FileFilter imageFilesFilter = new FileNameExtensionFilter("image files", ImageIO.getReaderFileSuffixes());
-        chooser.setFileFilter(imageFilesFilter);
-        chooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
-        int dialog = chooser.showOpenDialog(pane);
-        if (dialog == JFileChooser.APPROVE_OPTION) {
-            File selectedFile = chooser.getSelectedFile();
-            coverPath.setText(selectedFile.getPath());
-        }
     }
 
     private void inputArea() {
@@ -237,7 +178,7 @@ public class MainFrame extends JFrame {
             try {
                 new EpubService(new ConvertInfo(this)).process();
                 int input = JOptionPane.showOptionDialog(pane, "轉換成功", "訊息", JOptionPane.DEFAULT_OPTION,
-                                                         JOptionPane.INFORMATION_MESSAGE, null, null, null);
+                        JOptionPane.INFORMATION_MESSAGE, null, null, null);
                 if (input == JOptionPane.OK_OPTION) {
                     Desktop.getDesktop().open(Paths.get(outputFilePath.getText()).toFile());
                 }
