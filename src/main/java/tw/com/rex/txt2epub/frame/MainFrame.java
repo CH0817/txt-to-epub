@@ -1,7 +1,6 @@
 package tw.com.rex.txt2epub.frame;
 
 import lombok.Getter;
-import lombok.Setter;
 import org.apache.commons.lang3.StringUtils;
 import tw.com.rex.txt2epub.define.TypesettingEnum;
 import tw.com.rex.txt2epub.frame.button.CoverChooserButton;
@@ -15,28 +14,17 @@ import java.awt.*;
 import java.nio.file.Paths;
 import java.util.Enumeration;
 
+@Getter
 public class MainFrame extends JFrame {
 
     private final Container pane;
     private final GridBagConstraints bag;
-    @Getter
-    @Setter
-    private JLabel selectedTxtLabel;
-    @Getter
-    @Setter
-    private JLabel outputFilePath;
-    @Getter
-    @Setter
-    private JLabel coverPath;
-    @Getter
-    @Setter
-    private JTextField authorField;
-    @Getter
-    @Setter
-    private JTextField publishingHouseField;
-    @Getter
-    @Setter
-    private ButtonGroup typesettingGroup;
+    private final JLabel selectedTxtLabel;
+    private final JLabel outputFilePath;
+    private final JLabel coverPath;
+    private final JTextField authorField;
+    private final JTextField publishingHouseField;
+    private final ButtonGroup typesettingGroup;
 
     public MainFrame() throws HeadlessException {
         pane = this.getContentPane();
