@@ -2,10 +2,10 @@ package tw.com.rex.txt2epub.frame;
 
 import lombok.Getter;
 import org.apache.commons.lang3.StringUtils;
-import tw.com.rex.txt2epub.define.TypesettingEnum;
 import tw.com.rex.txt2epub.frame.button.CoverChooserButton;
 import tw.com.rex.txt2epub.frame.button.OutputPathChooserButton;
 import tw.com.rex.txt2epub.frame.button.TxtChooserButton;
+import tw.com.rex.txt2epub.frame.panel.TypeSettingPanel;
 import tw.com.rex.txt2epub.model.ConvertInfo;
 import tw.com.rex.txt2epub.service.EpubService;
 
@@ -17,16 +17,19 @@ import java.util.Enumeration;
 @Getter
 public class MainFrame extends JFrame {
 
-    private final GridBagConstraints bag;
+    private final GridBagConstraints bag = new GridBagConstraints();
     private final Container pane;
     private final JLabel selectedTxtLabel;
     private final JLabel outputFilePath;
     private final JLabel coverPath;
     private final JTextField authorField;
     private final JTextField publishingHouseField;
-    private final ButtonGroup typesettingGroup;
+    private final TypeSettingPanel typeSettingPanel;
 
     public MainFrame() throws HeadlessException {
+        pane = this.getContentPane();
+        pane.setLayout(new GridBagLayout());
+
         selectedTxtLabel = new JLabel();
         selectedTxtLabel.setName("selectedFilePath");
         selectedTxtLabel.setPreferredSize(new Dimension(300, 25));
@@ -43,13 +46,7 @@ public class MainFrame extends JFrame {
 
         publishingHouseField = new JTextField();
 
-        typesettingGroup = new ButtonGroup();
-
-        pane = this.getContentPane();
-        pane.setLayout(new GridBagLayout());
-
         // 選 txt
-        bag = new GridBagConstraints();
         bag.fill = GridBagConstraints.HORIZONTAL;
         bag.gridx = 0;
         bag.gridy = 0;
@@ -95,26 +92,7 @@ public class MainFrame extends JFrame {
         bag.gridy = 4;
         pane.add(publishingHouseField, bag);
 
-        // 橫直排
-        JRadioButton horizontal = new JRadioButton("橫排");
-        horizontal.setActionCommand(TypesettingEnum.HORIZONTAL.name());
-        horizontal.setSelected(true);
-
-        JRadioButton vertical = new JRadioButton("直排");
-        vertical.setActionCommand(TypesettingEnum.VERTICAL.name());
-
-        typesettingGroup.add(horizontal);
-        typesettingGroup.add(vertical);
-
-        JPanel panel = new JPanel();
-        panel.setLayout(new FlowLayout(FlowLayout.LEFT));
-        panel.add(horizontal);
-        panel.add(vertical);
-
-        bag.gridx = 0;
-        bag.gridy = 5;
-        bag.gridwidth = 2;
-        pane.add(panel, bag);
+        this.typeSettingPanel = initTypeSetting();
 
         // 開始轉換
         bag.gridx = 0;
@@ -134,6 +112,17 @@ public class MainFrame extends JFrame {
         setLocationRelativeTo(null);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         pack();
+    }
+
+    private TypeSettingPanel initTypeSetting() {
+        TypeSettingPanel result = new TypeSettingPanel();
+
+        this.bag.gridx = 0;
+        this.bag.gridy = 5;
+        this.bag.gridwidth = 2;
+        this.pane.add(result, this.bag);
+
+        return result;
     }
 
     private void convertToEpub() {
@@ -170,7 +159,7 @@ public class MainFrame extends JFrame {
     }
 
     public String getTypesetting() {
-        Enumeration<AbstractButton> elements = typesettingGroup.getElements();
+        Enumeration<AbstractButton> elements = this.typeSettingPanel.getTypesettingGroup().getElements();
         while (elements.hasMoreElements()) {
             AbstractButton button = elements.nextElement();
             if (button.isSelected()) {
