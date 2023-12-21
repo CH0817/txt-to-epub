@@ -6,7 +6,6 @@ import tw.com.rex.txt2epub.frame.MainFrame;
 import tw.com.rex.txt2epub.service.TxtHandlerService;
 import tw.com.rex.txt2epub.utils.ListUtil;
 
-import java.io.Serializable;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -15,7 +14,7 @@ import java.util.Objects;
 import java.util.stream.IntStream;
 
 @Getter
-public class Book implements Serializable {
+public class Book {
 
     private final String UNKNOWN = "未知";
 
@@ -37,8 +36,8 @@ public class Book implements Serializable {
         List<TxtContent> txtContentList = getTxtContentList(frame);
         List<List<TxtContent>> episodes = ListUtil.separateDataList(txtContentList, 100);
         return IntStream.range(0, episodes.size())
-                        .mapToObj(i -> new Book(frame, getBookName(frame, i + 1), episodes.get(i)))
-                        .toArray(Book[]::new);
+                .mapToObj(i -> new Book(frame, getBookName(frame, i + 1), episodes.get(i)))
+                .toArray(Book[]::new);
     }
 
     private static String getBookName(MainFrame frame, int episode) {
@@ -47,12 +46,12 @@ public class Book implements Serializable {
             episodeBuilder.insert(0, "0");
         }
         episodeBuilder.insert(0, "-");
-        String fileName = Paths.get(frame.getSelectedTxtLabel().getText()).toAbsolutePath().getFileName().toString();
+        String fileName = Paths.get(frame.getTxtChooser().getLabel().getText()).toAbsolutePath().getFileName().toString();
         return fileName.substring(0, fileName.lastIndexOf(".")) + episodeBuilder;
     }
 
     private static List<TxtContent> getTxtContentList(MainFrame frame) {
-        return new TxtHandlerService(frame.getSelectedTxtLabel().getText()).getTxtContentList();
+        return new TxtHandlerService(frame.getTxtChooser().getLabel().getText()).getTxtContentList();
     }
 
     public String getAuthor() {

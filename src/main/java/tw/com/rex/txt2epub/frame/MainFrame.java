@@ -4,7 +4,8 @@ import lombok.Getter;
 import org.apache.commons.lang3.StringUtils;
 import tw.com.rex.txt2epub.frame.button.CoverChooserButton;
 import tw.com.rex.txt2epub.frame.button.OutputPathChooserButton;
-import tw.com.rex.txt2epub.frame.button.TxtChooserButton;
+import tw.com.rex.txt2epub.frame.chooser.FileChooser;
+import tw.com.rex.txt2epub.frame.panel.TxtChooser;
 import tw.com.rex.txt2epub.frame.panel.TypeSettingPanel;
 import tw.com.rex.txt2epub.model.ConvertInfo;
 import tw.com.rex.txt2epub.service.EpubService;
@@ -19,20 +20,16 @@ public class MainFrame extends JFrame {
 
     private final GridBagConstraints bag = new GridBagConstraints();
     private final Container pane;
-    private final JLabel selectedTxtLabel;
     private final JLabel outputFilePath;
     private final JLabel coverPath;
     private final JTextField authorField;
     private final JTextField publishingHouseField;
+    private final FileChooser txtChooser = new TxtChooser();
     private final TypeSettingPanel typeSettingPanel;
 
     public MainFrame() throws HeadlessException {
         pane = this.getContentPane();
         pane.setLayout(new GridBagLayout());
-
-        selectedTxtLabel = new JLabel();
-        selectedTxtLabel.setName("selectedFilePath");
-        selectedTxtLabel.setPreferredSize(new Dimension(300, 25));
 
         outputFilePath = new JLabel();
         outputFilePath.setName("outputFilePath");
@@ -46,15 +43,7 @@ public class MainFrame extends JFrame {
 
         publishingHouseField = new JTextField();
 
-        // 選 txt
-        bag.fill = GridBagConstraints.HORIZONTAL;
-        bag.gridx = 0;
-        bag.gridy = 0;
-        pane.add(new TxtChooserButton(selectedTxtLabel), bag);
-
-        bag.gridx = 1;
-        bag.gridy = 0;
-        pane.add(selectedTxtLabel, bag);
+        initTxtChooser();
 
         // 選輸出
         bag.gridx = 0;
@@ -114,6 +103,18 @@ public class MainFrame extends JFrame {
         pack();
     }
 
+    private void initTxtChooser() {
+        // file choose button
+        this.bag.fill = GridBagConstraints.HORIZONTAL;
+        this.bag.gridx = 0;
+        this.bag.gridy = 0;
+        this.pane.add(this.txtChooser.getButton(), this.bag);
+        // choosed file path label
+        this.bag.gridx = 1;
+        this.bag.gridy = 0;
+        this.pane.add(this.txtChooser.getLabel(), this.bag);
+    }
+
     private TypeSettingPanel initTypeSetting() {
         TypeSettingPanel result = new TypeSettingPanel();
 
@@ -142,7 +143,7 @@ public class MainFrame extends JFrame {
 
     private boolean verify() {
         StringBuilder error = new StringBuilder();
-        if (StringUtils.isBlank(selectedTxtLabel.getText())) {
+        if (StringUtils.isBlank(txtChooser.getLabel().getText())) {
             error.append("請選擇檔案\n");
         }
         if (StringUtils.isBlank(outputFilePath.getText())) {

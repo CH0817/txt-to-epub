@@ -13,13 +13,14 @@ import java.util.Arrays;
 public class TestUtil {
 
     public static MainFrame createFrame(TypesettingEnum typesettingEnum, String outputPath) {
+        // TODO 後補
         MainFrame frame = new MainFrame();
-        frame.setSelectedTxtLabel(new JLabel(Paths.get("src/test/resources/曹賊.txt").toAbsolutePath().toString()));
-        frame.setOutputFilePath(new JLabel(outputPath));
-        frame.setCoverPath(new JLabel(Paths.get("src/test/resources/cover.jpg").toAbsolutePath().toString()));
-        frame.setAuthorField(new JTextField("庚新"));
-        frame.setPublishingHouseField(new JTextField("典藏閣"));
-        frame.setTypesettingGroup(createTypesettingGroup(typesettingEnum));
+        // frame.setSelectedTxtLabel(new JLabel(Paths.get("src/test/resources/曹賊.txt").toAbsolutePath().toString()));
+        // frame.setOutputFilePath(new JLabel(outputPath));
+        // frame.setCoverPath(new JLabel(Paths.get("src/test/resources/cover.jpg").toAbsolutePath().toString()));
+        // frame.setAuthorField(new JTextField("庚新"));
+        // frame.setPublishingHouseField(new JTextField("典藏閣"));
+        // frame.setTypesettingGroup(createTypesettingGroup(typesettingEnum));
         return frame;
     }
 
