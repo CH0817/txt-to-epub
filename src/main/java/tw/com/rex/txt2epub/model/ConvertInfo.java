@@ -21,7 +21,7 @@ public class ConvertInfo {
     public ConvertInfo(MainFrame frame) {
         this.frame = frame;
         this.books = Book.create(frame);
-        this.output = Paths.get(frame.getOutputFilePath().getText());
+        this.output = Paths.get(frame.getOutputPathChooser().getLabel().getText());
         this.style = StyleFactory.getStyle(frame.getTypesetting());
         this.tempDirectories = createTempDirectories();
     }

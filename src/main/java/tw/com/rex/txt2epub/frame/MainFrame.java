@@ -3,8 +3,8 @@ package tw.com.rex.txt2epub.frame;
 import lombok.Getter;
 import org.apache.commons.lang3.StringUtils;
 import tw.com.rex.txt2epub.frame.button.CoverChooserButton;
-import tw.com.rex.txt2epub.frame.button.OutputPathChooserButton;
 import tw.com.rex.txt2epub.frame.chooser.FileChooser;
+import tw.com.rex.txt2epub.frame.panel.OutputPathChooser;
 import tw.com.rex.txt2epub.frame.panel.TxtChooser;
 import tw.com.rex.txt2epub.frame.panel.TypeSettingPanel;
 import tw.com.rex.txt2epub.model.ConvertInfo;
@@ -20,20 +20,21 @@ public class MainFrame extends JFrame {
 
     private final GridBagConstraints bag = new GridBagConstraints();
     private final Container pane;
-    private final JLabel outputFilePath;
+    // private final JLabel outputFilePath;
     private final JLabel coverPath;
     private final JTextField authorField;
     private final JTextField publishingHouseField;
     private final FileChooser txtChooser = new TxtChooser();
+    private final FileChooser outputPathChooser = new OutputPathChooser();
     private final TypeSettingPanel typeSettingPanel;
 
     public MainFrame() throws HeadlessException {
         pane = this.getContentPane();
         pane.setLayout(new GridBagLayout());
 
-        outputFilePath = new JLabel();
-        outputFilePath.setName("outputFilePath");
-        outputFilePath.setPreferredSize(new Dimension(300, 25));
+        // outputFilePath = new JLabel();
+        // outputFilePath.setName("outputFilePath");
+        // outputFilePath.setPreferredSize(new Dimension(300, 25));
 
         coverPath = new JLabel();
         coverPath.setName("coverPath");
@@ -44,15 +45,9 @@ public class MainFrame extends JFrame {
         publishingHouseField = new JTextField();
 
         initTxtChooser();
+        initOutputChooser();
 
         // 選輸出
-        bag.gridx = 0;
-        bag.gridy = 1;
-        pane.add(new OutputPathChooserButton(outputFilePath), bag);
-
-        bag.gridx = 1;
-        bag.gridy = 1;
-        pane.add(outputFilePath, bag);
 
         // 選封面
         bag.gridx = 0;
@@ -115,6 +110,17 @@ public class MainFrame extends JFrame {
         this.pane.add(this.txtChooser.getLabel(), this.bag);
     }
 
+    private void initOutputChooser() {
+        // output choose button
+        bag.gridx = 0;
+        bag.gridy = 1;
+        pane.add(this.outputPathChooser.getButton(), bag);
+        // choosed output path label
+        bag.gridx = 1;
+        bag.gridy = 1;
+        pane.add(this.outputPathChooser.getLabel(), bag);
+    }
+
     private TypeSettingPanel initTypeSetting() {
         TypeSettingPanel result = new TypeSettingPanel();
 
@@ -133,7 +139,7 @@ public class MainFrame extends JFrame {
                 int input = JOptionPane.showOptionDialog(pane, "轉換成功", "訊息", JOptionPane.DEFAULT_OPTION,
                         JOptionPane.INFORMATION_MESSAGE, null, null, null);
                 if (input == JOptionPane.OK_OPTION) {
-                    Desktop.getDesktop().open(Paths.get(outputFilePath.getText()).toFile());
+                    Desktop.getDesktop().open(Paths.get(this.outputPathChooser.getLabel().getText()).toFile());
                 }
             } catch (Exception e) {
                 JOptionPane.showMessageDialog(pane, e.getMessage());
@@ -146,7 +152,7 @@ public class MainFrame extends JFrame {
         if (StringUtils.isBlank(txtChooser.getLabel().getText())) {
             error.append("請選擇檔案\n");
         }
-        if (StringUtils.isBlank(outputFilePath.getText())) {
+        if (StringUtils.isBlank(this.outputPathChooser.getLabel().getText())) {
             error.append("請選擇輸出路徑\n");
         }
         if (StringUtils.isBlank(getTypesetting())) {

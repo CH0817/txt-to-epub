@@ -40,7 +40,7 @@ public class EpubServiceTest {
     @Test
     public void processNoCover() {
         MainFrame frame = TestUtil.createFrame(TypesettingEnum.HORIZONTAL, OUTPUT_PATH);
-        frame.setCoverPath(new JLabel());
+        // frame.setCoverPath(new JLabel());
         ConvertInfo convertInfo = new ConvertInfo(frame);
         new EpubService(convertInfo).process();
         verifyResult();
