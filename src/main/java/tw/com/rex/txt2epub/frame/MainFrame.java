@@ -2,8 +2,8 @@ package tw.com.rex.txt2epub.frame;
 
 import lombok.Getter;
 import org.apache.commons.lang3.StringUtils;
-import tw.com.rex.txt2epub.frame.button.CoverChooserButton;
 import tw.com.rex.txt2epub.frame.chooser.FileChooser;
+import tw.com.rex.txt2epub.frame.panel.CoverChooser;
 import tw.com.rex.txt2epub.frame.panel.OutputPathChooser;
 import tw.com.rex.txt2epub.frame.panel.TxtChooser;
 import tw.com.rex.txt2epub.frame.panel.TypeSettingPanel;
@@ -20,25 +20,16 @@ public class MainFrame extends JFrame {
 
     private final GridBagConstraints bag = new GridBagConstraints();
     private final Container pane;
-    // private final JLabel outputFilePath;
-    private final JLabel coverPath;
     private final JTextField authorField;
     private final JTextField publishingHouseField;
     private final FileChooser txtChooser = new TxtChooser();
     private final FileChooser outputPathChooser = new OutputPathChooser();
+    private final FileChooser coverChooser = new CoverChooser();
     private final TypeSettingPanel typeSettingPanel;
 
     public MainFrame() throws HeadlessException {
         pane = this.getContentPane();
         pane.setLayout(new GridBagLayout());
-
-        // outputFilePath = new JLabel();
-        // outputFilePath.setName("outputFilePath");
-        // outputFilePath.setPreferredSize(new Dimension(300, 25));
-
-        coverPath = new JLabel();
-        coverPath.setName("coverPath");
-        coverPath.setPreferredSize(new Dimension(300, 25));
 
         authorField = new JTextField();
 
@@ -46,17 +37,7 @@ public class MainFrame extends JFrame {
 
         initTxtChooser();
         initOutputChooser();
-
-        // 選輸出
-
-        // 選封面
-        bag.gridx = 0;
-        bag.gridy = 2;
-        pane.add(new CoverChooserButton(coverPath), bag);
-
-        bag.gridx = 1;
-        bag.gridy = 2;
-        pane.add(coverPath, bag);
+        initCoverChooser();
 
         // 作者
         bag.gridx = 0;
@@ -119,6 +100,17 @@ public class MainFrame extends JFrame {
         bag.gridx = 1;
         bag.gridy = 1;
         pane.add(this.outputPathChooser.getLabel(), bag);
+    }
+
+    private void initCoverChooser() {
+        // cover choose button
+        bag.gridx = 0;
+        bag.gridy = 2;
+        pane.add(this.coverChooser.getButton(), bag);
+        // choosed cover label
+        bag.gridx = 1;
+        bag.gridy = 2;
+        pane.add(this.coverChooser.getLabel(), bag);
     }
 
     private TypeSettingPanel initTypeSetting() {

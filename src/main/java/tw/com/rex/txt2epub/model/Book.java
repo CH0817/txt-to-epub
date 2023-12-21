@@ -26,7 +26,7 @@ public class Book {
 
     private Book(MainFrame frame, String name, List<TxtContent> txtContentList) {
         this.name = name;
-        this.cover = Paths.get(frame.getCoverPath().getText());
+        this.cover = Paths.get(frame.getCoverChooser().getLabel().getText());
         this.author = frame.getAuthorField().getText();
         this.publisher = frame.getPublishingHouseField().getText();
         this.txtContentList = txtContentList;
