@@ -13,7 +13,6 @@ import tw.com.rex.txt2epub.service.EpubService;
 import javax.swing.*;
 import java.awt.*;
 import java.nio.file.Paths;
-import java.util.Enumeration;
 
 @Getter
 public class MainFrame extends JFrame {
@@ -142,30 +141,16 @@ public class MainFrame extends JFrame {
     private boolean verify() {
         StringBuilder error = new StringBuilder();
         if (StringUtils.isBlank(txtChooser.getLabel().getText())) {
-            error.append("請選擇檔案\n");
+            error.append("請選擇txt檔案\n");
         }
         if (StringUtils.isBlank(this.outputPathChooser.getLabel().getText())) {
             error.append("請選擇輸出路徑\n");
-        }
-        if (StringUtils.isBlank(getTypesetting())) {
-            error.append("未選擇直排或橫排\n");
         }
         if (StringUtils.isNotBlank(error.toString())) {
             JOptionPane.showMessageDialog(pane, error);
             return false;
         }
         return true;
-    }
-
-    public String getTypesetting() {
-        Enumeration<AbstractButton> elements = this.typeSettingPanel.getTypesettingGroup().getElements();
-        while (elements.hasMoreElements()) {
-            AbstractButton button = elements.nextElement();
-            if (button.isSelected()) {
-                return button.getActionCommand();
-            }
-        }
-        return StringUtils.EMPTY;
     }
 
 }

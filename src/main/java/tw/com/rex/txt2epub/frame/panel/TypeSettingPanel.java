@@ -1,6 +1,7 @@
 package tw.com.rex.txt2epub.frame.panel;
 
 import lombok.Getter;
+import org.apache.commons.lang3.StringUtils;
 import tw.com.rex.txt2epub.define.TypesettingEnum;
 
 import javax.swing.*;
@@ -46,6 +47,17 @@ public class TypeSettingPanel extends JPanel {
         while (elements.hasMoreElements()) {
             this.add(elements.nextElement());
         }
+    }
+
+    public String getStyle() {
+        Enumeration<AbstractButton> elements = this.typesettingGroup.getElements();
+        while (elements.hasMoreElements()) {
+            AbstractButton button = elements.nextElement();
+            if (button.isSelected()) {
+                return button.getActionCommand();
+            }
+        }
+        return StringUtils.EMPTY;
     }
 
 }

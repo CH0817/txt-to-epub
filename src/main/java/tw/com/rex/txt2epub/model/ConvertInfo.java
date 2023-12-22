@@ -22,7 +22,7 @@ public class ConvertInfo {
         this.frame = frame;
         this.books = Book.create(frame);
         this.output = Paths.get(frame.getOutputPathChooser().getLabel().getText());
-        this.style = StyleFactory.getStyle(frame.getTypesetting());
+        this.style = StyleFactory.getStyle(frame.getTypeSettingPanel().getStyle());
         this.tempDirectories = createTempDirectories();
     }
 
