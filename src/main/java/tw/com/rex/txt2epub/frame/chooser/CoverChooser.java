@@ -1,23 +1,23 @@
-package tw.com.rex.txt2epub.frame.panel;
+package tw.com.rex.txt2epub.frame.chooser;
 
-import tw.com.rex.txt2epub.frame.button.OutputPathChooserButton;
+import tw.com.rex.txt2epub.frame.button.CoverChooserButton;
 import tw.com.rex.txt2epub.frame.chooser.FileChooser;
 
 import javax.swing.*;
 import java.awt.*;
 
 /**
- * 輸出路徑選擇器
+ * 封面選擇器
  */
-public class OutputPathChooser implements FileChooser {
+public class CoverChooser implements FileChooser {
 
     private final JLabel label;
-    private final OutputPathChooserButton button;
+    private final CoverChooserButton button;
 
-    public OutputPathChooser() {
+    public CoverChooser() {
         this.label = new JLabel();
         this.label.setPreferredSize(new Dimension(300, 25));
-        this.button = new OutputPathChooserButton(this.label);
+        this.button = new CoverChooserButton(this.label);
     }
 
     @Override

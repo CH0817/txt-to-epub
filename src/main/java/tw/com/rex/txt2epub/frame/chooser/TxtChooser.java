@@ -1,4 +1,4 @@
-package tw.com.rex.txt2epub.frame.panel;
+package tw.com.rex.txt2epub.frame.chooser;
 
 import tw.com.rex.txt2epub.frame.button.TxtChooserButton;
 import tw.com.rex.txt2epub.frame.chooser.FileChooser;
