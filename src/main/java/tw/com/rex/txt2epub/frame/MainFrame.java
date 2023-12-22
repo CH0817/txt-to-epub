@@ -1,18 +1,15 @@
 package tw.com.rex.txt2epub.frame;
 
 import lombok.Getter;
-import org.apache.commons.lang3.StringUtils;
-import tw.com.rex.txt2epub.frame.chooser.FileChooser;
+import tw.com.rex.txt2epub.frame.button.ConvertButton;
 import tw.com.rex.txt2epub.frame.chooser.CoverChooser;
+import tw.com.rex.txt2epub.frame.chooser.FileChooser;
 import tw.com.rex.txt2epub.frame.chooser.OutputPathChooser;
 import tw.com.rex.txt2epub.frame.chooser.TxtChooser;
 import tw.com.rex.txt2epub.frame.panel.TypeSettingPanel;
-import tw.com.rex.txt2epub.model.ConvertInfo;
-import tw.com.rex.txt2epub.service.EpubService;
 
 import javax.swing.*;
 import java.awt.*;
-import java.nio.file.Paths;
 
 @Getter
 public class MainFrame extends JFrame {
@@ -63,10 +60,7 @@ public class MainFrame extends JFrame {
         bag.gridy = 6;
         bag.gridwidth = 2;
 
-        JButton doExecuteBtn = new JButton("開始轉換");
-        doExecuteBtn.addActionListener(e -> convertToEpub());
-
-        pane.add(doExecuteBtn, bag);
+        pane.add(new ConvertButton(this), bag);
 
         setTitle("txt轉EPUB");
         Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
@@ -121,36 +115,6 @@ public class MainFrame extends JFrame {
         this.pane.add(result, this.bag);
 
         return result;
-    }
-
-    private void convertToEpub() {
-        if (verify()) {
-            try {
-                new EpubService(new ConvertInfo(this)).process();
-                int input = JOptionPane.showOptionDialog(pane, "轉換成功", "訊息", JOptionPane.DEFAULT_OPTION,
-                        JOptionPane.INFORMATION_MESSAGE, null, null, null);
-                if (input == JOptionPane.OK_OPTION) {
-                    Desktop.getDesktop().open(Paths.get(this.outputPathChooser.getLabel().getText()).toFile());
-                }
-            } catch (Exception e) {
-                JOptionPane.showMessageDialog(pane, e.getMessage());
-            }
-        }
-    }
-
-    private boolean verify() {
-        StringBuilder error = new StringBuilder();
-        if (StringUtils.isBlank(txtChooser.getLabel().getText())) {
-            error.append("請選擇txt檔案\n");
-        }
-        if (StringUtils.isBlank(this.outputPathChooser.getLabel().getText())) {
-            error.append("請選擇輸出路徑\n");
-        }
-        if (StringUtils.isNotBlank(error.toString())) {
-            JOptionPane.showMessageDialog(pane, error);
-            return false;
-        }
-        return true;
     }
 
 }
