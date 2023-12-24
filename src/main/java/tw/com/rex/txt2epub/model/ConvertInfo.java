@@ -1,6 +1,7 @@
 package tw.com.rex.txt2epub.model;
 
 import lombok.Getter;
+import tw.com.rex.txt2epub.creator.BookCreator;
 import tw.com.rex.txt2epub.factory.StyleFactory;
 import tw.com.rex.txt2epub.frame.MainFrame;
 import tw.com.rex.txt2epub.model.css.Style;
@@ -18,7 +19,7 @@ public class ConvertInfo {
     private final Style style;
 
     public ConvertInfo(MainFrame frame) {
-        this.books = Book.create(frame);
+        this.books = BookCreator.create(frame);
         this.output = Paths.get(frame.getOutputPath());
         this.style = StyleFactory.getStyle(frame.getStyle());
         this.tempDirectories = createTempDirectories();
