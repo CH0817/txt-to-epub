@@ -26,7 +26,7 @@ public class ConvertButton extends JButton {
                 int input = JOptionPane.showOptionDialog(this.frame.getPane(), "轉換成功", "訊息", JOptionPane.DEFAULT_OPTION,
                         JOptionPane.INFORMATION_MESSAGE, null, null, null);
                 if (input == JOptionPane.OK_OPTION) {
-                    Desktop.getDesktop().open(Paths.get(this.frame.getOutputPathChooser().getLabel().getText()).toFile());
+                    Desktop.getDesktop().open(Paths.get(this.frame.getOutputPath()).toFile());
                 }
             } catch (Exception e) {
                 JOptionPane.showMessageDialog(this.frame.getPane(), e.getMessage());
@@ -36,10 +36,10 @@ public class ConvertButton extends JButton {
 
     private boolean verify() {
         StringBuilder error = new StringBuilder();
-        if (StringUtils.isBlank(this.frame.getTxtChooser().getLabel().getText())) {
+        if (StringUtils.isBlank(this.frame.getTxtFilePath())) {
             error.append("請選擇txt檔案\n");
         }
-        if (StringUtils.isBlank(this.frame.getOutputPathChooser().getLabel().getText())) {
+        if (StringUtils.isBlank(this.frame.getOutputPath())) {
             error.append("請選擇輸出路徑\n");
         }
         if (StringUtils.isNotBlank(error.toString())) {

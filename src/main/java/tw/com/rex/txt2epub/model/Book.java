@@ -26,7 +26,7 @@ public class Book {
 
     private Book(MainFrame frame, String name, List<TxtContent> txtContentList) {
         this.name = name;
-        this.cover = Paths.get(frame.getCoverChooser().getLabel().getText());
+        this.cover = Paths.get(frame.getCoverPath());
         this.author = frame.getAuthorField().getText();
         this.publisher = frame.getPublishingHouseField().getText();
         this.txtContentList = txtContentList;
@@ -46,12 +46,12 @@ public class Book {
             episodeBuilder.insert(0, "0");
         }
         episodeBuilder.insert(0, "-");
-        String fileName = Paths.get(frame.getTxtChooser().getLabel().getText()).toAbsolutePath().getFileName().toString();
+        String fileName = Paths.get(frame.getTxtFilePath()).toAbsolutePath().getFileName().toString();
         return fileName.substring(0, fileName.lastIndexOf(".")) + episodeBuilder;
     }
 
     private static List<TxtContent> getTxtContentList(MainFrame frame) {
-        return new TxtHandlerService(frame.getTxtChooser().getLabel().getText()).getTxtContentList();
+        return new TxtHandlerService(frame.getTxtFilePath()).getTxtContentList();
     }
 
     public String getAuthor() {

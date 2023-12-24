@@ -16,13 +16,11 @@ public class ConvertInfo {
     private final Path output;
     private final TempDirectory[] tempDirectories;
     private final Style style;
-    private final MainFrame frame;
 
     public ConvertInfo(MainFrame frame) {
-        this.frame = frame;
         this.books = Book.create(frame);
-        this.output = Paths.get(frame.getOutputPathChooser().getLabel().getText());
-        this.style = StyleFactory.getStyle(frame.getTypeSettingPanel().getStyle());
+        this.output = Paths.get(frame.getOutputPath());
+        this.style = StyleFactory.getStyle(frame.getStyle());
         this.tempDirectories = createTempDirectories();
     }
 

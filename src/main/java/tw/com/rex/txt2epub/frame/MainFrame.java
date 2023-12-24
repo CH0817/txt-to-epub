@@ -11,12 +11,14 @@ import tw.com.rex.txt2epub.frame.panel.TypeSettingPanel;
 import javax.swing.*;
 import java.awt.*;
 
-@Getter
 public class MainFrame extends JFrame {
 
     private final GridBagConstraints bag = new GridBagConstraints();
+    @Getter
     private final Container pane;
+    @Getter
     private final JTextField authorField;
+    @Getter
     private final JTextField publishingHouseField;
     private final FileChooser txtChooser = new TxtChooser();
     private final FileChooser outputPathChooser = new OutputPathChooser();
@@ -115,6 +117,42 @@ public class MainFrame extends JFrame {
         this.pane.add(result, this.bag);
 
         return result;
+    }
+
+    /**
+     * 取得文字檔路徑
+     *
+     * @return 文字檔路徑
+     */
+    public String getTxtFilePath() {
+        return this.txtChooser.getLabel().getText();
+    }
+
+    /**
+     * 取得輸出路徑
+     *
+     * @return 輸出路徑
+     */
+    public String getOutputPath() {
+        return this.outputPathChooser.getLabel().getText();
+    }
+
+    /**
+     * 取得封面路徑
+     *
+     * @return 封面路徑
+     */
+    public String getCoverPath() {
+        return this.coverChooser.getLabel().getText();
+    }
+
+    /**
+     * 取得轉換方式
+     *
+     * @return 橫式或直式
+     */
+    public String getStyle() {
+        return this.typeSettingPanel.getStyle();
     }
 
 }
