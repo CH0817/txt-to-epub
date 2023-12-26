@@ -2,6 +2,7 @@ package tw.com.rex.txt2epub.frame;
 
 import lombok.Getter;
 import tw.com.rex.txt2epub.frame.button.ConvertButton;
+import tw.com.rex.txt2epub.frame.chapter.ChapterTypePanel;
 import tw.com.rex.txt2epub.frame.chooser.CoverChooser;
 import tw.com.rex.txt2epub.frame.chooser.FileChooser;
 import tw.com.rex.txt2epub.frame.chooser.OutputPathChooser;
@@ -55,11 +56,22 @@ public class MainFrame extends JFrame {
         bag.gridy = 4;
         pane.add(publishingHouseField, bag);
 
+        // 章節判斷
+        ChapterTypePanel chapterTypePanel = new ChapterTypePanel();
+
+        this.bag.gridx = 0;
+        this.bag.gridy = 5;
+        this.pane.add(chapterTypePanel, this.bag);
+
+        this.bag.gridx = 1;
+        this.bag.gridy = 5;
+        this.pane.add(chapterTypePanel.getTextField(), this.bag);
+
         this.typeSettingPanel = initTypeSetting();
 
         // 開始轉換
         bag.gridx = 0;
-        bag.gridy = 6;
+        bag.gridy = 7;
         bag.gridwidth = 2;
 
         pane.add(new ConvertButton(this), bag);
@@ -112,7 +124,7 @@ public class MainFrame extends JFrame {
         TypeSettingPanel result = new TypeSettingPanel();
 
         this.bag.gridx = 0;
-        this.bag.gridy = 5;
+        this.bag.gridy = 6;
         this.bag.gridwidth = 2;
         this.pane.add(result, this.bag);
 
