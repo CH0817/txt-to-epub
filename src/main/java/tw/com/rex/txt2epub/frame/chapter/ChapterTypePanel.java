@@ -46,7 +46,7 @@ public class ChapterTypePanel extends JPanel {
         JRadioButton result = new JRadioButton("字數");
         result.setActionCommand("wordCount");
         result.addActionListener(e -> {
-            this.textField.setText("");
+            this.textField.setText("5000");
             this.textField.addKeyListener(onlyNumberInputKeyAdapter);
         });
         return result;

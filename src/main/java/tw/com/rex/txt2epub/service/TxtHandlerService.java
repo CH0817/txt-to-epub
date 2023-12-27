@@ -12,6 +12,7 @@ import java.nio.charset.Charset;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.stream.IntStream;
 
@@ -24,8 +25,32 @@ public class TxtHandlerService {
 
     public List<TxtContent> getTxtContentList() {
         List<String> allLines = getAllLines();
-        List<Integer> titleIndexes = getTitleIndexes(allLines);
-        return createTxtContentList(allLines, titleIndexes);
+        if ("regex".equals(this.frame.getChapterFinderType())) {
+            List<Integer> titleIndexes = getTitleIndexes(allLines);
+            return createTxtContentList(allLines, titleIndexes);
+        } else {
+            List<TxtContent> result = new ArrayList<>();
+            String allContent = getAllLines2();
+            int wordCount = Integer.parseInt(this.frame.getChapterFinder());
+            int totalChapters = allContent.length() / wordCount;
+            if (allLines.size() % wordCount != 0) {
+                totalChapters += 1;
+            }
+
+            for (int i = 0; i < totalChapters; i++) {
+                String title = "第" + (i + 1) + "章";
+                String xhtmlName = getXhtmlName(i + 1);
+                int start = i * wordCount;
+                int end = (i + 1) * wordCount;
+                if (end > allContent.length()) {
+                    end = allContent.length();
+                }
+                String content = allContent.substring(start, end);
+                List<String> contentList = Arrays.asList(content.split(System.lineSeparator()));
+                result.add(new TxtContent(title, contentList, xhtmlName));
+            }
+            return result;
+        }
     }
 
     private List<String> getAllLines() {
@@ -42,6 +67,19 @@ public class TxtHandlerService {
         throw new RuntimeException("取得 txt 內容失敗");
     }
 
+    private String getAllLines2() {
+        String[] charsets = {"UTF-8", "Big5", "GBK"};
+        for (String charset : charsets) {
+            try {
+                String allContents = Files.readString(Paths.get(this.frame.getTxtFilePath()), Charset.forName(charset));
+                return convertSimplified(allContents);
+            } catch (IOException e) {
+                System.out.println(charset + " 編碼取 txt 內容失敗");
+            }
+        }
+        throw new RuntimeException("取得 txt 內容失敗");
+    }
+
     private String convertSimplified(String origin) {
         if (this.frame.isConvertSimplified()) {
             return ZhConverterUtil.toTraditional(origin, Segments.defaults());
@@ -50,15 +88,11 @@ public class TxtHandlerService {
     }
 
     private List<Integer> getTitleIndexes(List<String> allLines) {
-        if ("regex".equals(this.frame.getChapterFinderType())) {
-            return IntStream.range(0, allLines.size())
-                    .filter(i -> StringUtils.isNotBlank(allLines.get(i)))
-                    .filter(i -> StringUtils.trimToEmpty(allLines.get(i)).matches(this.frame.getChapterFinder()))
-                    .boxed()
-                    .collect(toList());
-        } else {
-            throw new RuntimeException("字數分章節未完成");
-        }
+        return IntStream.range(0, allLines.size())
+                .filter(i -> StringUtils.isNotBlank(allLines.get(i)))
+                .filter(i -> StringUtils.trimToEmpty(allLines.get(i)).matches(this.frame.getChapterFinder()))
+                .boxed()
+                .collect(toList());
     }
 
     private List<TxtContent> createTxtContentList(List<String> allLines, List<Integer> titleIndexes) {
