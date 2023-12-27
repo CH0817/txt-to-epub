@@ -25,6 +25,7 @@ public class MainFrame extends JFrame {
     private final FileChooser outputPathChooser = new OutputPathChooser();
     private final FileChooser coverChooser = new CoverChooser();
     private final TypeSettingPanel typeSettingPanel;
+    private final ChapterTypePanel chapterTypePanel = new ChapterTypePanel();
 
     public MainFrame() throws HeadlessException {
         pane = this.getContentPane();
@@ -57,15 +58,13 @@ public class MainFrame extends JFrame {
         pane.add(publishingHouseField, bag);
 
         // 章節判斷
-        ChapterTypePanel chapterTypePanel = new ChapterTypePanel();
-
         this.bag.gridx = 0;
         this.bag.gridy = 5;
-        this.pane.add(chapterTypePanel, this.bag);
+        this.pane.add(this.chapterTypePanel, this.bag);
 
         this.bag.gridx = 1;
         this.bag.gridy = 5;
-        this.pane.add(chapterTypePanel.getTextField(), this.bag);
+        this.pane.add(this.chapterTypePanel.getTextField(), this.bag);
 
         this.typeSettingPanel = initTypeSetting();
 
@@ -165,6 +164,14 @@ public class MainFrame extends JFrame {
      */
     public String getStyle() {
         return this.typeSettingPanel.getStyle();
+    }
+
+    public String getChapterFinderType() {
+        return this.chapterTypePanel.getType();
+    }
+
+    public String getChapterFinder() {
+        return this.chapterTypePanel.getFinder();
     }
 
 }

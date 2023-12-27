@@ -21,7 +21,7 @@ public class BookCreator {
     }
 
     private static List<TxtContent> getTxtContentList(MainFrame frame) {
-        return new TxtHandlerService(frame.getTxtFilePath()).getTxtContentList();
+        return new TxtHandlerService(frame.getTxtFilePath(), frame.getChapterFinderType(), frame.getChapterFinder()).getTxtContentList();
     }
 
     private static String getBookName(MainFrame frame, int episode) {

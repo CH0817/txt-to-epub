@@ -20,6 +20,8 @@ import static java.util.stream.Collectors.toList;
 public class TxtHandlerService {
 
     private String filePath;
+    private String chapterFinderType;
+    private String chapterFinder;
 
     public List<TxtContent> getTxtContentList() {
         List<String> allLines = getAllLines();
@@ -43,11 +45,16 @@ public class TxtHandlerService {
     }
 
     private List<Integer> getTitleIndexes(List<String> allLines) {
-        return IntStream.range(0, allLines.size())
-                .filter(i -> StringUtils.isNotBlank(allLines.get(i)))
-                .filter(i -> StringUtils.trimToEmpty(allLines.get(i)).matches("^第\\d{1,4}章 .*$"))
-                .boxed()
-                .collect(toList());
+        // FIXME 章節判斷
+        if ("regex".equals(this.chapterFinderType)) {
+            return IntStream.range(0, allLines.size())
+                    .filter(i -> StringUtils.isNotBlank(allLines.get(i)))
+                    .filter(i -> StringUtils.trimToEmpty(allLines.get(i)).matches(chapterFinder))
+                    .boxed()
+                    .collect(toList());
+        } else {
+            throw new RuntimeException("字數分章節未完成");
+        }
     }
 
     private List<TxtContent> createTxtContentList(List<String> allLines, List<Integer> titleIndexes) {

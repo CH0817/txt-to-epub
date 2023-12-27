@@ -1,6 +1,7 @@
 package tw.com.rex.txt2epub.frame.chapter;
 
 import lombok.Getter;
+import org.apache.commons.lang3.StringUtils;
 
 import javax.swing.*;
 import java.awt.*;
@@ -35,7 +36,7 @@ public class ChapterTypePanel extends JPanel {
         result.setActionCommand("regex");
         result.setSelected(true);
         result.addActionListener(e -> {
-            this.textField.setText("");
+            this.textField.setText("^第[0-9]{1,4}章 .*$");
             this.textField.removeKeyListener(onlyNumberInputKeyAdapter);
         });
         return result;
@@ -60,6 +61,7 @@ public class ChapterTypePanel extends JPanel {
 
     private JTextField initTextField() {
         JTextField result = new JTextField();
+        result.setText("^第[0-9]{1,4}章 .*$");
         result.setPreferredSize(new Dimension(300, 25));
         return result;
     }
@@ -78,6 +80,21 @@ public class ChapterTypePanel extends JPanel {
 
     private boolean isNumber(int keyChar) {
         return keyChar >= KeyEvent.VK_0 && keyChar <= KeyEvent.VK_9;
+    }
+
+    public String getType() {
+        Enumeration<AbstractButton> elements = this.buttonGroup.getElements();
+        while (elements.hasMoreElements()) {
+            AbstractButton button = elements.nextElement();
+            if (button.isSelected()) {
+                return button.getActionCommand();
+            }
+        }
+        return StringUtils.EMPTY;
+    }
+
+    public String getFinder() {
+        return this.textField.getText();
     }
 
 }
