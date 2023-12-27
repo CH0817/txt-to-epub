@@ -24,7 +24,7 @@ public class MainFrame extends JFrame {
     private final FileChooser txtChooser = new TxtChooser();
     private final FileChooser outputPathChooser = new OutputPathChooser();
     private final FileChooser coverChooser = new CoverChooser();
-    private final TypeSettingPanel typeSettingPanel;
+    private final TypeSettingPanel typeSettingPanel = new TypeSettingPanel();
     private final ChapterTypePanel chapterTypePanel = new ChapterTypePanel();
     private final JCheckBox convertSimplified = new JCheckBox("簡轉繁");
 
@@ -67,7 +67,9 @@ public class MainFrame extends JFrame {
         this.bag.gridy = 5;
         this.pane.add(this.chapterTypePanel.getTextField(), this.bag);
 
-        this.typeSettingPanel = initTypeSetting();
+        this.bag.gridx = 0;
+        this.bag.gridy = 6;
+        this.pane.add(this.typeSettingPanel, this.bag);
 
         this.bag.gridx = 1;
         this.bag.gridy = 6;
@@ -122,17 +124,6 @@ public class MainFrame extends JFrame {
         bag.gridx = 1;
         bag.gridy = 2;
         pane.add(this.coverChooser.getLabel(), bag);
-    }
-
-    private TypeSettingPanel initTypeSetting() {
-        TypeSettingPanel result = new TypeSettingPanel();
-
-        this.bag.gridx = 0;
-        this.bag.gridy = 6;
-        // this.bag.gridwidth = 2;
-        this.pane.add(result, this.bag);
-
-        return result;
     }
 
     /**
