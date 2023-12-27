@@ -26,6 +26,7 @@ public class MainFrame extends JFrame {
     private final FileChooser coverChooser = new CoverChooser();
     private final TypeSettingPanel typeSettingPanel;
     private final ChapterTypePanel chapterTypePanel = new ChapterTypePanel();
+    private final JCheckBox convertSimplified = new JCheckBox("簡轉繁");
 
     public MainFrame() throws HeadlessException {
         pane = this.getContentPane();
@@ -67,6 +68,10 @@ public class MainFrame extends JFrame {
         this.pane.add(this.chapterTypePanel.getTextField(), this.bag);
 
         this.typeSettingPanel = initTypeSetting();
+
+        this.bag.gridx = 1;
+        this.bag.gridy = 6;
+        this.pane.add(convertSimplified, this.bag);
 
         // 開始轉換
         bag.gridx = 0;
@@ -124,7 +129,7 @@ public class MainFrame extends JFrame {
 
         this.bag.gridx = 0;
         this.bag.gridy = 6;
-        this.bag.gridwidth = 2;
+        // this.bag.gridwidth = 2;
         this.pane.add(result, this.bag);
 
         return result;
@@ -172,6 +177,10 @@ public class MainFrame extends JFrame {
 
     public String getChapterFinder() {
         return this.chapterTypePanel.getFinder();
+    }
+
+    public boolean isConvertSimplified() {
+        return this.convertSimplified.isSelected();
     }
 
 }
