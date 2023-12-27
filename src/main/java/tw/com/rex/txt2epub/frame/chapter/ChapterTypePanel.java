@@ -70,7 +70,8 @@ public class ChapterTypePanel extends JPanel {
         return new KeyAdapter() {
             @Override
             public void keyTyped(KeyEvent e) {
-                if (!isNumber(e.getKeyChar())) {
+                int keyChar = e.getKeyChar();
+                if (!isNumber(keyChar) && !isIgnoreShowTipKey(keyChar)) {
                     JOptionPane.showMessageDialog(null, "請輸入數字");
                     e.consume();
                 }
@@ -80,6 +81,16 @@ public class ChapterTypePanel extends JPanel {
 
     private boolean isNumber(int keyChar) {
         return keyChar >= KeyEvent.VK_0 && keyChar <= KeyEvent.VK_9;
+    }
+
+    private boolean isIgnoreShowTipKey(int keyChar) {
+        switch (keyChar) {
+            case KeyEvent.VK_ENTER:
+            case KeyEvent.VK_BACK_SPACE:
+                return true;
+            default:
+                return false;
+        }
     }
 
     public String getType() {
