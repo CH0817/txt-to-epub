@@ -1,9 +1,9 @@
 package tw.com.rex.txt2epub.creator;
 
+import tw.com.rex.txt2epub.factory.ChapterFinderFactory;
 import tw.com.rex.txt2epub.frame.MainFrame;
 import tw.com.rex.txt2epub.model.Book;
 import tw.com.rex.txt2epub.model.TxtContent;
-import tw.com.rex.txt2epub.service.TxtHandlerService;
 import tw.com.rex.txt2epub.utils.ListUtil;
 
 import java.nio.file.Paths;
@@ -13,15 +13,11 @@ import java.util.stream.IntStream;
 public class BookCreator {
 
     public static Book[] create(MainFrame frame) {
-        List<TxtContent> txtContentList = getTxtContentList(frame);
+        List<TxtContent> txtContentList = ChapterFinderFactory.getFinder(frame).getTxtContents();
         List<List<TxtContent>> episodes = ListUtil.separateDataList(txtContentList, 100);
         return IntStream.range(0, episodes.size())
                 .mapToObj(i -> new Book(frame, getBookName(frame, i + 1), episodes.get(i)))
                 .toArray(Book[]::new);
-    }
-
-    private static List<TxtContent> getTxtContentList(MainFrame frame) {
-        return new TxtHandlerService(frame).getTxtContentList();
     }
 
     private static String getBookName(MainFrame frame, int episode) {
