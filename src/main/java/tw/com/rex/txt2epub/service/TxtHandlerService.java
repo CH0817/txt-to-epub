@@ -4,6 +4,7 @@ import com.github.houbb.opencc4j.support.segment.impl.Segments;
 import com.github.houbb.opencc4j.util.ZhConverterUtil;
 import lombok.AllArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
+import tw.com.rex.txt2epub.define.ChapterTypeEnum;
 import tw.com.rex.txt2epub.frame.MainFrame;
 import tw.com.rex.txt2epub.model.TxtContent;
 
@@ -25,7 +26,7 @@ public class TxtHandlerService {
 
     public List<TxtContent> getTxtContentList() {
         List<String> allLines = getAllLines();
-        if ("regex".equals(this.frame.getChapterFinderType())) {
+        if (ChapterTypeEnum.REGEX.name().equals(this.frame.getChapterFinderType())) {
             List<Integer> titleIndexes = getTitleIndexes(allLines);
             return createTxtContentList(allLines, titleIndexes);
         } else {

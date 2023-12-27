@@ -2,6 +2,7 @@ package tw.com.rex.txt2epub.frame.chapter;
 
 import lombok.Getter;
 import org.apache.commons.lang3.StringUtils;
+import tw.com.rex.txt2epub.define.ChapterTypeEnum;
 
 import javax.swing.*;
 import java.awt.*;
@@ -32,8 +33,9 @@ public class ChapterTypePanel extends JPanel {
     }
 
     private JRadioButton createRegexButton() {
-        JRadioButton result = new JRadioButton("正則");
-        result.setActionCommand("regex");
+        ChapterTypeEnum regexEnum = ChapterTypeEnum.REGEX;
+        JRadioButton result = new JRadioButton(regexEnum.text);
+        result.setActionCommand(regexEnum.name());
         result.setSelected(true);
         result.addActionListener(e -> {
             this.textField.setText("^第[0-9]{1,4}章 .*$");
@@ -43,8 +45,9 @@ public class ChapterTypePanel extends JPanel {
     }
 
     private JRadioButton createWordCountButton() {
-        JRadioButton result = new JRadioButton("字數");
-        result.setActionCommand("wordCount");
+        ChapterTypeEnum wordCountEnum = ChapterTypeEnum.WORD_COUNT;
+        JRadioButton result = new JRadioButton(wordCountEnum.text);
+        result.setActionCommand(wordCountEnum.name());
         result.addActionListener(e -> {
             this.textField.setText("5000");
             this.textField.addKeyListener(onlyNumberInputKeyAdapter);
