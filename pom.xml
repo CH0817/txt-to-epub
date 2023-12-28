@@ -19,6 +19,11 @@
     </properties>
 
     <dependencies>
+        <dependency>
+            <groupId>ch.qos.logback</groupId>
+            <artifactId>logback-classic</artifactId>
+            <version>1.4.14</version>
+        </dependency>
         <!--簡轉繁-->
         <dependency>
             <groupId>com.github.houbb</groupId>
@@ -103,6 +108,7 @@
                 <directory>src/main/resources</directory>
                 <includes>
                     <include>**/*.css</include>
+                    <include>logback.xml</include>
                 </includes>
             </resource>
         </resources>

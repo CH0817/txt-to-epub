@@ -1,5 +1,6 @@
 package tw.com.rex.txt2epub.handler;
 
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import tw.com.rex.txt2epub.frame.MainFrame;
 import tw.com.rex.txt2epub.model.TxtContent;
@@ -17,6 +18,7 @@ import static java.util.stream.Collectors.toList;
 /**
  * 正則表達式查詢章節
  */
+@Slf4j
 public class RegexChapterFinder extends AbstractChapterFinder {
 
     public RegexChapterFinder(MainFrame frame) {
@@ -38,7 +40,7 @@ public class RegexChapterFinder extends AbstractChapterFinder {
                         .map(super::convertSimplified)
                         .collect(toList());
             } catch (IOException e) {
-                System.out.println(charset + " 編碼取 txt 內容失敗");
+                log.warn("{} 編碼取 txt 內容失敗", charset);
             }
         }
         throw new RuntimeException("取得 txt 內容失敗");

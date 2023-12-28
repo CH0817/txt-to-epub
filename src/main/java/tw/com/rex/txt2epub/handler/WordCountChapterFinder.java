@@ -1,5 +1,6 @@
 package tw.com.rex.txt2epub.handler;
 
+import lombok.extern.slf4j.Slf4j;
 import tw.com.rex.txt2epub.frame.MainFrame;
 import tw.com.rex.txt2epub.model.TxtContent;
 
@@ -14,6 +15,7 @@ import java.util.List;
 /**
  * 字數查詢章節
  */
+@Slf4j
 public class WordCountChapterFinder extends AbstractChapterFinder {
 
     public WordCountChapterFinder(MainFrame frame) {
@@ -55,7 +57,7 @@ public class WordCountChapterFinder extends AbstractChapterFinder {
                 allContents = super.convertSimplified(allContents);
                 return allContents;
             } catch (IOException e) {
-                System.out.println(charset + " 編碼取 txt 內容失敗");
+                log.warn("{} 編碼取 txt 內容失敗", charset);
             }
         }
         throw new RuntimeException("取得 txt 內容失敗");
