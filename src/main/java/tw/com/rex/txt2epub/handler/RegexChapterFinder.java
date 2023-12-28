@@ -31,9 +31,9 @@ public class RegexChapterFinder extends AbstractChapterFinder {
     }
 
     private List<String> getAllLines() {
-        for (String charset : super.charsets) {
+        for (Charset charset : super.charsets) {
             try {
-                return Files.readAllLines(Paths.get(this.frame.getTxtFilePath()), Charset.forName(charset)).stream()
+                return Files.readAllLines(Paths.get(this.frame.getTxtFilePath()), charset).stream()
                         .map(super::replaceSpecialSymbol)
                         .map(super::convertSimplified)
                         .collect(toList());

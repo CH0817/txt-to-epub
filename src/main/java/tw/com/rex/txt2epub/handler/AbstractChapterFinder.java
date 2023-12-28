@@ -6,13 +6,20 @@ import lombok.AllArgsConstructor;
 import tw.com.rex.txt2epub.frame.MainFrame;
 import tw.com.rex.txt2epub.model.TxtContent;
 
+import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.util.List;
 
 @AllArgsConstructor
 public abstract class AbstractChapterFinder {
 
-    protected final String[] charsets = {StandardCharsets.UTF_8.name(), "Big5", "GBK", StandardCharsets.UTF_16.name()};
+    /**
+     * 用來讀取檔案的 encode
+     */
+    protected final Charset[] charsets = {StandardCharsets.UTF_8,
+            Charset.forName("Big5"),
+            Charset.forName("GBK"),
+            StandardCharsets.UTF_16};
 
     protected MainFrame frame;
 
@@ -81,7 +88,7 @@ public abstract class AbstractChapterFinder {
     }
 
     /**
-     * 替換指定符號
+     * 替換特殊符號
      *
      * @param content 內文
      * @return 替換後的內文

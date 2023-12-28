@@ -48,9 +48,9 @@ public class WordCountChapterFinder extends AbstractChapterFinder {
      * @return txt 檔案內容
      */
     private String getAllContent() {
-        for (String charset : super.charsets) {
+        for (Charset charset : super.charsets) {
             try {
-                String allContents = Files.readString(Paths.get(super.frame.getTxtFilePath()), Charset.forName(charset));
+                String allContents = Files.readString(Paths.get(super.frame.getTxtFilePath()), charset);
                 allContents = super.replaceSpecialSymbol(allContents);
                 allContents = super.convertSimplified(allContents);
                 return allContents;
