@@ -6,12 +6,13 @@ import lombok.AllArgsConstructor;
 import tw.com.rex.txt2epub.frame.MainFrame;
 import tw.com.rex.txt2epub.model.TxtContent;
 
+import java.nio.charset.StandardCharsets;
 import java.util.List;
 
 @AllArgsConstructor
 public abstract class AbstractChapterFinder {
 
-    protected final String[] charsets = {"UTF-8", "Big5", "GBK"};
+    protected final String[] charsets = {StandardCharsets.UTF_8.name(), "Big5", "GBK", StandardCharsets.UTF_16.name()};
 
     protected MainFrame frame;
 
@@ -44,7 +45,6 @@ public abstract class AbstractChapterFinder {
         if (this.frame.isConvertSimplified()) {
             String content = ZhConverterUtil.toTraditional(origin, Segments.defaults());
             content = replaceSpecificChar(content);
-            content = replaceSpecialSymbol(content);
             content = replaceSpecificNoun(content);
             return content;
         }
@@ -68,20 +68,6 @@ public abstract class AbstractChapterFinder {
     }
 
     /**
-     * 簡轉繁後替換指定符號
-     *
-     * @param content 簡轉繁後的 String
-     * @return 替換後的 String
-     */
-    private String replaceSpecialSymbol(String content) {
-        return content.replaceAll("&", "&amp;")
-                .replaceAll("<", "&lt;")
-                .replaceAll(">", "&gt;")
-                .replaceAll("\"", "&quot;")
-                .replaceAll("'", "&apos;");
-    }
-
-    /**
      * 簡轉繁後替換指定名詞
      *
      * @param content 簡轉繁後的 String
@@ -92,6 +78,20 @@ public abstract class AbstractChapterFinder {
             return content;
         }
         return content.replaceAll("樑習", "梁習");
+    }
+
+    /**
+     * 替換指定符號
+     *
+     * @param content 內文
+     * @return 替換後的內文
+     */
+    protected String replaceSpecialSymbol(String content) {
+        return content.replaceAll("&", "&amp;")
+                .replaceAll("<", "&lt;")
+                .replaceAll(">", "&gt;")
+                .replaceAll("\"", "&quot;")
+                .replaceAll("'", "&apos;");
     }
 
 }

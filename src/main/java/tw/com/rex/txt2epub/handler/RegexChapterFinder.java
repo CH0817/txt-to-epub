@@ -34,7 +34,8 @@ public class RegexChapterFinder extends AbstractChapterFinder {
         for (String charset : super.charsets) {
             try {
                 return Files.readAllLines(Paths.get(this.frame.getTxtFilePath()), Charset.forName(charset)).stream()
-                        .map(this::convertSimplified)
+                        .map(super::replaceSpecialSymbol)
+                        .map(super::convertSimplified)
                         .collect(toList());
             } catch (IOException e) {
                 System.out.println(charset + " 編碼取 txt 內容失敗");
