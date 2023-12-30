@@ -98,10 +98,10 @@ public class MainFrame extends JFrame {
         this.bag.gridx = 0;
         this.bag.gridy = 0;
         this.pane.add(this.txtChooser.getButton(), this.bag);
-        // choosed file path label
+        // chose file path label
         this.bag.gridx = 1;
         this.bag.gridy = 0;
-        this.pane.add(this.txtChooser.getLabel(), this.bag);
+        this.pane.add(this.txtChooser.getTextField(), this.bag);
     }
 
     private void initOutputChooser() {
@@ -109,10 +109,10 @@ public class MainFrame extends JFrame {
         bag.gridx = 0;
         bag.gridy = 1;
         pane.add(this.outputPathChooser.getButton(), bag);
-        // choosed output path label
+        // chose output path label
         bag.gridx = 1;
         bag.gridy = 1;
-        pane.add(this.outputPathChooser.getLabel(), bag);
+        pane.add(this.outputPathChooser.getTextField(), bag);
     }
 
     private void initCoverChooser() {
@@ -120,10 +120,10 @@ public class MainFrame extends JFrame {
         bag.gridx = 0;
         bag.gridy = 2;
         pane.add(this.coverChooser.getButton(), bag);
-        // choosed cover label
+        // chose cover label
         bag.gridx = 1;
         bag.gridy = 2;
-        pane.add(this.coverChooser.getLabel(), bag);
+        pane.add(this.coverChooser.getTextField(), bag);
     }
 
     /**
@@ -132,7 +132,7 @@ public class MainFrame extends JFrame {
      * @return 文字檔路徑
      */
     public String getTxtFilePath() {
-        return this.txtChooser.getLabel().getText();
+        return this.txtChooser.getTextField().getText();
     }
 
     /**
@@ -141,7 +141,7 @@ public class MainFrame extends JFrame {
      * @return 輸出路徑
      */
     public String getOutputPath() {
-        return this.outputPathChooser.getLabel().getText();
+        return this.outputPathChooser.getTextField().getText();
     }
 
     /**
@@ -150,7 +150,7 @@ public class MainFrame extends JFrame {
      * @return 封面路徑
      */
     public String getCoverPath() {
-        return this.coverChooser.getLabel().getText();
+        return this.coverChooser.getTextField().getText();
     }
 
     /**

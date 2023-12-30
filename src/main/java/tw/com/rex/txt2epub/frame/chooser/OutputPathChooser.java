@@ -1,7 +1,7 @@
 package tw.com.rex.txt2epub.frame.chooser;
 
+import lombok.Getter;
 import tw.com.rex.txt2epub.frame.button.OutputPathChooserButton;
-import tw.com.rex.txt2epub.frame.chooser.FileChooser;
 
 import javax.swing.*;
 import java.awt.*;
@@ -9,25 +9,17 @@ import java.awt.*;
 /**
  * 輸出路徑選擇器
  */
+@Getter
 public class OutputPathChooser implements FileChooser {
 
-    private final JLabel label;
+    private final JTextField textField;
     private final OutputPathChooserButton button;
 
     public OutputPathChooser() {
-        this.label = new JLabel();
-        this.label.setPreferredSize(new Dimension(300, 25));
-        this.button = new OutputPathChooserButton(this.label);
-    }
+        this.textField = new JTextField();
+        this.textField.setPreferredSize(new Dimension(300, 25));
+        this.textField.setEditable(false);
 
-    @Override
-    public JLabel getLabel() {
-        return this.label;
+        this.button = new OutputPathChooserButton(this.textField);
     }
-
-    @Override
-    public JButton getButton() {
-        return this.button;
-    }
-
 }

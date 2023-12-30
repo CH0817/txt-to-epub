@@ -4,7 +4,7 @@ import javax.swing.*;
 
 public interface FileChooser {
 
-    JLabel getLabel();
+    JTextField getTextField();
 
     JButton getButton();
 
