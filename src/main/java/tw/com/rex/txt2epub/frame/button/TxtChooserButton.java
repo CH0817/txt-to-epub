@@ -11,9 +11,9 @@ import java.io.File;
 public class TxtChooserButton extends JButton {
 
     private final JFileChooser chooser;
-    private final JLabel display;
+    private final JTextField display;
 
-    public TxtChooserButton(JLabel display) {
+    public TxtChooserButton(JTextField display) {
         super("請選擇.txt檔案");
         this.setName("selectFileBtn");
         this.addActionListener(e -> choose());
@@ -22,10 +22,10 @@ public class TxtChooserButton extends JButton {
     }
 
     private void choose() {
-        int dialog = chooser.showOpenDialog(null);
+        int dialog = this.chooser.showOpenDialog(null);
         if (dialog == JFileChooser.APPROVE_OPTION) {
-            File selectedFile = chooser.getSelectedFile();
-            display.setText(selectedFile.getPath());
+            File selectedFile = this.chooser.getSelectedFile();
+            this.display.setText(selectedFile.getPath());
         }
     }
 

@@ -12,9 +12,9 @@ import java.io.File;
 public class CoverChooserButton extends JButton {
 
     private final JFileChooser chooser;
-    private final JLabel display;
+    private final JTextField display;
 
-    public CoverChooserButton(JLabel display) {
+    public CoverChooserButton(JTextField display) {
         super("請選擇封面");
         this.setName("selectCoverImage");
         this.addActionListener(e -> choose());
@@ -23,10 +23,10 @@ public class CoverChooserButton extends JButton {
     }
 
     private void choose() {
-        int dialog = chooser.showOpenDialog(null);
+        int dialog = this.chooser.showOpenDialog(null);
         if (dialog == JFileChooser.APPROVE_OPTION) {
-            File selectedFile = chooser.getSelectedFile();
-            display.setText(selectedFile.getPath());
+            File selectedFile = this.chooser.getSelectedFile();
+            this.display.setText(selectedFile.getPath());
         }
     }
 
