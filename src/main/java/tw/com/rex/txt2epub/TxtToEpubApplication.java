@@ -7,8 +7,10 @@ import javax.swing.*;
 public class TxtToEpubApplication {
 
     public static void main(String[] args) {
-        MainFrame frame = new MainFrame();
-        SwingUtilities.invokeLater(() -> frame.setVisible(true));
+        SwingUtilities.invokeLater(() -> {
+            MainFrame frame = new MainFrame();
+            frame.setVisible(true);
+        });
     }
 
 }
