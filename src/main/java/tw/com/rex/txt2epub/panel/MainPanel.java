@@ -1,6 +1,8 @@
 package tw.com.rex.txt2epub.panel;
 
 import lombok.Getter;
+import tw.com.rex.txt2epub.builder.GBCBuilder;
+import tw.com.rex.txt2epub.builder.helper.GridPositionTracker;
 import tw.com.rex.txt2epub.frame.button.ConvertButton;
 import tw.com.rex.txt2epub.frame.chapter.ChapterTypePanel;
 import tw.com.rex.txt2epub.frame.chooser.CoverChooser;
@@ -17,7 +19,7 @@ import java.awt.*;
  */
 public class MainPanel extends JPanel {
 
-    private final GridBagConstraints bag = new GridBagConstraints();
+    private final GridPositionTracker tracker = new GridPositionTracker();
     @Getter
     private final JTextField authorField;
     @Getter
@@ -41,46 +43,28 @@ public class MainPanel extends JPanel {
         initCoverChooser();
 
         // 作者
-        bag.gridx = 0;
-        bag.gridy = 3;
-        add(new JLabel("作者", SwingConstants.CENTER), bag);
-
-        bag.gridx = 1;
-        bag.gridy = 3;
-        add(authorField, bag);
-
+        add(new JLabel("作者", SwingConstants.CENTER), new GBCBuilder(0,3, tracker).build());
+        add(authorField, new GBCBuilder(1,3, tracker)
+                .fill(GridBagConstraints.HORIZONTAL)
+                .build());
         // 出版社
-        bag.gridx = 0;
-        bag.gridy = 4;
-        add(new JLabel("出版社", SwingConstants.CENTER), bag);
-
-        bag.gridx = 1;
-        bag.gridy = 4;
-        add(publishingHouseField, bag);
+        add(new JLabel("出版社", SwingConstants.CENTER), new GBCBuilder(0,4, tracker).build());
+        add(publishingHouseField, new GBCBuilder(1,4, tracker)
+                .fill(GridBagConstraints.HORIZONTAL)
+                .build());
 
         // 章節判斷
-        this.bag.gridx = 0;
-        this.bag.gridy = 5;
-        add(this.chapterTypePanel, this.bag);
-
-        this.bag.gridx = 1;
-        this.bag.gridy = 5;
-        add(this.chapterTypePanel.getTextField(), this.bag);
-
-        this.bag.gridx = 0;
-        this.bag.gridy = 6;
-        add(this.typeSettingPanel, this.bag);
-
-        this.bag.gridx = 1;
-        this.bag.gridy = 6;
-        add(convertSimplified, this.bag);
+        add(chapterTypePanel, new GBCBuilder(0,5, tracker).build());
+        add(chapterTypePanel.getTextField(), new GBCBuilder(1,5, tracker).build());
+        add(typeSettingPanel, new GBCBuilder(0,6, tracker).build());
+        add(convertSimplified, new GBCBuilder(1,6, tracker)
+                .fill(GridBagConstraints.HORIZONTAL)
+                .build());
 
         // 開始轉換
-        bag.gridx = 0;
-        bag.gridy = 7;
-        bag.gridwidth = 2;
-
-        add(new ConvertButton(this), bag);
+        add(new ConvertButton(this), new GBCBuilder(0,7, tracker)
+                .gridWidth(2)
+                .build());
 
         Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
         int height = screenSize.height;
@@ -91,36 +75,25 @@ public class MainPanel extends JPanel {
 
     private void initTxtChooser() {
         // file choose button
-        this.bag.fill = GridBagConstraints.HORIZONTAL;
-        this.bag.gridx = 0;
-        this.bag.gridy = 0;
-        add(this.txtChooser.getButton(), this.bag);
+        add(txtChooser.getButton(), new GBCBuilder(0,0, tracker)
+                .fill(GridBagConstraints.HORIZONTAL)
+                .build());
         // chose file path label
-        this.bag.gridx = 1;
-        this.bag.gridy = 0;
-        add(this.txtChooser.getTextField(), this.bag);
+        add(txtChooser.getTextField(), new GBCBuilder(1,0, tracker).build());
     }
 
     private void initOutputChooser() {
         // output choose button
-        bag.gridx = 0;
-        bag.gridy = 1;
-        add(this.outputPathChooser.getButton(), bag);
+        add(outputPathChooser.getButton(), new GBCBuilder(0,1, tracker).build());
         // chose output path label
-        bag.gridx = 1;
-        bag.gridy = 1;
-        add(this.outputPathChooser.getTextField(), bag);
+        add(outputPathChooser.getTextField(), new GBCBuilder(1,1, tracker).build());
     }
 
     private void initCoverChooser() {
         // cover choose button
-        bag.gridx = 0;
-        bag.gridy = 2;
-        add(this.coverChooser.getButton(), bag);
+        add(coverChooser.getButton(), new GBCBuilder(0,2, tracker).build());
         // chose cover label
-        bag.gridx = 1;
-        bag.gridy = 2;
-        add(this.coverChooser.getTextField(), bag);
+        add(coverChooser.getTextField(), new GBCBuilder(1,2, tracker).build());
     }
 
     /**
@@ -129,7 +102,7 @@ public class MainPanel extends JPanel {
      * @return 文字檔路徑
      */
     public String getTxtFilePath() {
-        return this.txtChooser.getTextField().getText();
+        return txtChooser.getTextField().getText();
     }
 
     /**
@@ -138,7 +111,7 @@ public class MainPanel extends JPanel {
      * @return 輸出路徑
      */
     public String getOutputPath() {
-        return this.outputPathChooser.getTextField().getText();
+        return outputPathChooser.getTextField().getText();
     }
 
     /**
@@ -147,7 +120,7 @@ public class MainPanel extends JPanel {
      * @return 封面路徑
      */
     public String getCoverPath() {
-        return this.coverChooser.getTextField().getText();
+        return coverChooser.getTextField().getText();
     }
 
     /**
@@ -156,19 +129,19 @@ public class MainPanel extends JPanel {
      * @return 橫式或直式
      */
     public String getStyle() {
-        return this.typeSettingPanel.getStyle();
+        return typeSettingPanel.getStyle();
     }
 
     public String getChapterFinderType() {
-        return this.chapterTypePanel.getType();
+        return chapterTypePanel.getType();
     }
 
     public String getChapterFinder() {
-        return this.chapterTypePanel.getFinder();
+        return chapterTypePanel.getFinder();
     }
 
     public boolean isConvertSimplified() {
-        return this.convertSimplified.isSelected();
+        return convertSimplified.isSelected();
     }
 
 }
