@@ -9,9 +9,13 @@ public class TxtToEpubApplication {
 
     public static void main(String[] args) {
         SwingUtilities.invokeLater(() -> {
+            Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
+            int height = screenSize.height;
+            int width = screenSize.width;
+
             JFrame frame = new JFrame();
             frame.add(new MainPanel(), BorderLayout.CENTER);
-            frame.setSize(800, 600);
+            frame.setSize(width / 2, height / 2);
             frame.setLocationRelativeTo(null);
             frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
             frame.setTitle("txt轉EPUB");

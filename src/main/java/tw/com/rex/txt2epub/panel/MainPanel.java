@@ -65,12 +65,6 @@ public class MainPanel extends JPanel {
         add(new ConvertButton(this), new GBCBuilder(0,7, tracker)
                 .gridWidth(2)
                 .build());
-
-        Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
-        int height = screenSize.height;
-        int width = screenSize.width;
-        setSize(width / 2, height / 2);
-
     }
 
     private void initTxtChooser() {
