@@ -2,8 +2,8 @@ package tw.com.rex.txt2epub.handler;
 
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
-import tw.com.rex.txt2epub.frame.MainFrame;
 import tw.com.rex.txt2epub.model.TxtContent;
+import tw.com.rex.txt2epub.panel.MainPanel;
 
 import java.io.IOException;
 import java.nio.charset.Charset;
@@ -21,7 +21,7 @@ import static java.util.stream.Collectors.toList;
 @Slf4j
 public class RegexChapterFinder extends AbstractChapterFinder {
 
-    public RegexChapterFinder(MainFrame frame) {
+    public RegexChapterFinder(MainPanel frame) {
         super(frame);
     }
 
@@ -35,7 +35,7 @@ public class RegexChapterFinder extends AbstractChapterFinder {
     private List<String> getAllLines() {
         for (Charset charset : super.charsets) {
             try {
-                return Files.readAllLines(Paths.get(this.frame.getTxtFilePath()), charset).stream()
+                return Files.readAllLines(Paths.get(this.panel.getTxtFilePath()), charset).stream()
                         .map(super::replaceSpecialSymbol)
                         .map(super::convertSimplified)
                         .collect(toList());
@@ -49,7 +49,7 @@ public class RegexChapterFinder extends AbstractChapterFinder {
     private List<Integer> getTitleIndexes(List<String> allLines) {
         return IntStream.range(0, allLines.size())
                 .filter(i -> StringUtils.isNotBlank(allLines.get(i)))
-                .filter(i -> StringUtils.trimToEmpty(allLines.get(i)).matches(super.frame.getChapterFinder()))
+                .filter(i -> StringUtils.trimToEmpty(allLines.get(i)).matches(super.panel.getChapterFinder()))
                 .boxed()
                 .collect(toList());
     }

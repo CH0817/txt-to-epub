@@ -1,4 +1,4 @@
-package tw.com.rex.txt2epub.frame;
+package tw.com.rex.txt2epub.panel;
 
 import lombok.Getter;
 import tw.com.rex.txt2epub.frame.button.ConvertButton;
@@ -12,11 +12,12 @@ import tw.com.rex.txt2epub.frame.panel.TypeSettingPanel;
 import javax.swing.*;
 import java.awt.*;
 
-public class MainFrame extends JFrame {
+/**
+ * 主要容器
+ */
+public class MainPanel extends JPanel {
 
     private final GridBagConstraints bag = new GridBagConstraints();
-    @Getter
-    private final Container pane;
     @Getter
     private final JTextField authorField;
     @Getter
@@ -28,9 +29,8 @@ public class MainFrame extends JFrame {
     private final ChapterTypePanel chapterTypePanel = new ChapterTypePanel();
     private final JCheckBox convertSimplified = new JCheckBox("簡轉繁");
 
-    public MainFrame() throws HeadlessException {
-        pane = this.getContentPane();
-        pane.setLayout(new GridBagLayout());
+    public MainPanel() {
+        super(new GridBagLayout());
 
         authorField = new JTextField();
 
@@ -43,53 +43,50 @@ public class MainFrame extends JFrame {
         // 作者
         bag.gridx = 0;
         bag.gridy = 3;
-        pane.add(new JLabel("作者", SwingConstants.CENTER), bag);
+        add(new JLabel("作者", SwingConstants.CENTER), bag);
 
         bag.gridx = 1;
         bag.gridy = 3;
-        pane.add(authorField, bag);
+        add(authorField, bag);
 
         // 出版社
         bag.gridx = 0;
         bag.gridy = 4;
-        pane.add(new JLabel("出版社", SwingConstants.CENTER), bag);
+        add(new JLabel("出版社", SwingConstants.CENTER), bag);
 
         bag.gridx = 1;
         bag.gridy = 4;
-        pane.add(publishingHouseField, bag);
+        add(publishingHouseField, bag);
 
         // 章節判斷
         this.bag.gridx = 0;
         this.bag.gridy = 5;
-        this.pane.add(this.chapterTypePanel, this.bag);
+        add(this.chapterTypePanel, this.bag);
 
         this.bag.gridx = 1;
         this.bag.gridy = 5;
-        this.pane.add(this.chapterTypePanel.getTextField(), this.bag);
+        add(this.chapterTypePanel.getTextField(), this.bag);
 
         this.bag.gridx = 0;
         this.bag.gridy = 6;
-        this.pane.add(this.typeSettingPanel, this.bag);
+        add(this.typeSettingPanel, this.bag);
 
         this.bag.gridx = 1;
         this.bag.gridy = 6;
-        this.pane.add(convertSimplified, this.bag);
+        add(convertSimplified, this.bag);
 
         // 開始轉換
         bag.gridx = 0;
         bag.gridy = 7;
         bag.gridwidth = 2;
 
-        pane.add(new ConvertButton(this), bag);
+        add(new ConvertButton(this), bag);
 
-        setTitle("txt轉EPUB");
         Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
         int height = screenSize.height;
         int width = screenSize.width;
         setSize(width / 2, height / 2);
-        setLocationRelativeTo(null);
-        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        pack();
+
     }
 
     private void initTxtChooser() {
@@ -97,33 +94,33 @@ public class MainFrame extends JFrame {
         this.bag.fill = GridBagConstraints.HORIZONTAL;
         this.bag.gridx = 0;
         this.bag.gridy = 0;
-        this.pane.add(this.txtChooser.getButton(), this.bag);
+        add(this.txtChooser.getButton(), this.bag);
         // chose file path label
         this.bag.gridx = 1;
         this.bag.gridy = 0;
-        this.pane.add(this.txtChooser.getTextField(), this.bag);
+        add(this.txtChooser.getTextField(), this.bag);
     }
 
     private void initOutputChooser() {
         // output choose button
         bag.gridx = 0;
         bag.gridy = 1;
-        pane.add(this.outputPathChooser.getButton(), bag);
+        add(this.outputPathChooser.getButton(), bag);
         // chose output path label
         bag.gridx = 1;
         bag.gridy = 1;
-        pane.add(this.outputPathChooser.getTextField(), bag);
+        add(this.outputPathChooser.getTextField(), bag);
     }
 
     private void initCoverChooser() {
         // cover choose button
         bag.gridx = 0;
         bag.gridy = 2;
-        pane.add(this.coverChooser.getButton(), bag);
+        add(this.coverChooser.getButton(), bag);
         // chose cover label
         bag.gridx = 1;
         bag.gridy = 2;
-        pane.add(this.coverChooser.getTextField(), bag);
+        add(this.coverChooser.getTextField(), bag);
     }
 
     /**

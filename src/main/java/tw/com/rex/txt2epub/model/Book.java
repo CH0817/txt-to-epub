@@ -1,7 +1,7 @@
 package tw.com.rex.txt2epub.model;
 
 import lombok.Getter;
-import tw.com.rex.txt2epub.frame.MainFrame;
+import tw.com.rex.txt2epub.panel.MainPanel;
 
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -18,11 +18,11 @@ public class Book {
     private final List<TxtContent> txtContentList;
     private final Path cover;
 
-    public Book(MainFrame frame, String name, List<TxtContent> txtContentList) {
+    public Book(MainPanel panel, String name, List<TxtContent> txtContentList) {
         this.name = name;
-        this.cover = Paths.get(frame.getCoverPath());
-        this.author = frame.getAuthorField().getText();
-        this.publisher = frame.getPublishingHouseField().getText();
+        this.cover = Paths.get(panel.getCoverPath());
+        this.author = panel.getAuthorField().getText();
+        this.publisher = panel.getPublishingHouseField().getText();
         this.txtContentList = txtContentList;
     }
 

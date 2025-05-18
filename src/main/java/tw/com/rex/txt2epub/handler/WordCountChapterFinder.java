@@ -1,8 +1,8 @@
 package tw.com.rex.txt2epub.handler;
 
 import lombok.extern.slf4j.Slf4j;
-import tw.com.rex.txt2epub.frame.MainFrame;
 import tw.com.rex.txt2epub.model.TxtContent;
+import tw.com.rex.txt2epub.panel.MainPanel;
 
 import java.io.IOException;
 import java.nio.charset.Charset;
@@ -18,15 +18,15 @@ import java.util.List;
 @Slf4j
 public class WordCountChapterFinder extends AbstractChapterFinder {
 
-    public WordCountChapterFinder(MainFrame frame) {
-        super(frame);
+    public WordCountChapterFinder(MainPanel panel) {
+        super(panel);
     }
 
     @Override
     public List<TxtContent> getTxtContents() {
         List<TxtContent> result = new ArrayList<>();
         String allContent = getAllContent();
-        int wordCount = Integer.parseInt(super.frame.getChapterFinder());
+        int wordCount = Integer.parseInt(super.panel.getChapterFinder());
         int chapterCount = getChapterCount(allContent, wordCount);
 
         for (int i = 0; i < chapterCount; i++) {
@@ -52,7 +52,7 @@ public class WordCountChapterFinder extends AbstractChapterFinder {
     private String getAllContent() {
         for (Charset charset : super.charsets) {
             try {
-                String allContents = Files.readString(Paths.get(super.frame.getTxtFilePath()), charset);
+                String allContents = Files.readString(Paths.get(super.panel.getTxtFilePath()), charset);
                 allContents = super.replaceSpecialSymbol(allContents);
                 allContents = super.convertSimplified(allContents);
                 return allContents;
