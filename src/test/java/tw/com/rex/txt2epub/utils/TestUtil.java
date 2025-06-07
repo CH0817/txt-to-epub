@@ -1,10 +1,8 @@
 package tw.com.rex.txt2epub.utils;
 
 import tw.com.rex.txt2epub.define.TypesettingEnum;
-import tw.com.rex.txt2epub.frame.MainFrame;
 import tw.com.rex.txt2epub.model.ConvertInfo;
 import tw.com.rex.txt2epub.model.TempDirectory;
-import tw.com.rex.txt2epub.utils.FileUtil;
 
 import javax.swing.*;
 import java.nio.file.Paths;
@@ -12,14 +10,15 @@ import java.util.Arrays;
 
 public class TestUtil {
 
-    public static MainFrame createFrame(TypesettingEnum typesettingEnum, String outputPath) {
-        MainFrame frame = new MainFrame();
-        frame.setSelectedTxtLabel(new JLabel(Paths.get("src/test/resources/曹賊.txt").toAbsolutePath().toString()));
-        frame.setOutputFilePath(new JLabel(outputPath));
-        frame.setCoverPath(new JLabel(Paths.get("src/test/resources/cover.jpg").toAbsolutePath().toString()));
-        frame.setAuthorField(new JTextField("庚新"));
-        frame.setPublishingHouseField(new JTextField("典藏閣"));
-        frame.setTypesettingGroup(createTypesettingGroup(typesettingEnum));
+    public static JFrame createFrame(TypesettingEnum typesettingEnum, String outputPath) {
+        // TODO 後補
+        JFrame frame = new JFrame();
+        // frame.setSelectedTxtLabel(new JLabel(Paths.get("src/test/resources/曹賊.txt").toAbsolutePath().toString()));
+        // frame.setOutputFilePath(new JLabel(outputPath));
+        // frame.setCoverPath(new JLabel(Paths.get("src/test/resources/cover.jpg").toAbsolutePath().toString()));
+        // frame.setAuthorField(new JTextField("庚新"));
+        // frame.setPublishingHouseField(new JTextField("典藏閣"));
+        // frame.setTypesettingGroup(createTypesettingGroup(typesettingEnum));
         return frame;
     }
 
@@ -44,7 +43,8 @@ public class TestUtil {
 
     public static ConvertInfo createConvertInfo() {
         String outputPath = Paths.get(System.getProperty("java.io.tmpdir"), "測試").toAbsolutePath().toString();
-        return new ConvertInfo(createFrame(TypesettingEnum.HORIZONTAL, outputPath));
+        return null;
+        // return new ConvertInfo(createFrame(TypesettingEnum.HORIZONTAL, outputPath));
     }
 
     public static void cleanUp(ConvertInfo convertInfo) {
