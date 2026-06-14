@@ -2,6 +2,7 @@ package tw.com.rex.txt2epub.presenter;
 
 import org.apache.commons.lang3.StringUtils;
 
+import tw.com.rex.txt2epub.model.ConvertInfo;
 import tw.com.rex.txt2epub.service.EpubService;
 import tw.com.rex.txt2epub.view.EpubConvertView;
 
@@ -19,7 +20,7 @@ public class EpubConvertPresenter {
         if (verify()) {
             this.view.setProgressLoading(true);
             try {
-                this.service.process(view);
+                this.service.process(new ConvertInfo(view));
                 this.view.showSuccess();
             } catch (Exception e) {
                 this.view.setProgressLoading(false);

@@ -1,21 +1,20 @@
 package tw.com.rex.txt2epub.service;
 
+import java.nio.file.Path;
+import java.util.stream.IntStream;
+
 import com.adobe.epubcheck.tool.EpubChecker;
+
 import tw.com.rex.txt2epub.model.ConvertInfo;
 import tw.com.rex.txt2epub.model.xml.Container;
 import tw.com.rex.txt2epub.utils.FileUtil;
 import tw.com.rex.txt2epub.utils.XmlUtil;
-import tw.com.rex.txt2epub.view.EpubConvertView;
-
-import java.nio.file.Path;
-import java.util.stream.IntStream;
 
 public class EpubService {
 
     private ConvertInfo convertInfo;
 
-    public void process(EpubConvertView view) {
-        this.convertInfo = new ConvertInfo(view);
+    public void process(ConvertInfo convertInfo) {
         IntStream.range(0, convertInfo.getBooks().length)
                 .forEach(i -> {
                     createContentXhtml(i);
