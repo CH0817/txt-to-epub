@@ -1,9 +1,5 @@
 package tw.com.rex.txt2epub.handler;
 
-import lombok.extern.slf4j.Slf4j;
-import tw.com.rex.txt2epub.model.TxtContent;
-import tw.com.rex.txt2epub.panel.MainPanel;
-
 import java.io.IOException;
 import java.nio.charset.Charset;
 import java.nio.file.Files;
@@ -12,21 +8,25 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import lombok.extern.slf4j.Slf4j;
+import tw.com.rex.txt2epub.model.TxtContent;
+import tw.com.rex.txt2epub.view.EpubConvertView;
+
 /**
  * 字數查詢章節
  */
 @Slf4j
 public class WordCountChapterFinder extends AbstractChapterFinder {
 
-    public WordCountChapterFinder(MainPanel panel) {
-        super(panel);
+    public WordCountChapterFinder(EpubConvertView view) {
+        super(view);
     }
 
     @Override
     public List<TxtContent> getTxtContents() {
         List<TxtContent> result = new ArrayList<>();
         String allContent = getAllContent();
-        int wordCount = Integer.parseInt(super.panel.getChapterFinder());
+        int wordCount = Integer.parseInt(super.view.getChapterFinder());
         int chapterCount = getChapterCount(allContent, wordCount);
 
         for (int i = 0; i < chapterCount; i++) {
@@ -52,7 +52,7 @@ public class WordCountChapterFinder extends AbstractChapterFinder {
     private String getAllContent() {
         for (Charset charset : super.charsets) {
             try {
-                String allContents = Files.readString(Paths.get(super.panel.getTxtFilePath()), charset);
+                String allContents = Files.readString(Paths.get(super.view.getTxtFilePath()), charset);
                 allContents = super.replaceSpecialSymbol(allContents);
                 allContents = super.convertSimplified(allContents);
                 return allContents;
