@@ -28,6 +28,9 @@ import tw.com.rex.txt2epub.frame.panel.TypeSettingPanel;
 import tw.com.rex.txt2epub.presenter.EpubConvertPresenter;
 import tw.com.rex.txt2epub.view.EpubConvertView;
 
+/**
+ * 畫面取得/操作 implement
+ */
 public class EpubConvertFrame extends JFrame implements EpubConvertView {
 
     private final GridPositionTracker tracker = new GridPositionTracker();

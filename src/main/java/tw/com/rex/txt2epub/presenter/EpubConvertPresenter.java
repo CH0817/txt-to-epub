@@ -16,6 +16,9 @@ public class EpubConvertPresenter {
         this.service = service;
     }
 
+    /**
+     * 執行 txt 轉 EPUB 流程
+     */
     public void onStartConversion() {
         if (verify()) {
             this.view.setProgressLoading(true);
@@ -30,6 +33,11 @@ public class EpubConvertPresenter {
         }
     }
 
+    /**
+     * 必要資料驗證
+     * 
+     * @return 是否驗證通過
+     */
     private boolean verify() {
         StringBuilder error = new StringBuilder();
         if (StringUtils.isBlank(view.getTxtFilePath())) {

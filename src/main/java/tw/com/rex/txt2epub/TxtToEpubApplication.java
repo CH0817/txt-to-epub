@@ -6,6 +6,9 @@ import tw.com.rex.txt2epub.frame.EpubConvertFrame;
 import tw.com.rex.txt2epub.presenter.EpubConvertPresenter;
 import tw.com.rex.txt2epub.service.EpubService;
 
+/**
+ * 主程式
+ */
 public class TxtToEpubApplication {
 
     public static void main(String[] args) {
