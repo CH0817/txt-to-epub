@@ -5,33 +5,31 @@ import tw.com.rex.txt2epub.model.ConvertInfo;
 import tw.com.rex.txt2epub.model.xml.Container;
 import tw.com.rex.txt2epub.utils.FileUtil;
 import tw.com.rex.txt2epub.utils.XmlUtil;
+import tw.com.rex.txt2epub.view.EpubConvertView;
 
 import java.nio.file.Path;
 import java.util.stream.IntStream;
 
 public class EpubService {
 
-    private final ConvertInfo convertInfo;
+    private ConvertInfo convertInfo;
 
-    public EpubService(ConvertInfo convertInfo) {
-        this.convertInfo = convertInfo;
-    }
-
-    public void process() {
+    public void process(EpubConvertView view) {
+        this.convertInfo = new ConvertInfo(view);
         IntStream.range(0, convertInfo.getBooks().length)
-                 .forEach(i -> {
-                     createContentXhtml(i);
-                     createCover(i);
-                     copyCssFiles(i);
-                     createTableOfContents(i);
-                     createNavigationDocuments(i);
-                     createOpf(i);
-                     createContainerXml(i);
-                     createMineType(i);
-                     convert(i);
-                     removeTemp(i);
-                     moveEpub(i);
-                 });
+                .forEach(i -> {
+                    createContentXhtml(i);
+                    createCover(i);
+                    copyCssFiles(i);
+                    createTableOfContents(i);
+                    createNavigationDocuments(i);
+                    createOpf(i);
+                    createContainerXml(i);
+                    createMineType(i);
+                    convert(i);
+                    removeTemp(i);
+                    moveEpub(i);
+                });
     }
 
     private void createContentXhtml(int index) {
@@ -60,18 +58,18 @@ public class EpubService {
 
     private void createContainerXml(int index) {
         XmlUtil.convertToXmlFile(new Container(),
-                                 convertInfo.getTempDirectories()[index].getMetaInfPath().resolve("container.xml"));
+                convertInfo.getTempDirectories()[index].getMetaInfPath().resolve("container.xml"));
     }
 
     private void createMineType(int index) {
         FileUtil.write(convertInfo.getTempDirectories()[index]
-                               .getBasePath()
-                               .resolve("mimetype"), "application/epub+zip");
+                .getBasePath()
+                .resolve("mimetype"), "application/epub+zip");
     }
 
     private void convert(int index) {
         String tempFilePath = convertInfo.getTempDirectories()[index].getBasePath().toAbsolutePath().toString();
-        String[] args = {tempFilePath, "--mode", "exp", "--save"};
+        String[] args = { tempFilePath, "--mode", "exp", "--save" };
         int checkResult = new EpubChecker().run(args);
         if (0 != checkResult) {
             throw new RuntimeException("EPUB 轉換失敗");

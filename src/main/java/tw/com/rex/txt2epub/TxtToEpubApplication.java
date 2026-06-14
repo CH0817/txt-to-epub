@@ -4,6 +4,7 @@ import javax.swing.SwingUtilities;
 
 import tw.com.rex.txt2epub.frame.EpubConvertFrame;
 import tw.com.rex.txt2epub.presenter.EpubConvertPresenter;
+import tw.com.rex.txt2epub.service.EpubService;
 
 public class TxtToEpubApplication {
 
@@ -14,7 +15,7 @@ public class TxtToEpubApplication {
             // EpubConverterModel model = new EpubConverterModel(); // 你的核心轉檔邏輯
 
             // 2. 建立 Presenter 並相互綁定
-            EpubConvertPresenter presenter = new EpubConvertPresenter(view);
+            EpubConvertPresenter presenter = new EpubConvertPresenter(view, new EpubService());
             view.setPresenter(presenter);
         });
     }

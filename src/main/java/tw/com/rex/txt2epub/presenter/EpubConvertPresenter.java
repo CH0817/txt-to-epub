@@ -1,42 +1,30 @@
 package tw.com.rex.txt2epub.presenter;
 
-import java.awt.Desktop;
-import java.nio.file.Paths;
-
-import javax.swing.JFrame;
-import javax.swing.JOptionPane;
-
 import org.apache.commons.lang3.StringUtils;
 
-import tw.com.rex.txt2epub.model.ConvertInfo;
 import tw.com.rex.txt2epub.service.EpubService;
 import tw.com.rex.txt2epub.view.EpubConvertView;
 
 public class EpubConvertPresenter {
 
     private final EpubConvertView view;
-    // private final EpubConverterModel model; // 負責實際轉檔邏輯的類別
+    private final EpubService service;
 
-    public EpubConvertPresenter(EpubConvertView view) {
+    public EpubConvertPresenter(EpubConvertView view, EpubService service) {
         this.view = view;
+        this.service = service;
     }
-
-    // public EpubConvertPresenter(EpubConvertView view, EpubConverterModel model) {
-    // this.view = view;
-    // this.model = model;
-    // }
 
     public void onStartConversion() {
         if (verify()) {
+            this.view.setProgressLoading(true);
             try {
-                new EpubService(new ConvertInfo(view)).process();
-                int input = JOptionPane.showOptionDialog((JFrame) view, "轉換成功", "訊息", JOptionPane.DEFAULT_OPTION,
-                        JOptionPane.INFORMATION_MESSAGE, null, null, null);
-                if (input == JOptionPane.OK_OPTION) {
-                    Desktop.getDesktop().open(Paths.get(this.view.getOutputPath()).toFile());
-                }
+                this.service.process(view);
+                this.view.showSuccess();
             } catch (Exception e) {
-                JOptionPane.showMessageDialog(((JFrame) view), e.getMessage());
+                this.view.setProgressLoading(false);
+                this.view.showErrorMessage("EPUB 轉換失敗！");
+                e.printStackTrace();
             }
         }
     }
@@ -50,7 +38,7 @@ public class EpubConvertPresenter {
             error.append("請選擇輸出路徑\n");
         }
         if (StringUtils.isNotBlank(error.toString())) {
-            JOptionPane.showMessageDialog(((JFrame) view), error);
+            this.view.showErrorMessage(error.toString());
             return false;
         }
         return true;

@@ -1,13 +1,17 @@
 package tw.com.rex.txt2epub.frame;
 
+import java.awt.Desktop;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
+import java.io.IOException;
+import java.nio.file.Paths;
 import java.util.Objects;
 
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.SwingConstants;
@@ -35,6 +39,7 @@ public class EpubConvertFrame extends JFrame implements EpubConvertView {
     private final TypeSettingPanel typeSettingPanel = new TypeSettingPanel();
     private final ChapterTypePanel chapterTypePanel = new ChapterTypePanel();
     private final JCheckBox convertSimplified = new JCheckBox("簡轉繁");
+    private final JButton convertButton = new JButton("開始轉換");
 
     @Setter
     private EpubConvertPresenter presenter;
@@ -69,14 +74,13 @@ public class EpubConvertFrame extends JFrame implements EpubConvertView {
                 .build());
 
         // 開始轉換
-        JButton convertButton = new JButton("開始轉換");
-        convertButton.addActionListener(e -> {
+        this.convertButton.addActionListener(e -> {
             if (Objects.nonNull(this.presenter)) {
                 this.presenter.onStartConversion();
             }
         });
 
-        panel.add(convertButton, new GBCBuilder(0, 7, tracker)
+        panel.add(this.convertButton, new GBCBuilder(0, 7, tracker)
                 .gridWidth(2)
                 .build());
 
@@ -154,21 +158,34 @@ public class EpubConvertFrame extends JFrame implements EpubConvertView {
     }
 
     @Override
+    public void showSuccess() {
+        this.setProgressLoading(false);
+        int input = JOptionPane.showOptionDialog(this, "轉換成功", "訊息", JOptionPane.DEFAULT_OPTION,
+                JOptionPane.INFORMATION_MESSAGE, null, null, null);
+        if (input == JOptionPane.OK_OPTION) {
+            try {
+                Desktop.getDesktop().open(Paths.get(this.getOutputPath()).toFile());
+            } catch (IOException e) {
+                this.showErrorMessage("開啟 " + this.getOutputPath() + "失敗！");
+                e.printStackTrace();
+            }
+        }
+    }
+
+    @Override
     public void showMessage(String message) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'showMessage'");
+        JOptionPane.showMessageDialog(this, message, "提示", JOptionPane.INFORMATION_MESSAGE);
     }
 
     @Override
     public void showErrorMessage(String error) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'showErrorMessage'");
+        JOptionPane.showMessageDialog(this, error, "錯誤", JOptionPane.ERROR_MESSAGE);
     }
 
     @Override
     public void setProgressLoading(boolean isLoading) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'setProgressLoading'");
+        this.convertButton.setEnabled(!isLoading);
+        this.convertButton.setText(isLoading ? "轉換中..." : "開始轉換");
     }
 
 }

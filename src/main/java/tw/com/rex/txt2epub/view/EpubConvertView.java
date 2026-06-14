@@ -23,6 +23,8 @@ public interface EpubConvertView {
 
     // ---- 控制畫面的顯示與反饋 (Actions/Setters) ----
 
+    void showSuccess();
+
     void showMessage(String message);
 
     void showErrorMessage(String error);
