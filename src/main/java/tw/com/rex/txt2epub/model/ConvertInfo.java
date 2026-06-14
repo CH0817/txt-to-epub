@@ -6,8 +6,7 @@ import java.util.stream.Stream;
 
 import lombok.Getter;
 import tw.com.rex.txt2epub.creator.BookCreator;
-import tw.com.rex.txt2epub.factory.StyleFactory;
-import tw.com.rex.txt2epub.model.css.Style;
+import tw.com.rex.txt2epub.model.css.DisplayStyle;
 import tw.com.rex.txt2epub.view.EpubConvertView;
 
 @Getter
@@ -16,12 +15,12 @@ public class ConvertInfo {
     private final Book[] books;
     private final Path output;
     private final TempDirectory[] tempDirectories;
-    private final Style style;
+    private final DisplayStyle style;
 
     public ConvertInfo(EpubConvertView view) {
         this.books = BookCreator.create(view);
         this.output = Paths.get(view.getOutputPath());
-        this.style = StyleFactory.getStyle(view.getStyle());
+        this.style = view.getDisplayStyle();
         this.tempDirectories = createTempDirectories();
     }
 

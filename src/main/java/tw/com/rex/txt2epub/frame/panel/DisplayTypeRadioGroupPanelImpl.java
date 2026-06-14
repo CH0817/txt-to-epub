@@ -1,24 +1,30 @@
 package tw.com.rex.txt2epub.frame.panel;
 
-import lombok.Getter;
-import org.apache.commons.lang3.StringUtils;
-import tw.com.rex.txt2epub.define.TypesettingEnum;
-
-import javax.swing.*;
-import java.awt.*;
+import java.awt.FlowLayout;
 import java.util.Enumeration;
+
+import javax.swing.AbstractButton;
+import javax.swing.ButtonGroup;
+import javax.swing.JPanel;
+import javax.swing.JRadioButton;
+
+import lombok.Getter;
+import tw.com.rex.txt2epub.define.TypesettingEnum;
+import tw.com.rex.txt2epub.factory.StyleFactory;
+import tw.com.rex.txt2epub.frame.DisplayTypeRadioGroupPanel;
+import tw.com.rex.txt2epub.model.css.DisplayStyle;
 
 /**
  * 橫排、直排 panel
  */
 @Getter
-public class TypeSettingPanel extends JPanel {
+public class DisplayTypeRadioGroupPanelImpl extends JPanel implements DisplayTypeRadioGroupPanel {
 
-    private final ButtonGroup typesettingGroup;
+    private final ButtonGroup group;
 
-    public TypeSettingPanel() {
+    public DisplayTypeRadioGroupPanelImpl() {
         this.setLayout(new FlowLayout(FlowLayout.LEFT));
-        this.typesettingGroup = initTypesettingGroup();
+        this.group = initTypesettingGroup();
         setButtonToPanel();
     }
 
@@ -43,21 +49,19 @@ public class TypeSettingPanel extends JPanel {
     }
 
     private void setButtonToPanel() {
-        Enumeration<AbstractButton> elements = this.typesettingGroup.getElements();
+        Enumeration<AbstractButton> elements = this.group.getElements();
         while (elements.hasMoreElements()) {
             this.add(elements.nextElement());
         }
     }
 
-    public String getStyle() {
-        Enumeration<AbstractButton> elements = this.typesettingGroup.getElements();
-        while (elements.hasMoreElements()) {
-            AbstractButton button = elements.nextElement();
-            if (button.isSelected()) {
-                return button.getActionCommand();
-            }
-        }
-        return StringUtils.EMPTY;
+    @Override
+    public String getSelected() {
+        return group.getSelection().getActionCommand();
+    }
+
+    public DisplayStyle getStyle() {
+        return StyleFactory.getStyle(this.getSelected());
     }
 
 }

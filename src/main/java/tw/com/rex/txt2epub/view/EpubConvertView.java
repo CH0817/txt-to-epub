@@ -1,5 +1,7 @@
 package tw.com.rex.txt2epub.view;
 
+import tw.com.rex.txt2epub.model.css.DisplayStyle;
+
 /**
  * 畫面取得/操作 interface
  */
@@ -32,7 +34,7 @@ public interface EpubConvertView {
      */
     String getPublisher();
 
-    public String getStyle();
+    public DisplayStyle getDisplayStyle();
 
     public String getChapterFinderType();
 

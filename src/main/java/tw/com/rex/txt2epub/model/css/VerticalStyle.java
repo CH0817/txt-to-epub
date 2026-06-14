@@ -2,7 +2,7 @@ package tw.com.rex.txt2epub.model.css;
 
 import org.apache.commons.lang3.StringUtils;
 
-public class VerticalStyle extends Style {
+public class VerticalStyle extends DisplayStyle {
 
     public VerticalStyle() {
         this.typesettingClass = "vrtl";

@@ -15,6 +15,7 @@ public class EpubService {
     private ConvertInfo convertInfo;
 
     public void process(ConvertInfo convertInfo) {
+        this.convertInfo = convertInfo;
         IntStream.range(0, convertInfo.getBooks().length)
                 .forEach(i -> {
                     createContentXhtml(i);

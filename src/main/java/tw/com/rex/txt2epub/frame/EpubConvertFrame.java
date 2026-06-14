@@ -24,7 +24,8 @@ import tw.com.rex.txt2epub.frame.chooser.CoverChooser;
 import tw.com.rex.txt2epub.frame.chooser.FileChooser;
 import tw.com.rex.txt2epub.frame.chooser.OutputPathChooser;
 import tw.com.rex.txt2epub.frame.chooser.TxtChooser;
-import tw.com.rex.txt2epub.frame.panel.TypeSettingPanel;
+import tw.com.rex.txt2epub.frame.panel.DisplayTypeRadioGroupPanelImpl;
+import tw.com.rex.txt2epub.model.css.DisplayStyle;
 import tw.com.rex.txt2epub.presenter.EpubConvertPresenter;
 import tw.com.rex.txt2epub.view.EpubConvertView;
 
@@ -39,7 +40,7 @@ public class EpubConvertFrame extends JFrame implements EpubConvertView {
     private final FileChooser txtChooser = new TxtChooser();
     private final FileChooser outputPathChooser = new OutputPathChooser();
     private final FileChooser coverChooser = new CoverChooser();
-    private final TypeSettingPanel typeSettingPanel = new TypeSettingPanel();
+    private final DisplayTypeRadioGroupPanel typeSettingPanel = new DisplayTypeRadioGroupPanelImpl();
     private final ChapterTypePanel chapterTypePanel = new ChapterTypePanel();
     private final JCheckBox convertSimplified = new JCheckBox("簡轉繁");
     private final JButton convertButton = new JButton("開始轉換");
@@ -71,7 +72,7 @@ public class EpubConvertFrame extends JFrame implements EpubConvertView {
         // 章節判斷
         panel.add(chapterTypePanel, new GBCBuilder(0, 5, tracker).build());
         panel.add(chapterTypePanel.getTextField(), new GBCBuilder(1, 5, tracker).build());
-        panel.add(typeSettingPanel, new GBCBuilder(0, 6, tracker).build());
+        panel.add((JPanel) typeSettingPanel, new GBCBuilder(0, 6, tracker).build());
         panel.add(convertSimplified, new GBCBuilder(1, 6, tracker)
                 .fill(GridBagConstraints.HORIZONTAL)
                 .build());
@@ -141,7 +142,7 @@ public class EpubConvertFrame extends JFrame implements EpubConvertView {
     }
 
     @Override
-    public String getStyle() {
+    public DisplayStyle getDisplayStyle() {
         return typeSettingPanel.getStyle();
     }
 

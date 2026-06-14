@@ -5,7 +5,7 @@ import lombok.Getter;
 import java.io.Serializable;
 
 @Getter
-public class Style implements Serializable {
+public class DisplayStyle implements Serializable {
 
     protected String typesettingClass;
     protected String contentH2Class;

@@ -2,7 +2,7 @@ package tw.com.rex.txt2epub.model.css;
 
 import org.apache.commons.lang3.StringUtils;
 
-public class HorizontalStyle extends Style {
+public class HorizontalStyle extends DisplayStyle {
 
     public HorizontalStyle() {
         this.typesettingClass = "hltr";
