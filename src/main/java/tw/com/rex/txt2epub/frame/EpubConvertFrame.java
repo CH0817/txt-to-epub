@@ -2,7 +2,9 @@ package tw.com.rex.txt2epub.frame;
 
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
+import java.util.Objects;
 
+import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -13,7 +15,6 @@ import javax.swing.SwingConstants;
 import lombok.Setter;
 import tw.com.rex.txt2epub.builder.GBCBuilder;
 import tw.com.rex.txt2epub.builder.helper.GridPositionTracker;
-import tw.com.rex.txt2epub.frame.button.ConvertButton;
 import tw.com.rex.txt2epub.frame.chapter.ChapterTypePanel;
 import tw.com.rex.txt2epub.frame.chooser.CoverChooser;
 import tw.com.rex.txt2epub.frame.chooser.FileChooser;
@@ -68,7 +69,14 @@ public class EpubConvertFrame extends JFrame implements EpubConvertView {
                 .build());
 
         // 開始轉換
-        panel.add(new ConvertButton(this), new GBCBuilder(0, 7, tracker)
+        JButton convertButton = new JButton("開始轉換");
+        convertButton.addActionListener(e -> {
+            if (Objects.nonNull(this.presenter)) {
+                this.presenter.onStartConversion();
+            }
+        });
+
+        panel.add(convertButton, new GBCBuilder(0, 7, tracker)
                 .gridWidth(2)
                 .build());
 
