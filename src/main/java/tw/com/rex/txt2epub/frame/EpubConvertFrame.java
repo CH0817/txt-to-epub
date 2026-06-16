@@ -26,11 +26,12 @@ import lombok.Setter;
 import tw.com.rex.txt2epub.builder.GBCBuilder;
 import tw.com.rex.txt2epub.builder.helper.GridPositionTracker;
 import tw.com.rex.txt2epub.define.ChapterTypeEnum;
+import tw.com.rex.txt2epub.define.TypesettingEnum;
+import tw.com.rex.txt2epub.factory.StyleFactory;
 import tw.com.rex.txt2epub.frame.chooser.CoverChooser;
 import tw.com.rex.txt2epub.frame.chooser.FileChooser;
 import tw.com.rex.txt2epub.frame.chooser.OutputPathChooser;
 import tw.com.rex.txt2epub.frame.chooser.TxtChooser;
-import tw.com.rex.txt2epub.frame.panel.DisplayTypeRadioGroupPanelImpl;
 import tw.com.rex.txt2epub.model.css.DisplayStyle;
 import tw.com.rex.txt2epub.presenter.EpubConvertPresenter;
 import tw.com.rex.txt2epub.view.EpubConvertView;
@@ -46,14 +47,16 @@ public class EpubConvertFrame extends JFrame implements EpubConvertView {
     private final FileChooser txtChooser = new TxtChooser();
     private final FileChooser outputPathChooser = new OutputPathChooser();
     private final FileChooser coverChooser = new CoverChooser();
-    private final DisplayTypeRadioGroupPanel typeSettingPanel = new DisplayTypeRadioGroupPanelImpl();
     private final JCheckBox convertSimplified = new JCheckBox("簡轉繁");
     private final JButton convertButton = new JButton("開始轉換");
     private final ButtonGroup chapterTypeRadioButtonGroup = new ButtonGroup();
+    private final ButtonGroup displayTypeRadioButtonGroup = new ButtonGroup();
     private final JTextField chapterTypeTextField;
     private final KeyAdapter onlyNumberInputKeyAdapter;
     private final JRadioButton regexRadioButton;
     private final JRadioButton wordCountRadioButton;
+    private final JRadioButton horizontalRadioButton;
+    private final JRadioButton verticalRadioButton;
 
     @Setter
     private EpubConvertPresenter presenter;
@@ -94,7 +97,21 @@ public class EpubConvertFrame extends JFrame implements EpubConvertView {
 
         panel.add(chapterTypePanel, new GBCBuilder(0, 5, tracker).build());
         panel.add(chapterTypeTextField, new GBCBuilder(1, 5, tracker).build());
-        panel.add((JPanel) typeSettingPanel, new GBCBuilder(0, 6, tracker).build());
+
+        // 排版模式判斷
+        horizontalRadioButton = createHorizontalButton();
+        verticalRadioButton = createVerticalButton();
+        displayTypeRadioButtonGroup.add(horizontalRadioButton);
+        displayTypeRadioButtonGroup.add(verticalRadioButton);
+        JPanel displayTypePanel = new JPanel();
+
+        displayTypePanel.setLayout(new FlowLayout(FlowLayout.LEFT));
+        displayTypePanel.add(horizontalRadioButton);
+        displayTypePanel.add(verticalRadioButton);
+
+        panel.add(displayTypePanel, new GBCBuilder(0, 6, tracker).build());
+
+        // 簡轉繁 checkbox
         panel.add(convertSimplified, new GBCBuilder(1, 6, tracker)
                 .fill(GridBagConstraints.HORIZONTAL)
                 .build());
@@ -113,6 +130,19 @@ public class EpubConvertFrame extends JFrame implements EpubConvertView {
         this.add(panel);
         this.pack();
         this.setVisible(true);
+    }
+
+    private JRadioButton createHorizontalButton() {
+        JRadioButton result = new JRadioButton("橫排");
+        result.setActionCommand(TypesettingEnum.HORIZONTAL.name());
+        result.setSelected(true);
+        return result;
+    }
+
+    private JRadioButton createVerticalButton() {
+        JRadioButton result = new JRadioButton("直排");
+        result.setActionCommand(TypesettingEnum.VERTICAL.name());
+        return result;
     }
 
     private JTextField initChapterTypeTextField() {
@@ -222,7 +252,7 @@ public class EpubConvertFrame extends JFrame implements EpubConvertView {
 
     @Override
     public DisplayStyle getDisplayStyle() {
-        return typeSettingPanel.getStyle();
+        return StyleFactory.getStyle(displayTypeRadioButtonGroup.getSelection().getActionCommand());
     }
 
     @Override
