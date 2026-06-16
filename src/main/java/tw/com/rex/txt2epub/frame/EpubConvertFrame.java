@@ -1,25 +1,31 @@
 package tw.com.rex.txt2epub.frame;
 
 import java.awt.Desktop;
+import java.awt.Dimension;
+import java.awt.FlowLayout;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
 import java.io.IOException;
 import java.nio.file.Paths;
 import java.util.Objects;
 
+import javax.swing.ButtonGroup;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.JRadioButton;
 import javax.swing.JTextField;
 import javax.swing.SwingConstants;
 
 import lombok.Setter;
 import tw.com.rex.txt2epub.builder.GBCBuilder;
 import tw.com.rex.txt2epub.builder.helper.GridPositionTracker;
-import tw.com.rex.txt2epub.frame.chapter.ChapterTypePanel;
+import tw.com.rex.txt2epub.define.ChapterTypeEnum;
 import tw.com.rex.txt2epub.frame.chooser.CoverChooser;
 import tw.com.rex.txt2epub.frame.chooser.FileChooser;
 import tw.com.rex.txt2epub.frame.chooser.OutputPathChooser;
@@ -41,9 +47,13 @@ public class EpubConvertFrame extends JFrame implements EpubConvertView {
     private final FileChooser outputPathChooser = new OutputPathChooser();
     private final FileChooser coverChooser = new CoverChooser();
     private final DisplayTypeRadioGroupPanel typeSettingPanel = new DisplayTypeRadioGroupPanelImpl();
-    private final ChapterTypePanel chapterTypePanel = new ChapterTypePanel();
     private final JCheckBox convertSimplified = new JCheckBox("簡轉繁");
     private final JButton convertButton = new JButton("開始轉換");
+    private final ButtonGroup chapterTypeRadioButtonGroup = new ButtonGroup();
+    private final JTextField chapterTypeTextField;
+    private final KeyAdapter onlyNumberInputKeyAdapter;
+    private final JRadioButton regexRadioButton;
+    private final JRadioButton wordCountRadioButton;
 
     @Setter
     private EpubConvertPresenter presenter;
@@ -70,8 +80,20 @@ public class EpubConvertFrame extends JFrame implements EpubConvertView {
                 .build());
 
         // 章節判斷
+        chapterTypeTextField = initChapterTypeTextField();
+        onlyNumberInputKeyAdapter = initOnlyNumberInputKeyAdapter();
+        regexRadioButton = createRegexButton();
+        wordCountRadioButton = createWordCountButton();
+        chapterTypeRadioButtonGroup.add(regexRadioButton);
+        chapterTypeRadioButtonGroup.add(wordCountRadioButton);
+
+        JPanel chapterTypePanel = new JPanel();
+        chapterTypePanel.setLayout(new FlowLayout(FlowLayout.LEFT));
+        chapterTypePanel.add(regexRadioButton);
+        chapterTypePanel.add(wordCountRadioButton);
+
         panel.add(chapterTypePanel, new GBCBuilder(0, 5, tracker).build());
-        panel.add(chapterTypePanel.getTextField(), new GBCBuilder(1, 5, tracker).build());
+        panel.add(chapterTypeTextField, new GBCBuilder(1, 5, tracker).build());
         panel.add((JPanel) typeSettingPanel, new GBCBuilder(0, 6, tracker).build());
         panel.add(convertSimplified, new GBCBuilder(1, 6, tracker)
                 .fill(GridBagConstraints.HORIZONTAL)
@@ -91,6 +113,63 @@ public class EpubConvertFrame extends JFrame implements EpubConvertView {
         this.add(panel);
         this.pack();
         this.setVisible(true);
+    }
+
+    private JTextField initChapterTypeTextField() {
+        JTextField result = new JTextField();
+        result.setText("^第[0-9]{1,4}章 .*$");
+        result.setPreferredSize(new Dimension(300, 25));
+        return result;
+    }
+
+    private JRadioButton createRegexButton() {
+        ChapterTypeEnum regexEnum = ChapterTypeEnum.REGEX;
+        JRadioButton result = new JRadioButton(regexEnum.text);
+        result.setActionCommand(regexEnum.name());
+        result.setSelected(true);
+        result.addActionListener(e -> {
+            chapterTypeTextField.setText("^第[0-9]{1,4}章 .*$");
+            chapterTypeTextField.removeKeyListener(onlyNumberInputKeyAdapter);
+        });
+        return result;
+    }
+
+    private JRadioButton createWordCountButton() {
+        ChapterTypeEnum wordCountEnum = ChapterTypeEnum.WORD_COUNT;
+        JRadioButton result = new JRadioButton(wordCountEnum.text);
+        result.setActionCommand(wordCountEnum.name());
+        result.addActionListener(e -> {
+            chapterTypeTextField.setText("5000");
+            chapterTypeTextField.addKeyListener(onlyNumberInputKeyAdapter);
+        });
+        return result;
+    }
+
+    private KeyAdapter initOnlyNumberInputKeyAdapter() {
+        return new KeyAdapter() {
+            @Override
+            public void keyTyped(KeyEvent e) {
+                int keyChar = e.getKeyChar();
+                if (!isNumber(keyChar) && !isIgnoreShowTipKey(keyChar)) {
+                    JOptionPane.showMessageDialog(null, "請輸入數字");
+                    e.consume();
+                }
+            }
+        };
+    }
+
+    private boolean isNumber(int keyChar) {
+        return keyChar >= KeyEvent.VK_0 && keyChar <= KeyEvent.VK_9;
+    }
+
+    private boolean isIgnoreShowTipKey(int keyChar) {
+        switch (keyChar) {
+            case KeyEvent.VK_ENTER:
+            case KeyEvent.VK_BACK_SPACE:
+                return true;
+            default:
+                return false;
+        }
     }
 
     private void initTxtChooser(JPanel panel) {
@@ -148,12 +227,12 @@ public class EpubConvertFrame extends JFrame implements EpubConvertView {
 
     @Override
     public String getChapterFinderType() {
-        return chapterTypePanel.getType();
+        return chapterTypeRadioButtonGroup.getSelection().getActionCommand();
     }
 
     @Override
     public String getChapterFinder() {
-        return chapterTypePanel.getFinder();
+        return chapterTypeTextField.getText();
     }
 
     @Override
