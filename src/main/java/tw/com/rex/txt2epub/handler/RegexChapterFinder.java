@@ -13,8 +13,8 @@ import java.util.stream.IntStream;
 import org.apache.commons.lang3.StringUtils;
 
 import lombok.extern.slf4j.Slf4j;
+import tw.com.rex.txt2epub.model.ConvertInfo;
 import tw.com.rex.txt2epub.model.TxtContent;
-import tw.com.rex.txt2epub.view.EpubConvertView;
 
 /**
  * 正則表達式查詢章節
@@ -22,8 +22,8 @@ import tw.com.rex.txt2epub.view.EpubConvertView;
 @Slf4j
 public class RegexChapterFinder extends AbstractChapterFinder {
 
-    public RegexChapterFinder(EpubConvertView view) {
-        super(view);
+    public RegexChapterFinder(ConvertInfo convertInfo) {
+        super(convertInfo);
     }
 
     @Override
@@ -36,7 +36,7 @@ public class RegexChapterFinder extends AbstractChapterFinder {
     private List<String> getAllLines() {
         for (Charset charset : super.charsets) {
             try {
-                return Files.readAllLines(Paths.get(this.view.getTxtFilePath()), charset).stream()
+                return Files.readAllLines(Paths.get(convertInfo.getTxtPath()), charset).stream()
                         .map(super::replaceSpecialSymbol)
                         .map(super::convertSimplified)
                         .collect(toList());
@@ -50,7 +50,7 @@ public class RegexChapterFinder extends AbstractChapterFinder {
     private List<Integer> getTitleIndexes(List<String> allLines) {
         return IntStream.range(0, allLines.size())
                 .filter(i -> StringUtils.isNotBlank(allLines.get(i)))
-                .filter(i -> StringUtils.trimToEmpty(allLines.get(i)).matches(super.view.getChapterFinder()))
+                .filter(i -> StringUtils.trimToEmpty(allLines.get(i)).matches(convertInfo.getChapterFinder()))
                 .boxed()
                 .collect(toList());
     }

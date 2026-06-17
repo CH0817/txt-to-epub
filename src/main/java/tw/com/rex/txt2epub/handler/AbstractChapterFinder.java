@@ -8,8 +8,8 @@ import com.github.houbb.opencc4j.support.segment.impl.Segments;
 import com.github.houbb.opencc4j.util.ZhConverterUtil;
 
 import lombok.AllArgsConstructor;
+import tw.com.rex.txt2epub.model.ConvertInfo;
 import tw.com.rex.txt2epub.model.TxtContent;
-import tw.com.rex.txt2epub.view.EpubConvertView;
 
 @AllArgsConstructor
 public abstract class AbstractChapterFinder {
@@ -22,7 +22,7 @@ public abstract class AbstractChapterFinder {
             Charset.forName("GBK"),
             StandardCharsets.UTF_16 };
 
-    protected EpubConvertView view;
+    protected ConvertInfo convertInfo;
 
     /**
      * 取得章節內容
@@ -50,7 +50,7 @@ public abstract class AbstractChapterFinder {
      * @return 繁體
      */
     protected String convertSimplified(String origin) {
-        if (this.view.isConvertSimplified()) {
+        if (convertInfo.isConvertSimplified()) {
             String content = ZhConverterUtil.toTraditional(origin, Segments.defaults());
             content = replaceSpecificChar(content);
             content = replaceSpecificNoun(content);
@@ -66,7 +66,7 @@ public abstract class AbstractChapterFinder {
      * @return 替換後的 String
      */
     private String replaceSpecificChar(String content) {
-        if (!this.view.isConvertSimplified()) {
+        if (!convertInfo.isConvertSimplified()) {
             return content;
         }
         return content.replaceAll("羣", "群")
@@ -82,7 +82,7 @@ public abstract class AbstractChapterFinder {
      * @return 替換後的 String
      */
     private String replaceSpecificNoun(String content) {
-        if (!this.view.isConvertSimplified()) {
+        if (!convertInfo.isConvertSimplified()) {
             return content;
         }
         return content.replaceAll("樑習", "梁習");

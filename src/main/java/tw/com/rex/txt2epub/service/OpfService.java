@@ -1,22 +1,23 @@
 package tw.com.rex.txt2epub.service;
 
-import org.apache.commons.lang3.StringUtils;
-import tw.com.rex.txt2epub.model.Book;
-import tw.com.rex.txt2epub.model.ConvertInfo;
-import tw.com.rex.txt2epub.utils.DateUtil;
-import tw.com.rex.txt2epub.utils.FileUtil;
-
 import java.nio.file.Path;
 import java.util.UUID;
+
+import org.apache.commons.lang3.StringUtils;
+
+import tw.com.rex.txt2epub.model.Book;
+import tw.com.rex.txt2epub.model.TempDirectory;
+import tw.com.rex.txt2epub.utils.DateUtil;
+import tw.com.rex.txt2epub.utils.FileUtil;
 
 public class OpfService {
 
     private final Book book;
     private final Path output;
 
-    public OpfService(ConvertInfo convertInfo, int index) {
-        this.book = convertInfo.getBooks()[index];
-        this.output = convertInfo.getTempDirectories()[index].getItemPath();
+    public OpfService(Book book) {
+        this.book = book;
+        this.output = new TempDirectory(book.getName()).getItemPath();
     }
 
     public void generate() {

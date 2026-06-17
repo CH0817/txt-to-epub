@@ -1,11 +1,14 @@
 package tw.com.rex.txt2epub.service;
 
 import java.nio.file.Path;
-import java.util.stream.IntStream;
+import java.nio.file.Paths;
+import java.util.stream.Stream;
 
 import com.adobe.epubcheck.tool.EpubChecker;
 
+import tw.com.rex.txt2epub.model.Book;
 import tw.com.rex.txt2epub.model.ConvertInfo;
+import tw.com.rex.txt2epub.model.TempDirectory;
 import tw.com.rex.txt2epub.model.xml.Container;
 import tw.com.rex.txt2epub.utils.FileUtil;
 import tw.com.rex.txt2epub.utils.XmlUtil;
@@ -14,61 +17,61 @@ public class EpubService {
 
     private ConvertInfo convertInfo;
 
-    public void process(ConvertInfo convertInfo) {
+    public void process(ConvertInfo convertInfo, Book[] books) {
         this.convertInfo = convertInfo;
-        IntStream.range(0, convertInfo.getBooks().length)
-                .forEach(i -> {
-                    createContentXhtml(i);
-                    createCover(i);
-                    copyCssFiles(i);
-                    createTableOfContents(i);
-                    createNavigationDocuments(i);
-                    createOpf(i);
-                    createContainerXml(i);
-                    createMineType(i);
-                    convert(i);
-                    removeTemp(i);
-                    moveEpub(i);
+        Stream.of(books)
+                .forEach(book -> {
+                    createContentXhtml(book);
+                    createCover(book);
+                    copyCssFiles(book);
+                    createTableOfContents(book);
+                    createNavigationDocuments(book);
+                    createOpf(book);
+                    createContainerXml(book);
+                    createMineType(book);
+                    convert(book);
+                    removeTemp(book);
+                    moveEpub(book);
                 });
     }
 
-    private void createContentXhtml(int index) {
-        new ContentXhtmlService(convertInfo, index).generate();
+    private void createContentXhtml(Book book) {
+        new ContentXhtmlService(convertInfo.getStyle(), book).generate();
     }
 
-    private void createCover(int index) {
-        new CoverXhtmlService(convertInfo, index).generate();
+    private void createCover(Book book) {
+        new CoverXhtmlService(book).generate();
     }
 
-    private void copyCssFiles(int index) {
-        new StyleFileService(convertInfo, index).copy();
+    private void copyCssFiles(Book book) {
+        new StyleFileService(convertInfo.getStyle(), book).copy();
     }
 
-    private void createTableOfContents(int index) {
-        new TableOfContentsService(convertInfo, index).generate();
+    private void createTableOfContents(Book book) {
+        new TableOfContentsService(convertInfo.getStyle(), book).generate();
     }
 
-    private void createNavigationDocuments(int index) {
-        new NavigationDocumentsXhtmlService(convertInfo, index).generate();
+    private void createNavigationDocuments(Book book) {
+        new NavigationDocumentsXhtmlService(book).generate();
     }
 
-    private void createOpf(int index) {
-        new OpfService(convertInfo, index).generate();
+    private void createOpf(Book book) {
+        new OpfService(book).generate();
     }
 
-    private void createContainerXml(int index) {
+    private void createContainerXml(Book book) {
         XmlUtil.convertToXmlFile(new Container(),
-                convertInfo.getTempDirectories()[index].getMetaInfPath().resolve("container.xml"));
+                new TempDirectory(book.getName()).getMetaInfPath().resolve("container.xml"));
     }
 
-    private void createMineType(int index) {
-        FileUtil.write(convertInfo.getTempDirectories()[index]
+    private void createMineType(Book book) {
+        FileUtil.write(new TempDirectory(book.getName())
                 .getBasePath()
                 .resolve("mimetype"), "application/epub+zip");
     }
 
-    private void convert(int index) {
-        String tempFilePath = convertInfo.getTempDirectories()[index].getBasePath().toAbsolutePath().toString();
+    private void convert(Book book) {
+        String tempFilePath = new TempDirectory(book.getName()).getBasePath().toAbsolutePath().toString();
         String[] args = { tempFilePath, "--mode", "exp", "--save" };
         int checkResult = new EpubChecker().run(args);
         if (0 != checkResult) {
@@ -76,13 +79,13 @@ public class EpubService {
         }
     }
 
-    private void removeTemp(int index) {
-        FileUtil.deleteAll(convertInfo.getTempDirectories()[index].getBasePath());
+    private void removeTemp(Book book) {
+        FileUtil.deleteAll(new TempDirectory(book.getName()).getBasePath());
     }
 
-    private void moveEpub(int index) {
-        Path path = convertInfo.getTempDirectories()[index].getFinalFilePath();
-        Path output = convertInfo.getOutput().resolve(path.getFileName());
+    private void moveEpub(Book book) {
+        Path path = new TempDirectory(book.getName()).getFinalFilePath();
+        Path output = Paths.get(convertInfo.getOutputPath()).resolve(path.getFileName());
         FileUtil.move(path, output);
     }
 

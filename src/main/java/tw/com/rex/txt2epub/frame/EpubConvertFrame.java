@@ -32,7 +32,7 @@ import tw.com.rex.txt2epub.frame.chooser.CoverChooser;
 import tw.com.rex.txt2epub.frame.chooser.FileChooser;
 import tw.com.rex.txt2epub.frame.chooser.OutputPathChooser;
 import tw.com.rex.txt2epub.frame.chooser.TxtChooser;
-import tw.com.rex.txt2epub.model.css.DisplayStyle;
+import tw.com.rex.txt2epub.model.ConvertInfo;
 import tw.com.rex.txt2epub.presenter.EpubConvertPresenter;
 import tw.com.rex.txt2epub.view.EpubConvertView;
 
@@ -226,60 +226,31 @@ public class EpubConvertFrame extends JFrame implements EpubConvertView {
     }
 
     @Override
-    public String getTxtFilePath() {
-        return this.txtChooser.getTextField().getText();
-    }
-
-    @Override
-    public String getOutputPath() {
-        return this.outputPathChooser.getTextField().getText();
-    }
-
-    @Override
-    public String getCoverPath() {
-        return this.coverChooser.getTextField().getText();
-    }
-
-    @Override
-    public String getAuthor() {
-        return this.authorField.getText();
-    }
-
-    @Override
-    public String getPublisher() {
-        return this.publishingHouseField.getText();
-    }
-
-    @Override
-    public DisplayStyle getDisplayStyle() {
-        return StyleFactory.getStyle(displayTypeRadioButtonGroup.getSelection().getActionCommand());
-    }
-
-    @Override
-    public String getChapterFinderType() {
-        return chapterTypeRadioButtonGroup.getSelection().getActionCommand();
-    }
-
-    @Override
-    public String getChapterFinder() {
-        return chapterTypeTextField.getText();
-    }
-
-    @Override
-    public boolean isConvertSimplified() {
-        return convertSimplified.isSelected();
+    public ConvertInfo getConvertInfo() {
+        return ConvertInfo.builder()
+                .txtPath(txtChooser.getTextField().getText())
+                .outputPath(outputPathChooser.getTextField().getText())
+                .coverPath(coverChooser.getTextField().getText())
+                .author(authorField.getText())
+                .publisher(publishingHouseField.getText())
+                .chapterFinderType(chapterTypeRadioButtonGroup.getSelection().getActionCommand())
+                .chapterFinder(chapterTypeTextField.getText())
+                .style(StyleFactory.getStyle(displayTypeRadioButtonGroup.getSelection().getActionCommand()))
+                .isConvertSimplified(convertSimplified.isSelected())
+                .build();
     }
 
     @Override
     public void showSuccess() {
-        this.setProgressLoading(false);
+        String outputPath = outputPathChooser.getTextField().getText();
+        setProgressLoading(false);
         int input = JOptionPane.showOptionDialog(this, "轉換成功", "訊息", JOptionPane.DEFAULT_OPTION,
                 JOptionPane.INFORMATION_MESSAGE, null, null, null);
         if (input == JOptionPane.OK_OPTION) {
             try {
-                Desktop.getDesktop().open(Paths.get(this.getOutputPath()).toFile());
+                Desktop.getDesktop().open(Paths.get(outputPath).toFile());
             } catch (IOException e) {
-                this.showErrorMessage("開啟 " + this.getOutputPath() + "失敗！");
+                showErrorMessage("開啟 " + outputPath + "失敗！");
                 e.printStackTrace();
             }
         }

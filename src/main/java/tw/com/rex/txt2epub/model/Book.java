@@ -7,7 +7,6 @@ import java.util.List;
 import java.util.Objects;
 
 import lombok.Getter;
-import tw.com.rex.txt2epub.view.EpubConvertView;
 
 @Getter
 public class Book {
@@ -18,11 +17,11 @@ public class Book {
     private final List<TxtContent> txtContentList;
     private final Path cover;
 
-    public Book(EpubConvertView view, String name, List<TxtContent> txtContentList) {
+    public Book(ConvertInfo convertInfo, String name, List<TxtContent> txtContentList) {
         this.name = name;
-        this.cover = Paths.get(view.getCoverPath());
-        this.author = view.getAuthor();
-        this.publisher = view.getPublisher();
+        this.cover = Paths.get(convertInfo.getCoverPath());
+        this.author = convertInfo.getAuthor();
+        this.publisher = convertInfo.getPublisher();
         this.txtContentList = txtContentList;
     }
 

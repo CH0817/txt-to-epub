@@ -1,11 +1,11 @@
 package tw.com.rex.txt2epub.service;
 
+import java.nio.file.Path;
+
 import tw.com.rex.txt2epub.model.Book;
-import tw.com.rex.txt2epub.model.ConvertInfo;
+import tw.com.rex.txt2epub.model.TempDirectory;
 import tw.com.rex.txt2epub.model.css.DisplayStyle;
 import tw.com.rex.txt2epub.utils.FileUtil;
-
-import java.nio.file.Path;
 
 public class TableOfContentsService {
 
@@ -13,10 +13,10 @@ public class TableOfContentsService {
   private final DisplayStyle style;
   private final Path output;
 
-  public TableOfContentsService(ConvertInfo convertInfo, int index) {
-    this.style = convertInfo.getStyle();
-    this.book = convertInfo.getBooks()[index];
-    this.output = convertInfo.getTempDirectories()[index].getXhtmlPath();
+  public TableOfContentsService(DisplayStyle style, Book book) {
+    this.style = style;
+    this.book = book;
+    this.output = new TempDirectory(book.getName()).getXhtmlPath();
   }
 
   public void generate() {

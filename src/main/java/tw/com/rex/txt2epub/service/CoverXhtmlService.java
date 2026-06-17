@@ -1,20 +1,20 @@
 package tw.com.rex.txt2epub.service;
 
-import tw.com.rex.txt2epub.model.Book;
-import tw.com.rex.txt2epub.model.ConvertInfo;
-import tw.com.rex.txt2epub.utils.FileUtil;
-
 import java.nio.file.Path;
 import java.nio.file.Paths;
+
+import tw.com.rex.txt2epub.model.Book;
+import tw.com.rex.txt2epub.model.TempDirectory;
+import tw.com.rex.txt2epub.utils.FileUtil;
 
 public class CoverXhtmlService {
 
     private final Book book;
     private final Path output;
 
-    public CoverXhtmlService(ConvertInfo convertInfo, int index) {
-        this.book = convertInfo.getBooks()[index];
-        this.output = convertInfo.getTempDirectories()[index].getXhtmlPath().resolve("p-cover.xhtml");
+    public CoverXhtmlService(Book book) {
+        this.book = book;
+        this.output = new TempDirectory(book.getName()).getXhtmlPath().resolve("p-cover.xhtml");
     }
 
     public void generate() {
@@ -26,9 +26,9 @@ public class CoverXhtmlService {
 
     private void copyCoverImage() {
         Path path = Paths.get(System.getProperty("java.io.tmpdir"), book.getName())
-                         .resolve("item")
-                         .resolve("image")
-                         .resolve(book.getCover().getFileName());
+                .resolve("item")
+                .resolve("image")
+                .resolve(book.getCover().getFileName());
         FileUtil.copy(book.getCover(), path);
     }
 
