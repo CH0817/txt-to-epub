@@ -1,25 +1,26 @@
 package tw.com.rex.txt2epub.service;
 
-import tw.com.rex.txt2epub.model.ConvertInfo;
-import tw.com.rex.txt2epub.model.TempDirectory;
-import tw.com.rex.txt2epub.utils.FileUtil;
-
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.Path;
+
+import tw.com.rex.txt2epub.model.Book;
+import tw.com.rex.txt2epub.model.TempDirectory;
+import tw.com.rex.txt2epub.model.css.DisplayStyle;
+import tw.com.rex.txt2epub.utils.FileUtil;
 
 public class StyleFileService {
 
     private final TempDirectory tempDirectory;
     private final String mainStyleFolder;
 
-    public StyleFileService(ConvertInfo convertInfo, int index) {
-        tempDirectory = convertInfo.getTempDirectories()[index];
-        mainStyleFolder = convertInfo.getStyle().getMainStyleFolder();
+    public StyleFileService(DisplayStyle style, Book book) {
+        tempDirectory = new TempDirectory(book.getName());
+        mainStyleFolder = style.getMainStyleFolder();
     }
 
     public void copy() {
-        String[] cssNames = {"style-advance.css", "style-check.css", "style-reset.css", "style-standard.css"};
+        String[] cssNames = { "style-advance.css", "style-check.css", "style-reset.css", "style-standard.css" };
         for (String cssName : cssNames) {
             Path cssPath = tempDirectory.getStylePath().resolve(cssName).toAbsolutePath();
             ClassLoader classloader = Thread.currentThread().getContextClassLoader();

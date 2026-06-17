@@ -2,6 +2,7 @@ package tw.com.rex.txt2epub.presenter;
 
 import org.apache.commons.lang3.StringUtils;
 
+import tw.com.rex.txt2epub.creator.BookCreator;
 import tw.com.rex.txt2epub.model.ConvertInfo;
 import tw.com.rex.txt2epub.service.EpubService;
 import tw.com.rex.txt2epub.view.EpubConvertView;
@@ -20,10 +21,11 @@ public class EpubConvertPresenter {
      * 執行 txt 轉 EPUB 流程
      */
     public void onStartConversion() {
-        if (verify()) {
+        ConvertInfo convertInfo = view.getConvertInfo();
+        if (verify(convertInfo)) {
             this.view.setProgressLoading(true);
             try {
-                this.service.process(new ConvertInfo(view));
+                this.service.process(convertInfo, BookCreator.create(convertInfo));
                 this.view.showSuccess();
             } catch (Exception e) {
                 this.view.setProgressLoading(false);
@@ -38,12 +40,12 @@ public class EpubConvertPresenter {
      * 
      * @return 是否驗證通過
      */
-    private boolean verify() {
+    private boolean verify(ConvertInfo convertInfo) {
         StringBuilder error = new StringBuilder();
-        if (StringUtils.isBlank(view.getTxtFilePath())) {
+        if (StringUtils.isBlank(convertInfo.getTxtPath())) {
             error.append("請選擇txt檔案\n");
         }
-        if (StringUtils.isBlank(view.getOutputPath())) {
+        if (StringUtils.isBlank(convertInfo.getOutputPath())) {
             error.append("請選擇輸出路徑\n");
         }
         if (StringUtils.isNotBlank(error.toString())) {

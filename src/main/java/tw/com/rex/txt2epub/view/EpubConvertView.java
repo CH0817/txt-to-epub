@@ -1,46 +1,13 @@
 package tw.com.rex.txt2epub.view;
 
-import tw.com.rex.txt2epub.model.css.DisplayStyle;
+import tw.com.rex.txt2epub.model.ConvertInfo;
 
 /**
  * 畫面取得/操作 interface
  */
 public interface EpubConvertView {
 
-    // ---- 獲取使用者輸入的資料 (Getters) ----
-
-    /**
-     * 取得 txt 檔案路徑
-     */
-    String getTxtFilePath();
-
-    /**
-     * 取得 EPUB 輸出路徑
-     */
-    String getOutputPath();
-
-    /**
-     * 取得 EPUB 封面圖片路徑
-     */
-    String getCoverPath();
-
-    /**
-     * 取得作者
-     */
-    String getAuthor();
-
-    /**
-     * 取得出版社
-     */
-    String getPublisher();
-
-    public DisplayStyle getDisplayStyle();
-
-    public String getChapterFinderType();
-
-    public String getChapterFinder();
-
-    public boolean isConvertSimplified();
+    ConvertInfo getConvertInfo();
 
     /**
      * 顯示轉換成功訊息
