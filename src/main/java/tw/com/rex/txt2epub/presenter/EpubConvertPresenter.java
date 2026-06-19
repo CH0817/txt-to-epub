@@ -2,7 +2,6 @@ package tw.com.rex.txt2epub.presenter;
 
 import org.apache.commons.lang3.StringUtils;
 
-import tw.com.rex.txt2epub.creator.BookCreator;
 import tw.com.rex.txt2epub.model.ConvertInfo;
 import tw.com.rex.txt2epub.service.EpubService;
 import tw.com.rex.txt2epub.view.EpubConvertView;
@@ -23,13 +22,13 @@ public class EpubConvertPresenter {
     public void onStartConversion() {
         ConvertInfo convertInfo = view.getConvertInfo();
         if (verify(convertInfo)) {
-            this.view.setProgressLoading(true);
+            view.setProgressLoading(true);
             try {
-                this.service.process(convertInfo, BookCreator.create(convertInfo));
-                this.view.showSuccess();
+                service.process(convertInfo);
+                view.showSuccess();
             } catch (Exception e) {
-                this.view.setProgressLoading(false);
-                this.view.showErrorMessage("EPUB 轉換失敗！");
+                view.setProgressLoading(false);
+                view.showErrorMessage("EPUB 轉換失敗！");
                 e.printStackTrace();
             }
         }
@@ -49,7 +48,7 @@ public class EpubConvertPresenter {
             error.append("請選擇輸出路徑\n");
         }
         if (StringUtils.isNotBlank(error.toString())) {
-            this.view.showErrorMessage(error.toString());
+            view.showErrorMessage(error.toString());
             return false;
         }
         return true;

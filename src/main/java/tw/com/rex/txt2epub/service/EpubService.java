@@ -6,6 +6,7 @@ import java.util.stream.Stream;
 
 import com.adobe.epubcheck.tool.EpubChecker;
 
+import tw.com.rex.txt2epub.creator.BookCreator;
 import tw.com.rex.txt2epub.model.Book;
 import tw.com.rex.txt2epub.model.ConvertInfo;
 import tw.com.rex.txt2epub.model.TempDirectory;
@@ -17,7 +18,8 @@ public class EpubService {
 
     private ConvertInfo convertInfo;
 
-    public void process(ConvertInfo convertInfo, Book[] books) {
+    public void process(ConvertInfo convertInfo) {
+        Book[] books = BookCreator.create(convertInfo);
         this.convertInfo = convertInfo;
         Stream.of(books)
                 .forEach(book -> {
