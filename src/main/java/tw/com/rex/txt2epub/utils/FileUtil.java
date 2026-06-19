@@ -4,19 +4,30 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 import java.nio.file.StandardOpenOption;
 import java.util.Arrays;
 import java.util.Comparator;
+import java.util.List;
 import java.util.Objects;
 import java.util.stream.Stream;
 
 import org.apache.commons.lang3.StringUtils;
 
+import lombok.extern.slf4j.Slf4j;
+
+@Slf4j
 public class FileUtil {
+
+    private static Charset[] charsets = { StandardCharsets.UTF_8,
+            Charset.forName("Big5"),
+            Charset.forName("GBK"),
+            StandardCharsets.UTF_16 };
 
     public static void createDirectories(Path... paths) {
         assert Objects.nonNull(paths) && paths.length > 0;
@@ -108,6 +119,30 @@ public class FileUtil {
         } catch (IOException e) {
             handlerIOException(e, "remove file " + path.toAbsolutePath() + " failure!");
         }
+    }
+
+    public static String readTxtString(String path) {
+        for (Charset charset : charsets) {
+            try {
+                return Files.readString(Paths.get(path), charset);
+            } catch (IOException e) {
+                log.warn("{} 編碼取 txt 內容失敗", charset);
+            }
+        }
+
+        throw new RuntimeException("讀取 txt 內容失敗");
+    }
+
+    public static List<String> readTxtLines(String path) {
+        for (Charset charset : charsets) {
+            try {
+                return Files.readAllLines(Paths.get(path), charset);
+            } catch (IOException e) {
+                log.warn("{} 編碼取 txt 內容失敗", charset);
+            }
+        }
+
+        throw new RuntimeException("讀取 txt 內容失敗");
     }
 
     private static void handlerIOException(Exception e, String message) {

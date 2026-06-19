@@ -2,10 +2,6 @@ package tw.com.rex.txt2epub.handler;
 
 import static java.util.stream.Collectors.*;
 
-import java.io.IOException;
-import java.nio.charset.Charset;
-import java.nio.file.Files;
-import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.IntStream;
@@ -15,6 +11,7 @@ import org.apache.commons.lang3.StringUtils;
 import lombok.extern.slf4j.Slf4j;
 import tw.com.rex.txt2epub.model.ConvertInfo;
 import tw.com.rex.txt2epub.model.TxtContent;
+import tw.com.rex.txt2epub.utils.FileUtil;
 import tw.com.rex.txt2epub.utils.SpecialSymbolReplacer;
 
 /**
@@ -35,17 +32,10 @@ public class RegexChapterFinder extends AbstractChapterFinder {
     }
 
     private List<String> getAllLines() {
-        for (Charset charset : super.charsets) {
-            try {
-                return Files.readAllLines(Paths.get(convertInfo.getTxtPath()), charset).stream()
-                        .map(SpecialSymbolReplacer::replace)
-                        .map(super::convertSimplified)
-                        .collect(toList());
-            } catch (IOException e) {
-                log.warn("{} 編碼取 txt 內容失敗", charset);
-            }
-        }
-        throw new RuntimeException("取得 txt 內容失敗");
+        return FileUtil.readTxtLines(convertInfo.getTxtPath()).stream()
+                .map(SpecialSymbolReplacer::replace)
+                .map(super::convertSimplified)
+                .collect(toList());
     }
 
     private List<Integer> getTitleIndexes(List<String> allLines) {

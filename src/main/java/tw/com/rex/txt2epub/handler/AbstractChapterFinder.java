@@ -1,7 +1,5 @@
 package tw.com.rex.txt2epub.handler;
 
-import java.nio.charset.Charset;
-import java.nio.charset.StandardCharsets;
 import java.util.List;
 
 import lombok.AllArgsConstructor;
@@ -11,14 +9,6 @@ import tw.com.rex.txt2epub.utils.SimplifiedToTraditionalConverter;
 
 @AllArgsConstructor
 public abstract class AbstractChapterFinder {
-
-    /**
-     * 用來讀取檔案的 encode
-     */
-    protected final Charset[] charsets = { StandardCharsets.UTF_8,
-            Charset.forName("Big5"),
-            Charset.forName("GBK"),
-            StandardCharsets.UTF_16 };
 
     protected ConvertInfo convertInfo;
 

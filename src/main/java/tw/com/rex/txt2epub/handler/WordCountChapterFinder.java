@@ -1,9 +1,5 @@
 package tw.com.rex.txt2epub.handler;
 
-import java.io.IOException;
-import java.nio.charset.Charset;
-import java.nio.file.Files;
-import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -11,6 +7,7 @@ import java.util.List;
 import lombok.extern.slf4j.Slf4j;
 import tw.com.rex.txt2epub.model.ConvertInfo;
 import tw.com.rex.txt2epub.model.TxtContent;
+import tw.com.rex.txt2epub.utils.FileUtil;
 import tw.com.rex.txt2epub.utils.SpecialSymbolReplacer;
 
 /**
@@ -51,17 +48,10 @@ public class WordCountChapterFinder extends AbstractChapterFinder {
      * @return txt 檔案內容
      */
     private String getAllContent() {
-        for (Charset charset : super.charsets) {
-            try {
-                String allContents = Files.readString(Paths.get(convertInfo.getTxtPath()), charset);
-                allContents = SpecialSymbolReplacer.replace(allContents);
-                allContents = super.convertSimplified(allContents);
-                return allContents;
-            } catch (IOException e) {
-                log.warn("{} 編碼取 txt 內容失敗", charset);
-            }
-        }
-        throw new RuntimeException("取得 txt 內容失敗");
+        String allContents = FileUtil.readTxtString(convertInfo.getTxtPath());
+        allContents = SpecialSymbolReplacer.replace(allContents);
+        allContents = super.convertSimplified(allContents);
+        return allContents;
     }
 
     /**
