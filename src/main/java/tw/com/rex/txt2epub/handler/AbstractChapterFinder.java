@@ -4,12 +4,10 @@ import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.util.List;
 
-import com.github.houbb.opencc4j.support.segment.impl.Segments;
-import com.github.houbb.opencc4j.util.ZhConverterUtil;
-
 import lombok.AllArgsConstructor;
 import tw.com.rex.txt2epub.model.ConvertInfo;
 import tw.com.rex.txt2epub.model.TxtContent;
+import tw.com.rex.txt2epub.utils.SimplifiedToTraditionalConverter;
 
 @AllArgsConstructor
 public abstract class AbstractChapterFinder {
@@ -50,56 +48,7 @@ public abstract class AbstractChapterFinder {
      * @return 繁體
      */
     protected String convertSimplified(String origin) {
-        if (convertInfo.isConvertSimplified()) {
-            String content = ZhConverterUtil.toTraditional(origin, Segments.defaults());
-            content = replaceSpecificChar(content);
-            content = replaceSpecificNoun(content);
-            return content;
-        }
-        return origin;
-    }
-
-    /**
-     * 簡轉繁後替換指定字
-     *
-     * @param content 簡轉繁後的 String
-     * @return 替換後的 String
-     */
-    private String replaceSpecificChar(String content) {
-        if (!convertInfo.isConvertSimplified()) {
-            return content;
-        }
-        return content.replaceAll("羣", "群")
-                .replaceAll("孃", "娘")
-                .replaceAll("裏", "裡")
-                .replaceAll("纔", "才");
-    }
-
-    /**
-     * 簡轉繁後替換指定名詞
-     *
-     * @param content 簡轉繁後的 String
-     * @return 替換後的 String
-     */
-    private String replaceSpecificNoun(String content) {
-        if (!convertInfo.isConvertSimplified()) {
-            return content;
-        }
-        return content.replaceAll("樑習", "梁習");
-    }
-
-    /**
-     * 替換特殊符號
-     *
-     * @param content 內文
-     * @return 替換後的內文
-     */
-    protected String replaceSpecialSymbol(String content) {
-        return content.replaceAll("&", "&amp;")
-                .replaceAll("<", "&lt;")
-                .replaceAll(">", "&gt;")
-                .replaceAll("\"", "&quot;")
-                .replaceAll("'", "&apos;");
+        return (convertInfo.isConvertSimplified()) ? SimplifiedToTraditionalConverter.convert(origin) : origin;
     }
 
 }

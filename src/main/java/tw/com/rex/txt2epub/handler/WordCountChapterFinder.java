@@ -11,6 +11,7 @@ import java.util.List;
 import lombok.extern.slf4j.Slf4j;
 import tw.com.rex.txt2epub.model.ConvertInfo;
 import tw.com.rex.txt2epub.model.TxtContent;
+import tw.com.rex.txt2epub.utils.SpecialSymbolReplacer;
 
 /**
  * 字數查詢章節
@@ -53,7 +54,7 @@ public class WordCountChapterFinder extends AbstractChapterFinder {
         for (Charset charset : super.charsets) {
             try {
                 String allContents = Files.readString(Paths.get(convertInfo.getTxtPath()), charset);
-                allContents = super.replaceSpecialSymbol(allContents);
+                allContents = SpecialSymbolReplacer.replace(allContents);
                 allContents = super.convertSimplified(allContents);
                 return allContents;
             } catch (IOException e) {

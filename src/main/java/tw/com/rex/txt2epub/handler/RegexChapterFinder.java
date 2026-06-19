@@ -15,6 +15,7 @@ import org.apache.commons.lang3.StringUtils;
 import lombok.extern.slf4j.Slf4j;
 import tw.com.rex.txt2epub.model.ConvertInfo;
 import tw.com.rex.txt2epub.model.TxtContent;
+import tw.com.rex.txt2epub.utils.SpecialSymbolReplacer;
 
 /**
  * 正則表達式查詢章節
@@ -37,7 +38,7 @@ public class RegexChapterFinder extends AbstractChapterFinder {
         for (Charset charset : super.charsets) {
             try {
                 return Files.readAllLines(Paths.get(convertInfo.getTxtPath()), charset).stream()
-                        .map(super::replaceSpecialSymbol)
+                        .map(SpecialSymbolReplacer::replace)
                         .map(super::convertSimplified)
                         .collect(toList());
             } catch (IOException e) {
