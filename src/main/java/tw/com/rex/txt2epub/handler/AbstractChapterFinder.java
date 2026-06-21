@@ -5,7 +5,6 @@ import java.util.List;
 import lombok.AllArgsConstructor;
 import tw.com.rex.txt2epub.model.ConvertInfo;
 import tw.com.rex.txt2epub.model.TxtContent;
-import tw.com.rex.txt2epub.utils.SimplifiedToTraditionalConverter;
 
 @AllArgsConstructor
 public abstract class AbstractChapterFinder {
@@ -29,16 +28,6 @@ public abstract class AbstractChapterFinder {
             chapter.insert(0, "0");
         }
         return chapter.toString();
-    }
-
-    /**
-     * 簡轉繁
-     *
-     * @param origin 原始內容
-     * @return 繁體
-     */
-    protected String convertSimplified(String origin) {
-        return (convertInfo.isConvertSimplified()) ? SimplifiedToTraditionalConverter.convert(origin) : origin;
     }
 
 }

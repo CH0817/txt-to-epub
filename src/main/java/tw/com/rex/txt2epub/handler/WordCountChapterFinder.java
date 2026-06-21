@@ -8,7 +8,6 @@ import lombok.extern.slf4j.Slf4j;
 import tw.com.rex.txt2epub.model.ConvertInfo;
 import tw.com.rex.txt2epub.model.TxtContent;
 import tw.com.rex.txt2epub.utils.FileUtil;
-import tw.com.rex.txt2epub.utils.SpecialSymbolReplacer;
 
 /**
  * 字數查詢章節
@@ -23,7 +22,7 @@ public class WordCountChapterFinder extends AbstractChapterFinder {
     @Override
     public List<TxtContent> getTxtContents() {
         List<TxtContent> result = new ArrayList<>();
-        String allContent = getAllContent();
+        String allContent = FileUtil.readTxtString(convertInfo);
         int wordCount = Integer.parseInt(convertInfo.getChapterFinder());
         int chapterCount = getChapterCount(allContent, wordCount);
 
@@ -40,18 +39,6 @@ public class WordCountChapterFinder extends AbstractChapterFinder {
             result.add(new TxtContent(title, contentList, xhtmlName));
         }
         return result;
-    }
-
-    /**
-     * 取得 txt 檔案內容
-     *
-     * @return txt 檔案內容
-     */
-    private String getAllContent() {
-        String allContents = FileUtil.readTxtString(convertInfo.getTxtPath());
-        allContents = SpecialSymbolReplacer.replace(allContents);
-        allContents = super.convertSimplified(allContents);
-        return allContents;
     }
 
     /**

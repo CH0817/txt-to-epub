@@ -12,7 +12,6 @@ import lombok.extern.slf4j.Slf4j;
 import tw.com.rex.txt2epub.model.ConvertInfo;
 import tw.com.rex.txt2epub.model.TxtContent;
 import tw.com.rex.txt2epub.utils.FileUtil;
-import tw.com.rex.txt2epub.utils.SpecialSymbolReplacer;
 
 /**
  * 正則表達式查詢章節
@@ -26,16 +25,9 @@ public class RegexChapterFinder extends AbstractChapterFinder {
 
     @Override
     public List<TxtContent> getTxtContents() {
-        List<String> allLines = getAllLines();
+        List<String> allLines = FileUtil.readTxtLines(convertInfo);
         List<Integer> titleIndexes = getTitleIndexes(allLines);
         return createTxtContentList(allLines, titleIndexes);
-    }
-
-    private List<String> getAllLines() {
-        return FileUtil.readTxtLines(convertInfo.getTxtPath()).stream()
-                .map(SpecialSymbolReplacer::replace)
-                .map(super::convertSimplified)
-                .collect(toList());
     }
 
     private List<Integer> getTitleIndexes(List<String> allLines) {
