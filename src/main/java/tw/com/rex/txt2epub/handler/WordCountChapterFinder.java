@@ -1,14 +1,11 @@
 package tw.com.rex.txt2epub.handler;
 
-import java.io.IOException;
-import java.nio.charset.Charset;
-import java.nio.file.Files;
-import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
 import lombok.extern.slf4j.Slf4j;
+import tw.com.rex.txt2epub.factory.TxtReadFactory;
 import tw.com.rex.txt2epub.model.ConvertInfo;
 import tw.com.rex.txt2epub.model.TxtContent;
 
@@ -18,14 +15,11 @@ import tw.com.rex.txt2epub.model.TxtContent;
 @Slf4j
 public class WordCountChapterFinder extends AbstractChapterFinder {
 
-    public WordCountChapterFinder(ConvertInfo convertInfo) {
-        super(convertInfo);
-    }
-
     @Override
-    public List<TxtContent> getTxtContents() {
+    public List<TxtContent> getTxtContents(ConvertInfo convertInfo) {
+        String allContent = TxtReadFactory.createWordCountTxtReader()
+                .read(convertInfo.getTxtPath(), convertInfo.isConvertSimplified());
         List<TxtContent> result = new ArrayList<>();
-        String allContent = getAllContent();
         int wordCount = Integer.parseInt(convertInfo.getChapterFinder());
         int chapterCount = getChapterCount(allContent, wordCount);
 
@@ -42,25 +36,6 @@ public class WordCountChapterFinder extends AbstractChapterFinder {
             result.add(new TxtContent(title, contentList, xhtmlName));
         }
         return result;
-    }
-
-    /**
-     * 取得 txt 檔案內容
-     *
-     * @return txt 檔案內容
-     */
-    private String getAllContent() {
-        for (Charset charset : super.charsets) {
-            try {
-                String allContents = Files.readString(Paths.get(convertInfo.getTxtPath()), charset);
-                allContents = super.replaceSpecialSymbol(allContents);
-                allContents = super.convertSimplified(allContents);
-                return allContents;
-            } catch (IOException e) {
-                log.warn("{} 編碼取 txt 內容失敗", charset);
-            }
-        }
-        throw new RuntimeException("取得 txt 內容失敗");
     }
 
     /**
