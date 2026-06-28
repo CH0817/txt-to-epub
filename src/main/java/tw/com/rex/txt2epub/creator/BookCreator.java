@@ -13,7 +13,9 @@ import tw.com.rex.txt2epub.utils.ListUtil;
 public class BookCreator {
 
     public static Book[] create(ConvertInfo convertInfo) {
-        List<TxtContent> txtContentList = ChapterFinderFactory.getFinder(convertInfo).getTxtContents();
+        List<TxtContent> txtContentList = ChapterFinderFactory
+                .getFinder(convertInfo.getChapterFinderType())
+                .getTxtContents(convertInfo);
         List<List<TxtContent>> episodes = ListUtil.separateDataList(txtContentList, 100);
         return IntStream.range(0, episodes.size())
                 .mapToObj(i -> new Book(convertInfo, getBookName(convertInfo, i + 1), episodes.get(i)))

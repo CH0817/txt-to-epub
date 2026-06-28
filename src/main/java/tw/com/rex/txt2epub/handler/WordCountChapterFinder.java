@@ -15,14 +15,10 @@ import tw.com.rex.txt2epub.utils.FileUtil;
 @Slf4j
 public class WordCountChapterFinder extends AbstractChapterFinder {
 
-    public WordCountChapterFinder(ConvertInfo convertInfo) {
-        super(convertInfo);
-    }
-
     @Override
-    public List<TxtContent> getTxtContents() {
-        List<TxtContent> result = new ArrayList<>();
+    public List<TxtContent> getTxtContents(ConvertInfo convertInfo) {
         String allContent = FileUtil.readTxtString(convertInfo);
+        List<TxtContent> result = new ArrayList<>();
         int wordCount = Integer.parseInt(convertInfo.getChapterFinder());
         int chapterCount = getChapterCount(allContent, wordCount);
 

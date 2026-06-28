@@ -19,21 +19,17 @@ import tw.com.rex.txt2epub.utils.FileUtil;
 @Slf4j
 public class RegexChapterFinder extends AbstractChapterFinder {
 
-    public RegexChapterFinder(ConvertInfo convertInfo) {
-        super(convertInfo);
-    }
-
     @Override
-    public List<TxtContent> getTxtContents() {
+    public List<TxtContent> getTxtContents(ConvertInfo convertInfo) {
         List<String> allLines = FileUtil.readTxtLines(convertInfo);
-        List<Integer> titleIndexes = getTitleIndexes(allLines);
+        List<Integer> titleIndexes = getTitleIndexes(allLines, convertInfo.getChapterFinder());
         return createTxtContentList(allLines, titleIndexes);
     }
 
-    private List<Integer> getTitleIndexes(List<String> allLines) {
+    private List<Integer> getTitleIndexes(List<String> allLines, String chapterFinder) {
         return IntStream.range(0, allLines.size())
                 .filter(i -> StringUtils.isNotBlank(allLines.get(i)))
-                .filter(i -> StringUtils.trimToEmpty(allLines.get(i)).matches(convertInfo.getChapterFinder()))
+                .filter(i -> StringUtils.trimToEmpty(allLines.get(i)).matches(chapterFinder))
                 .boxed()
                 .collect(toList());
     }
