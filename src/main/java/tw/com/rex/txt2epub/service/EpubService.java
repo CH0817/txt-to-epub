@@ -10,47 +10,45 @@ import tw.com.rex.txt2epub.creator.BookCreator;
 import tw.com.rex.txt2epub.model.Book;
 import tw.com.rex.txt2epub.model.ConvertInfo;
 import tw.com.rex.txt2epub.model.TempDirectory;
+import tw.com.rex.txt2epub.model.css.DisplayStyle;
 import tw.com.rex.txt2epub.model.xml.Container;
 import tw.com.rex.txt2epub.utils.FileUtil;
 import tw.com.rex.txt2epub.utils.XmlUtil;
 
 public class EpubService {
 
-    private ConvertInfo convertInfo;
-
     public void process(ConvertInfo convertInfo) {
         Book[] books = BookCreator.create(convertInfo);
-        this.convertInfo = convertInfo;
         Stream.of(books)
                 .forEach(book -> {
-                    createContentXhtml(book);
+                    createContentXhtml(book, convertInfo.getStyle());
                     createCover(book);
-                    copyCssFiles(book);
-                    createTableOfContents(book);
+                    copyCssFiles(book, convertInfo.getStyle());
+                    createTableOfContents(book, convertInfo.getStyle());
                     createNavigationDocuments(book);
                     createOpf(book);
                     createContainerXml(book);
                     createMineType(book);
                     convert(book);
                     removeTemp(book);
-                    moveEpub(book);
+                    moveEpub(book, convertInfo.getOutputPath());
                 });
     }
 
-    private void createContentXhtml(Book book) {
-        new ContentXhtmlService(convertInfo.getStyle(), book).generate();
+    private void createContentXhtml(Book book, DisplayStyle displayStyle) {
+        new ContentXhtmlService(displayStyle, book).generate();
     }
 
     private void createCover(Book book) {
         new CoverXhtmlService(book).generate();
     }
 
-    private void copyCssFiles(Book book) {
-        new StyleFileService(convertInfo.getStyle(), book).copy();
+    private void copyCssFiles(Book book, DisplayStyle displayStyle) {
+        new StyleFileService(displayStyle, book).copy();
     }
 
-    private void createTableOfContents(Book book) {
-        new TableOfContentsService(convertInfo.getStyle(), book).generate();
+    private void createTableOfContents(Book book, DisplayStyle displayStyle) {
+        new TableOfContentsService(displayStyle, book).generate();
     }
 
     private void createNavigationDocuments(Book book) {
@@ -85,9 +83,9 @@ public class EpubService {
         FileUtil.deleteAll(new TempDirectory(book.getName()).getBasePath());
     }
 
-    private void moveEpub(Book book) {
+    private void moveEpub(Book book, String outputPath) {
         Path path = new TempDirectory(book.getName()).getFinalFilePath();
-        Path output = Paths.get(convertInfo.getOutputPath()).resolve(path.getFileName());
+        Path output = Paths.get(outputPath).resolve(path.getFileName());
         FileUtil.move(path, output);
     }
 
