@@ -5,9 +5,9 @@ import java.util.Arrays;
 import java.util.List;
 
 import lombok.extern.slf4j.Slf4j;
+import tw.com.rex.txt2epub.factory.TxtReadFactory;
 import tw.com.rex.txt2epub.model.ConvertInfo;
 import tw.com.rex.txt2epub.model.TxtContent;
-import tw.com.rex.txt2epub.utils.FileUtil;
 
 /**
  * 字數查詢章節
@@ -17,7 +17,8 @@ public class WordCountChapterFinder extends AbstractChapterFinder {
 
     @Override
     public List<TxtContent> getTxtContents(ConvertInfo convertInfo) {
-        String allContent = FileUtil.readTxtString(convertInfo);
+        String allContent = TxtReadFactory.createWordCountTxtReader()
+                .read(convertInfo.getTxtPath(), convertInfo.isConvertSimplified());
         List<TxtContent> result = new ArrayList<>();
         int wordCount = Integer.parseInt(convertInfo.getChapterFinder());
         int chapterCount = getChapterCount(allContent, wordCount);

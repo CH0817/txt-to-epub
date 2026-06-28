@@ -9,9 +9,9 @@ import java.util.stream.IntStream;
 import org.apache.commons.lang3.StringUtils;
 
 import lombok.extern.slf4j.Slf4j;
+import tw.com.rex.txt2epub.factory.TxtReadFactory;
 import tw.com.rex.txt2epub.model.ConvertInfo;
 import tw.com.rex.txt2epub.model.TxtContent;
-import tw.com.rex.txt2epub.utils.FileUtil;
 
 /**
  * 正則表達式查詢章節
@@ -21,7 +21,8 @@ public class RegexChapterFinder extends AbstractChapterFinder {
 
     @Override
     public List<TxtContent> getTxtContents(ConvertInfo convertInfo) {
-        List<String> allLines = FileUtil.readTxtLines(convertInfo);
+        List<String> allLines = TxtReadFactory.createRegexTxtReader()
+                .read(convertInfo.getTxtPath(), convertInfo.isConvertSimplified());
         List<Integer> titleIndexes = getTitleIndexes(allLines, convertInfo.getChapterFinder());
         return createTxtContentList(allLines, titleIndexes);
     }

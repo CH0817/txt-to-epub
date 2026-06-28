@@ -1,36 +1,25 @@
 package tw.com.rex.txt2epub.utils;
 
-import static java.util.stream.Collectors.*;
-
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 import java.nio.file.StandardOpenOption;
 import java.util.Arrays;
 import java.util.Comparator;
-import java.util.List;
 import java.util.Objects;
 import java.util.stream.Stream;
 
 import org.apache.commons.lang3.StringUtils;
 
 import lombok.extern.slf4j.Slf4j;
-import tw.com.rex.txt2epub.model.ConvertInfo;
 
 @Slf4j
 public class FileUtil {
-
-    private static Charset[] charsets = { StandardCharsets.UTF_8,
-            Charset.forName("Big5"),
-            Charset.forName("GBK"),
-            StandardCharsets.UTF_16 };
 
     public static void createDirectories(Path... paths) {
         assert Objects.nonNull(paths) && paths.length > 0;
@@ -122,40 +111,6 @@ public class FileUtil {
         } catch (IOException e) {
             handlerIOException(e, "remove file " + path.toAbsolutePath() + " failure!");
         }
-    }
-
-    public static String readTxtString(ConvertInfo convertInfo) {
-        for (Charset charset : charsets) {
-            try {
-                String result = Files.readString(Paths.get(convertInfo.getTxtPath()), charset);
-                result = SpecialSymbolReplacer.replace(result);
-                result = convertSimplified(result, convertInfo.isConvertSimplified());
-                return result;
-            } catch (IOException e) {
-                log.warn("{} 編碼取 txt 內容失敗", charset);
-            }
-        }
-
-        throw new RuntimeException("讀取 txt 內容失敗");
-    }
-
-    public static List<String> readTxtLines(ConvertInfo convertInfo) {
-        for (Charset charset : charsets) {
-            try {
-                return Files.readAllLines(Paths.get(convertInfo.getTxtPath()), charset).stream()
-                        .map(SpecialSymbolReplacer::replace)
-                        .map(origin -> convertSimplified(origin, convertInfo.isConvertSimplified()))
-                        .collect(toList());
-            } catch (IOException e) {
-                log.warn("{} 編碼取 txt 內容失敗", charset);
-            }
-        }
-
-        throw new RuntimeException("讀取 txt 內容失敗");
-    }
-
-    private static String convertSimplified(String source, boolean isConvertSimplified) {
-        return (isConvertSimplified) ? SimplifiedToTraditionalConverter.convert(source) : source;
     }
 
     private static void handlerIOException(Exception e, String message) {
